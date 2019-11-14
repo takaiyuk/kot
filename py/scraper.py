@@ -2,11 +2,8 @@
 from collections import Counter
 from bs4 import BeautifulSoup
 
+from .const import WORK_HOUR
 from .crawler import Crawler
-
-
-# Const
-WORK_HOUR = 8
 
 
 class Scraper:

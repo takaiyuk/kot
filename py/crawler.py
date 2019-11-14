@@ -4,11 +4,7 @@ from selenium import webdriver
 import time
 
 from config import YOUR_ID, YOUR_PW
-
-
-# Const
-TOP_URL = "https://s3.kingtime.jp/admin"
-DRIVER_PATH = "./drivers/chromedriver"
+from .const import DRIVER_PATH, TOP_URL
 
 
 # Class
