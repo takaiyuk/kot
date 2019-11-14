@@ -21,11 +21,11 @@ class Scraper:
     def str_to_int(self, string):
         return int(float(string))
 
-    def calc_monthly_work_hour(self, montly_work_count):
-        return WORK_HOUR * montly_work_count
+    def calc_monthly_work_hour(self, monthly_work_count):
+        return WORK_HOUR * monthly_work_count
 
-    def calc_count_remain(self, montly_work_count, work_count):
-        return montly_work_count - work_count
+    def calc_count_remain(self, monthly_work_count, work_count):
+        return monthly_work_count - work_count
 
     def calc_hour_remain(self, total_hour, finished_hour):
         total_minutes = total_hour * 60
@@ -56,8 +56,8 @@ class Scraper:
             except IndexError:
                 break
         c = Counter(work_day_types)
-        montly_work_count = self.str_to_int(c["平日"])
-        return montly_work_count
+        monthly_work_count = self.str_to_int(c["平日"])
+        return monthly_work_count
 
     def get_work_count(self, soup, yukyu_count):
         work_count = soup.find("div", class_="work_count").string
@@ -80,17 +80,17 @@ class Scraper:
         teiji_time_string = ":".join([str(int(hhmm[0]) + (WORK_HOUR + 1)), hhmm[1]])
         return start_time_string, teiji_time_string
 
-    def run(self, html=None):
+    def raw_data(self, html=None):
         if html is None:
             html = Crawler().get_source()
         soup = BeautifulSoup(html, "html.parser")
         yukyu_count = 0  # TODO: 当月利用した有給日数を取得
 
         # 今月の必要勤務日を取得
-        montly_work_count = self.get_monthly_work_count(soup)
+        monthly_work_count = self.get_monthly_work_count(soup)
 
         # 今月の必要勤務時間を計算
-        monthly_work_hour = self.calc_monthly_work_hour(montly_work_count)
+        monthly_work_hour = self.calc_monthly_work_hour(monthly_work_count)
 
         # 前日までの勤務日数を取得
         work_count = self.get_work_count(soup, yukyu_count)
@@ -99,7 +99,7 @@ class Scraper:
         work_hour = self.get_work_hour(soup, yukyu_count)
 
         # 残り日数と残り必要時間、1日あたりの必要時間を計算
-        work_count_remain = self.calc_count_remain(montly_work_count, work_count)
+        work_count_remain = self.calc_count_remain(monthly_work_count, work_count)
         work_hour_remain = self.calc_hour_remain(monthly_work_hour, work_hour)
         work_hour_remain_by_day = self.calc_hour_remain_by_day(
             work_hour_remain, work_count_remain
@@ -111,12 +111,33 @@ class Scraper:
         # 当日の出勤打刻時間
         start_time, teiji_time = self.get_today_work_start(soup)
 
-        message1 = f"REMAIN-DAYS={work_count_remain}days(done={work_count}/{montly_work_count})"
-        message2 = f"REMAIN-HOURS={work_hour_remain:.2f}h(done={work_hour}/{monthly_work_hour})"
-        message3 = f":bank:--{saveing_time:.2f}h"
-        message4 = f"REMAIN-HOURS-BY-DAY={work_hour_remain_by_day:.2f}h"
-        message5 = f":shigyou:--{start_time}"
-        message6 = f":teiji:--{teiji_time}"
+        return {
+            "work_count_remain": work_count_remain,
+            "work_count": work_count,
+            "monthly_work_count": monthly_work_count,
+            "work_hour_remain": work_hour_remain,
+            "work_hour": work_hour,
+            "monthly_work_hour": monthly_work_hour,
+            "saveing_time": saveing_time,
+            "work_hour_remain_by_day": work_hour_remain_by_day,
+            "start_time": start_time,
+            "teiji_time": teiji_time,
+        }
+
+    def run(self, html=None):
+        values = self.raw_data(html=html)
+
+        message1, message2, message3, message4, message5, message6 = [
+            x.format(**values)
+            for x in (
+                "REMAIN-DAYS={work_count_remain}days(done={work_count}/{monthly_work_count})",
+                "REMAIN-HOURS={work_hour_remain:.2f}h(done={work_hour}/{monthly_work_hour})",
+                ":bank:--{saveing_time:.2f}h",
+                "REMAIN-HOURS-BY-DAY={work_hour_remain_by_day:.2f}h",
+                ":shigyou:--{start_time}",
+                ":teiji:--{teiji_time}",
+            )
+        ]
 
         for message in [message1, message2, message3, message4, message5, message6]:
             print(message)

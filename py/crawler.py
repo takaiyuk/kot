@@ -11,13 +11,6 @@ from config import YOUR_ID, YOUR_PW
 TOP_URL = "https://s3.kingtime.jp/admin"
 DRIVER_PATH = "./drivers/chromedriver"
 
-parser = argparse.ArgumentParser()
-parser.add_argument(
-    "--headless", type=bool, required=False, default=True, help="headless mode"
-)
-p = vars(parser.parse_args())
-IS_HEADLESS = p["headless"]
-
 
 # Class
 class Browser:
@@ -54,9 +47,9 @@ class Browser:
 
 
 class Crawler:
-    def __init__(self):
+    def __init__(self, headless):
         options = webdriver.ChromeOptions()
-        if IS_HEADLESS:
+        if headless:
             options.add_argument("--headless")
         self.driver = webdriver.Chrome(executable_path=DRIVER_PATH, options=options)
         self.browser = Browser(self.driver)
