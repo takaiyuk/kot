@@ -1,5 +1,4 @@
 # Import
-import argparse
 import random
 from selenium import webdriver
 import time
