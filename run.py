@@ -6,8 +6,8 @@ from py.scraper import Scraper
 from py.notifyer import notify
 
 
-def console(params):
-    src = Crawler(headless=True).get_source()
+def console():
+    src = Crawler().get_source()
     dct = Scraper().raw_data(src)
     print(
         """
@@ -28,9 +28,9 @@ def console(params):
     )
 
 
-def notify_to_slack(params):
+def notify_to_slack():
     try:
-        page_source = Crawler(headless=params.headless).get_source()
+        page_source = Crawler().get_source()
         messages = Scraper().run(page_source)
         dt_now = datetime.now()
         notify(f"{dt_now.year}/{dt_now.month}/{dt_now.day}")
@@ -43,13 +43,6 @@ def notify_to_slack(params):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument(
-        "--headless",
-        dest="headless",
-        action="store_true",
-        default=True,
-        help="headless mode",
-    )
     parser.set_defaults(func=notify_to_slack)
 
     sub = parser.add_subparsers()
@@ -57,4 +50,4 @@ if __name__ == "__main__":
     _console.set_defaults(func=console)
 
     params = parser.parse_args()
-    params.func(params)
+    params.func()
