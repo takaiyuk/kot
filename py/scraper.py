@@ -2,16 +2,13 @@
 from collections import Counter
 from bs4 import BeautifulSoup
 
+from .const import WORK_HOUR
 from .crawler import Crawler
-
-
-# Const
-WORK_HOUR = 8
 
 
 class Scraper:
     def __init__(self):
-        pass
+        self.soup = None
 
     def clean_text(self, x):
         x = x.replace("\n", "")
@@ -45,12 +42,12 @@ class Scraper:
     def calc_saving_time(self, work_hour, work_count):
         return work_hour - WORK_HOUR * work_count
 
-    def get_monthly_work_count(self, soup):
+    def get_monthly_work_count(self):
         work_day_types = []
         for i in range(31):
             try:
                 work_day_type = self.clean_text(
-                    soup.find_all("td", class_="work_day_type")[i].p.string
+                    self.soup.find_all("td", class_="work_day_type")[i].p.string
                 )
                 work_day_types.append(work_day_type)
             except IndexError:
@@ -59,22 +56,22 @@ class Scraper:
         monthly_work_count = self.str_to_int(c["平日"])
         return monthly_work_count
 
-    def get_work_count(self, soup, yukyu_count):
-        work_count = soup.find("div", class_="work_count").string
+    def get_work_count(self, yukyu_count):
+        work_count = self.soup.find("div", class_="work_count").string
         work_count = self.str_to_int(work_count)
         work_count += yukyu_count
         return work_count
 
-    def get_work_hour(self, soup, yukyu_count):
-        work_hour = self.clean_text(soup.find("td", class_="custom2").string)
+    def get_work_hour(self, yukyu_count):
+        work_hour = self.clean_text(self.soup.find("td", class_="custom2").string)
         work_hour = float(work_hour)
         yukyu_hour = WORK_HOUR * yukyu_count
         work_hour += yukyu_hour
         return work_hour
 
-    def get_today_work_start(self, soup):
+    def get_today_work_start(self):
         start_time_string = self.clean_text(
-            soup.find("td", class_="start_end_timerecord specific-uncomplete").text
+            self.soup.find("td", class_="start_end_timerecord specific-uncomplete").text
         ).replace("IC", "")
         hhmm = start_time_string.split(":")
         teiji_time_string = ":".join([str(int(hhmm[0]) + (WORK_HOUR + 1)), hhmm[1]])
@@ -83,20 +80,20 @@ class Scraper:
     def raw_data(self, html=None):
         if html is None:
             html = Crawler().get_source()
-        soup = BeautifulSoup(html, "html.parser")
+        self.soup = BeautifulSoup(html, "html.parser")
         yukyu_count = 0  # TODO: 当月利用した有給日数を取得
 
         # 今月の必要勤務日を取得
-        monthly_work_count = self.get_monthly_work_count(soup)
+        monthly_work_count = self.get_monthly_work_count()
 
         # 今月の必要勤務時間を計算
         monthly_work_hour = self.calc_monthly_work_hour(monthly_work_count)
 
         # 前日までの勤務日数を取得
-        work_count = self.get_work_count(soup, yukyu_count)
+        work_count = self.get_work_count(yukyu_count)
 
         # 前日までの勤務時間を取得
-        work_hour = self.get_work_hour(soup, yukyu_count)
+        work_hour = self.get_work_hour(yukyu_count)
 
         # 残り日数と残り必要時間、1日あたりの必要時間を計算
         work_count_remain = self.calc_count_remain(monthly_work_count, work_count)
@@ -109,7 +106,7 @@ class Scraper:
         saveing_time = self.calc_saving_time(work_hour, work_count)
 
         # 当日の出勤打刻時間
-        start_time, teiji_time = self.get_today_work_start(soup)
+        start_time, teiji_time = self.get_today_work_start()
 
         return {
             "work_count_remain": work_count_remain,

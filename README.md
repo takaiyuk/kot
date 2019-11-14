@@ -14,3 +14,9 @@ pip install -r requirements.txt
 cp config.py.example config.py  # config.py に自分の King of Time の ID/PW 等を入力する
 python run.py
 ```
+
+If you do not want to notify on slack channel, you can make the result output only on your console with `console` command:
+
+```
+python run.py console
+```
