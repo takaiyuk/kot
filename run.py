@@ -40,7 +40,7 @@ def notify_to_slack():
         notify(f"error occurred: {e}")
 
 
-if __name__ == "__main__":
+def main(event=None, context=None):
     parser = argparse.ArgumentParser()
     parser.set_defaults(func=notify_to_slack)
 
@@ -50,3 +50,7 @@ if __name__ == "__main__":
 
     params = parser.parse_args()
     params.func()
+
+
+if __name__ == "__main__":
+    main()
