@@ -6,6 +6,8 @@ King of Time をスクレイピングして、 勤務時間の貯金等を計�
 
 ## How to Use?
 
+### Run on Local
+
 ```
 git clone https://github.com/takaiyuk/scrape-king-of-time.git
 cd scrape-king-of-time
@@ -15,7 +17,7 @@ cp config.py.example config.py  # config.py に自分の King of Time の ID/PW 
 python run.py
 ```
 
-Output example
+- Output example
 
 ![Slack Notify Image](https://github.com/takaiyuk/scrape-king-of-time/blob/master/docs/source/_static/img/slack-notify-message-image.png)
 
@@ -27,7 +29,7 @@ If you do not want to notify on slack channel, you can make the result output on
 python run.py console
 ```
 
-Output example
+- Output example
 
 ```
     残り12営業日: (8/20 日)
@@ -42,3 +44,19 @@ Output example
         出勤: 10:15
         定時: 19:15
 ```
+
+<br>
+
+### Run on AWS Lambda
+
+Prepare lambda deploy package with docker
+
+```
+python py/utils/lambda_prepare.py
+docker build -t scrape-king-of-time .
+docker run -v "${PWD}":/var/task scrape-king-of-time
+```
+
+Place the created `deploy_package.zip` on S3 and set the Lambda function appropriately.
+
+**Note: MAKE SURE to use your PRIVATE S3 accoount because `deploy_package.zip` includes very important information (ID and password for king-of-time).**
