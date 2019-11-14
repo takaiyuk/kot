@@ -42,10 +42,9 @@ class Browser:
 
 
 class Crawler:
-    def __init__(self, headless):
+    def __init__(self):
         options = webdriver.ChromeOptions()
-        if headless:
-            options.add_argument("--headless")
+        options.add_argument("--headless")
         self.driver = webdriver.Chrome(executable_path=DRIVER_PATH, options=options)
         self.browser = Browser(self.driver)
 
