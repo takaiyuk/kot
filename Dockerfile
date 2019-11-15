@@ -13,7 +13,5 @@ RUN apk add --update \
   && poetry config settings.virtualenvs.create false \
   && poetry install --no-interaction --no-ansi
 
-ENV PATH /usr/lib:$PATH
-
 ENTRYPOINT ["python"]
 CMD ["./run.py"]
