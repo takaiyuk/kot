@@ -33,9 +33,8 @@ def notify_to_slack():
         page_source = Crawler().get_source()
         messages = Scraper().run(page_source)
         dt_now = datetime.now()
-        notify(f"{dt_now.year}/{dt_now.month}/{dt_now.day}")
-        for message in messages:
-            notify(message)
+        messages = [f"{dt_now.year}/{dt_now.month}/{dt_now.day}"] + messages
+        notify("\n".join(messages))
     except Exception as e:
         # 打刻ない時に要素を取得できずエラー発生する
         notify(f"error occurred: {e}")
