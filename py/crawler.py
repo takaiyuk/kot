@@ -2,6 +2,7 @@
 import random
 from selenium import webdriver
 import time
+import os
 
 from config import YOUR_ID, YOUR_PW
 from .const import (
@@ -50,6 +51,7 @@ class Crawler:
     def __init__(self, params):
         options = webdriver.ChromeOptions()
         options.add_argument("--headless")
+        options.add_argument("--no-sandbox")
         if params.lambda_deploy is True:
             options.binary_location = AMAZONLINUX_CHROME_PATH
             options.add_argument("--disable-gpu")
@@ -67,7 +69,10 @@ class Crawler:
                 executable_path=AMAZONLINUX_DRIVER_PATH, options=options
             )
         else:
-            self.driver = webdriver.Chrome(executable_path=DRIVER_PATH, options=options)
+            if os.path.exists(DRIVER_PATH):
+                self.driver = webdriver.Chrome(executable_path=DRIVER_PATH, options=options)
+            else:
+                self.driver = webdriver.Chrome(options=options)
         self.browser = Browser(self.driver)
 
     def get_source(self):
