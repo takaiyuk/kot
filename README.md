@@ -53,6 +53,8 @@ Prepare lambda deploy package with docker
 
 ```
 python py/utils/lambda_prepare.py
+rsync -ar ./* ./deploy_package --exclude 'deploy_package' --exclude 'drivers/chromedriver'
+cd deploy_package
 docker build -t scrape-king-of-time .
 docker run -v "${PWD}":/var/task scrape-king-of-time
 ```
