@@ -1,5 +1,7 @@
 import argparse
 from datetime import datetime
+import traceback
+import sys
 
 from py.crawler import Crawler
 from py.scraper import Scraper
@@ -37,7 +39,9 @@ def notify_to_slack(params):
         notify(title, "\n".join(messages))
     except Exception as e:
         # 打刻ない時に要素を取得できずエラー発生する
-        notify("error",f"error occurred: {e}")
+        t, v, tb = sys.exc_info()
+        x = traceback.format_exception(t, v, tb)
+        notify("error", f"error occurred: {''.join(x)}")
         raise e
 
 
