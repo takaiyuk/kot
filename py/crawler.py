@@ -2,9 +2,15 @@
 import random
 from selenium import webdriver
 import time
+import os
 
 from config import YOUR_ID, YOUR_PW
-from .const import DRIVER_PATH, TOP_URL
+from .const import (
+    DRIVER_PATH,
+    TOP_URL,
+    AMAZONLINUX_CHROME_PATH,
+    AMAZONLINUX_DRIVER_PATH,
+)
 
 
 # Class
@@ -42,10 +48,31 @@ class Browser:
 
 
 class Crawler:
-    def __init__(self):
+    def __init__(self, params):
         options = webdriver.ChromeOptions()
         options.add_argument("--headless")
-        self.driver = webdriver.Chrome(executable_path=DRIVER_PATH, options=options)
+        options.add_argument("--no-sandbox")
+        if params.lambda_deploy is True:
+            options.binary_location = AMAZONLINUX_CHROME_PATH
+            options.add_argument("--disable-gpu")
+            options.add_argument("--window-size=1280x1696")
+            options.add_argument("--disable-application-cache")
+            options.add_argument("--disable-infobars")
+            options.add_argument("--no-sandbox")
+            options.add_argument("--hide-scrollbars")
+            options.add_argument("--enable-logging")
+            options.add_argument("--log-level=0")
+            options.add_argument("--single-process")
+            options.add_argument("--ignore-certificate-errors")
+            options.add_argument("--homedir=/tmp")
+            self.driver = webdriver.Chrome(
+                executable_path=AMAZONLINUX_DRIVER_PATH, options=options
+            )
+        else:
+            if os.path.exists(DRIVER_PATH):
+                self.driver = webdriver.Chrome(executable_path=DRIVER_PATH, options=options)
+            else:
+                self.driver = webdriver.Chrome(options=options)
         self.browser = Browser(self.driver)
 
     def get_source(self):

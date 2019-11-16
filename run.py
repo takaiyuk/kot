@@ -6,8 +6,8 @@ from py.scraper import Scraper
 from py.notifyer import notify
 
 
-def console():
-    src = Crawler().get_source()
+def console(params):
+    src = Crawler(params).get_source()
     dct = Scraper().raw_data(src)
     print(
         """
@@ -28,9 +28,9 @@ def console():
     )
 
 
-def notify_to_slack():
+def notify_to_slack(params):
     try:
-        page_source = Crawler().get_source()
+        page_source = Crawler(params).get_source()
         messages = Scraper().run(page_source)
         dt_now = datetime.now()
         title = f"{dt_now.year}/{dt_now.month}/{dt_now.day}"
@@ -38,6 +38,21 @@ def notify_to_slack():
     except Exception as e:
         # 打刻ない時に要素を取得できずエラー発生する
         notify("error",f"error occurred: {e}")
+        raise e
+
+
+# Function for lambda execution
+def main(event=None, context=None):
+    parser = argparse.ArgumentParser()
+    parser.set_defaults(func=notify_to_slack)
+
+    sub = parser.add_subparsers()
+    _console = sub.add_parser("console")
+    _console.set_defaults(func=console)
+
+    params = parser.parse_args()
+    params.lambda_deploy = True
+    params.func(params)
 
 
 if __name__ == "__main__":
@@ -49,4 +64,5 @@ if __name__ == "__main__":
     _console.set_defaults(func=console)
 
     params = parser.parse_args()
-    params.func()
+    params.lambda_deploy = False
+    params.func(params)
