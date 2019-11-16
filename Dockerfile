@@ -6,7 +6,7 @@ WORKDIR $APP_HOME
 
 COPY . .
 
-RUN apk add --update \
+RUN apk add --update --no-cache\
   chromium \
   chromium-chromedriver \
   && pip install poetry \

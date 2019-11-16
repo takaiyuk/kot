@@ -38,6 +38,7 @@ def notify_to_slack(params):
     except Exception as e:
         # 打刻ない時に要素を取得できずエラー発生する
         notify(f"error occurred: {e}")
+        raise e
 
 
 # Function for lambda execution
