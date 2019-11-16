@@ -71,8 +71,12 @@ class Scraper:
 
     def get_today_work_start(self):
         start_time_string = self.clean_text(
-            self.soup.find("td", class_="start_end_timerecord specific-uncomplete").text
-        ).replace("IC", "")
+            self.soup.find_all("td", class_="start_end_timerecord specific-uncomplete")[
+                -2
+            ].text
+        )
+        ic_place = start_time_string.find("IC")
+        start_time_string = start_time_string[(ic_place + 2) : (ic_place + 7)]
         hhmm = start_time_string.split(":")
         teiji_time_string = ":".join([str(int(hhmm[0]) + (WORK_HOUR + 1)), hhmm[1]])
         return start_time_string, teiji_time_string
