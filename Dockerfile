@@ -1,11 +1,17 @@
-FROM python:3.8.0-alpine
+FROM python:3.8-alpine
 
-WORKDIR /root
+ENV APP_HOME /scrape_kot
+
+WORKDIR $APP_HOME
 
 COPY . .
-RUN apk add --update --no-cache chromium chromium-chromedriver \
-        && pip install -r requirements.txt
+
+RUN apk add --update --no-cache\
+  chromium \
+  chromium-chromedriver \
+  && pip install poetry \
+  && poetry config settings.virtualenvs.create false \
+  && poetry install --no-interaction --no-ansi
 
 ENTRYPOINT ["python"]
 CMD ["./run.py"]
-
