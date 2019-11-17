@@ -95,8 +95,7 @@ class Crawler:
         # ログイン成功したか確認
         url = self.browser.get_url()
         if url == TOP_URL:
-            notify("error", f"error occurred: login failed")
-            raise Exception
+            raise Exception("login failed")
 
         # ソースを取得
         page_source = self.browser.source()
