@@ -47,6 +47,29 @@ class Scraper:
     def calc_saving_time(self, work_hour, work_count):
         return work_hour - WORK_HOUR * work_count
 
+    def get_holiday_count(self):
+        holiday_counts = self.soup.find_all("div", class_="holiday_count")
+        # 有給
+        self.holiday_count += self._clean_text(holiday_counts[0].text).split("(")[0]
+        # 代休
+        self.holiday_count += self._clean_text(holiday_counts[1].text).split("(")[0]
+        # 夏季休暇
+        self.holiday_count += self._clean_text(holiday_counts[3].text).split("(")[0]
+        # 特別休暇
+        self.holiday_count += self._clean_text(holiday_counts[4].text).split("/")[0]
+        # 年末年始休暇
+        self.holiday_count += self._clean_text(holiday_counts[5].text)
+        # 輪番休暇
+        self.holiday_count += self._clean_text(holiday_counts[6].text).split("(")[0]
+        # 産休・育休
+        self.holiday_count += self._clean_text(holiday_counts[7].text)
+        # 代休（土曜日・祝日）
+        self.holiday_count += self._clean_text(holiday_counts[8].text).split("(")[0]
+        # 代休（日曜日）
+        self.holiday_count += self._clean_text(holiday_counts[9].text).split("(")[0]
+        # 特別輪番休暇
+        self.holiday_count += self._clean_text(holiday_counts[10].text).split("(")[0]
+
     def get_monthly_work_count(self):
         work_day_types = []
         for i in range(31):
@@ -92,6 +115,9 @@ class Scraper:
         if html is None:
             html = Crawler().get_source()
         self.soup = BeautifulSoup(html, "html.parser")
+
+        # 有給等の取得日数を取得
+        self.get_holiday_count()
 
         # 今月の必要勤務日を取得
         monthly_work_count = self.get_monthly_work_count()
