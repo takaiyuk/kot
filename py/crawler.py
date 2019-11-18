@@ -11,7 +11,6 @@ from .const import (
     AMAZONLINUX_CHROME_PATH,
     AMAZONLINUX_DRIVER_PATH,
 )
-from py.notifyer import notify
 
 
 # Class
