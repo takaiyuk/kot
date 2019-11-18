@@ -18,6 +18,12 @@ class Scraper:
     def str_to_int(self, string):
         return int(float(string))
 
+    def _hour_to_minute(self, hours):
+        return round(hours // 1.0 * 60 + hours % 1.0 * 100)
+
+    def _minute_to_hour(self, minutes):
+        return minutes // 60 + round(minutes % 60 / 100, 2)
+
     def calc_monthly_work_hour(self, monthly_work_count):
         return WORK_HOUR * monthly_work_count
 
@@ -25,19 +31,17 @@ class Scraper:
         return monthly_work_count - work_count
 
     def calc_hour_remain(self, total_hour, finished_hour):
-        total_minutes = total_hour * 60
-        finished_minites = round(finished_hour // 1.0 * 60 + finished_hour % 1.0 * 100)
+        total_minutes = self._hour_to_minute(total_hour)
+        finished_minites = self._hour_to_minute(finished_hour)
         remain_minutes = total_minutes - finished_minites
-        remain_hour = remain_minutes // 60 + round(remain_minutes % 60 / 100, 2)
+        remain_hour = self._minute_to_hour(remain_minutes)
         return remain_hour
 
     def calc_hour_remain_by_day(self, remain_hour, remain_count):
-        remain_min = remain_hour * 60
-        remain_min_by_day = remain_min / remain_count
-        remain_hour_by_day = remain_min_by_day // 60 + round(
-            remain_min_by_day % 60 / 100, 2
-        )
-        return remain_hour_by_day
+        remain_minutes = self._hour_to_minute(remain_hour)
+        remain_minutes_by_day = remain_minutes / remain_count
+        remain_hours_by_day = self._minute_to_hour(remain_minutes_by_day)
+        return remain_hours_by_day
 
     def calc_saving_time(self, work_hour, work_count):
         return work_hour - WORK_HOUR * work_count
