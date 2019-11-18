@@ -9,6 +9,7 @@ from .crawler import Crawler
 class Scraper:
     def __init__(self):
         self.soup = None
+        self.holiday_count = 0  # TODO: 当月利用した有給日数を取得
 
     def _clean_text(self, x):
         x = x.replace("\n", "")
@@ -60,16 +61,16 @@ class Scraper:
         monthly_work_count = self._str_to_int(c["平日"])
         return monthly_work_count
 
-    def get_work_count(self, yukyu_count):
+    def get_work_count(self):
         work_count = self.soup.find("div", class_="work_count").string
         work_count = self._str_to_int(work_count)
-        work_count += yukyu_count
+        work_count += self.holiday_count
         return work_count
 
-    def get_work_hour(self, yukyu_count):
+    def get_work_hour(self):
         work_hour = self._clean_text(self.soup.find("td", class_="custom2").string)
         work_hour = float(work_hour)
-        yukyu_hour = WORK_HOUR * yukyu_count
+        yukyu_hour = WORK_HOUR * self.holiday_count
         work_hour += yukyu_hour
         return work_hour
 
@@ -91,7 +92,6 @@ class Scraper:
         if html is None:
             html = Crawler().get_source()
         self.soup = BeautifulSoup(html, "html.parser")
-        yukyu_count = 0  # TODO: 当月利用した有給日数を取得
 
         # 今月の必要勤務日を取得
         monthly_work_count = self.get_monthly_work_count()
@@ -100,10 +100,10 @@ class Scraper:
         monthly_work_hours = self.calc_monthly_work_hour(monthly_work_count)
 
         # 前日までの勤務日数を取得
-        work_count = self.get_work_count(yukyu_count)
+        work_count = self.get_work_count()
 
         # 前日までの勤務時間を取得
-        work_hours = self.get_work_hour(yukyu_count)
+        work_hours = self.get_work_hour()
 
         # 残り日数と残り必要時間、1日あたりの必要時間を計算
         work_count_remain = self.calc_count_remain(monthly_work_count, work_count)
