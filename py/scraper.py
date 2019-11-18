@@ -30,15 +30,15 @@ class Scraper:
     def calc_count_remain(self, monthly_work_count, work_count):
         return monthly_work_count - work_count
 
-    def calc_hour_remain(self, total_hour, finished_hour):
-        total_minutes = self._hour_to_minute(total_hour)
-        finished_minites = self._hour_to_minute(finished_hour)
+    def calc_hour_remain(self, total_hours, finished_hours):
+        total_minutes = self._hour_to_minute(total_hours)
+        finished_minites = self._hour_to_minute(finished_hours)
         remain_minutes = total_minutes - finished_minites
         remain_hour = self._minute_to_hour(remain_minutes)
         return remain_hour
 
-    def calc_hour_remain_by_day(self, remain_hour, remain_count):
-        remain_minutes = self._hour_to_minute(remain_hour)
+    def calc_hour_remain_by_day(self, remain_hours, remain_count):
+        remain_minutes = self._hour_to_minute(remain_hours)
         remain_minutes_by_day = remain_minutes / remain_count
         remain_hours_by_day = self._minute_to_hour(remain_minutes_by_day)
         return remain_hours_by_day
@@ -95,23 +95,23 @@ class Scraper:
         monthly_work_count = self.get_monthly_work_count()
 
         # 今月の必要勤務時間を計算
-        monthly_work_hour = self.calc_monthly_work_hour(monthly_work_count)
+        monthly_work_hours = self.calc_monthly_work_hour(monthly_work_count)
 
         # 前日までの勤務日数を取得
         work_count = self.get_work_count(yukyu_count)
 
         # 前日までの勤務時間を取得
-        work_hour = self.get_work_hour(yukyu_count)
+        work_hours = self.get_work_hour(yukyu_count)
 
         # 残り日数と残り必要時間、1日あたりの必要時間を計算
         work_count_remain = self.calc_count_remain(monthly_work_count, work_count)
-        work_hour_remain = self.calc_hour_remain(monthly_work_hour, work_hour)
-        work_hour_remain_by_day = self.calc_hour_remain_by_day(
-            work_hour_remain, work_count_remain
+        work_hours_remain = self.calc_hour_remain(monthly_work_hours, work_hours)
+        work_hours_remain_by_day = self.calc_hour_remain_by_day(
+            work_hours_remain, work_count_remain
         )
 
         # 暫定残業時間を計算
-        saveing_time = self.calc_saving_time(work_hour, work_count)
+        saveing_time = self.calc_saving_time(work_hours, work_count)
 
         # 当日の出勤打刻時間
         start_time, teiji_time = self.get_today_work_start()
@@ -120,11 +120,11 @@ class Scraper:
             "work_count_remain": work_count_remain,
             "work_count": work_count,
             "monthly_work_count": monthly_work_count,
-            "work_hour_remain": work_hour_remain,
-            "work_hour": work_hour,
-            "monthly_work_hour": monthly_work_hour,
+            "work_hour_remain": work_hours_remain,
+            "work_hour": work_hours,
+            "monthly_work_hour": monthly_work_hours,
             "saveing_time": saveing_time,
-            "work_hour_remain_by_day": work_hour_remain_by_day,
+            "work_hour_remain_by_day": work_hours_remain_by_day,
             "start_time": start_time,
             "teiji_time": teiji_time,
         }
@@ -136,9 +136,9 @@ class Scraper:
             x.format(**values)
             for x in (
                 "REMAIN-DAYS={work_count_remain}days(done={work_count}/{monthly_work_count})",
-                "REMAIN-HOURS={work_hour_remain:.2f}h(done={work_hour}/{monthly_work_hour})",
+                "REMAIN-HOURS={work_hours_remain:.2f}h(done={work_hours}/{monthly_work_hours})",
                 ":bank:--{saveing_time:.2f}h",
-                "REMAIN-HOURS-BY-DAY={work_hour_remain_by_day:.2f}h",
+                "REMAIN-HOURS-BY-DAY={work_hours_remain_by_day:.2f}h",
                 ":shigyou:--{start_time}",
                 ":teiji:--{teiji_time}",
             )
