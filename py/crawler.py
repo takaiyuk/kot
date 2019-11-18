@@ -11,6 +11,7 @@ from .const import (
     AMAZONLINUX_CHROME_PATH,
     AMAZONLINUX_DRIVER_PATH,
 )
+from py.notifyer import notify
 
 
 # Class
@@ -31,6 +32,9 @@ class Browser:
         self.driver.get(url)
         ts = self._get_random(1, 1)
         time.sleep(ts)
+
+    def get_url(self):
+        return self.driver.current_url
 
     def save(self, filepath):
         html = self.driver.page_source
@@ -70,7 +74,9 @@ class Crawler:
             )
         else:
             if os.path.exists(DRIVER_PATH):
-                self.driver = webdriver.Chrome(executable_path=DRIVER_PATH, options=options)
+                self.driver = webdriver.Chrome(
+                    executable_path=DRIVER_PATH, options=options
+                )
             else:
                 self.driver = webdriver.Chrome(options=options)
         self.browser = Browser(self.driver)
@@ -85,6 +91,11 @@ class Crawler:
 
         # ログイン
         self.browser.click('//*[@id="login_button"]')
+
+        # ログイン成功したか確認
+        url = self.browser.get_url()
+        if url == TOP_URL:
+            raise Exception("login failed")
 
         # ソースを取得
         page_source = self.browser.source()
