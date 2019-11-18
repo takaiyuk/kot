@@ -10,19 +10,19 @@ class Scraper:
     def __init__(self):
         self.soup = None
 
-    def clean_text(self, x):
+    def _clean_text(self, x):
         x = x.replace("\n", "")
         x = x.strip()
         return x
-
-    def str_to_int(self, string):
-        return int(float(string))
 
     def _hour_to_minute(self, hours):
         return round(hours // 1.0 * 60 + hours % 1.0 * 100)
 
     def _minute_to_hour(self, minutes):
         return minutes // 60 + round(minutes % 60 / 100, 2)
+
+    def _str_to_int(self, string):
+        return int(float(string))
 
     def calc_monthly_work_hour(self, monthly_work_count):
         return WORK_HOUR * monthly_work_count
@@ -50,31 +50,31 @@ class Scraper:
         work_day_types = []
         for i in range(31):
             try:
-                work_day_type = self.clean_text(
+                work_day_type = self._clean_text(
                     self.soup.find_all("td", class_="work_day_type")[i].p.string
                 )
                 work_day_types.append(work_day_type)
             except IndexError:
                 break
         c = Counter(work_day_types)
-        monthly_work_count = self.str_to_int(c["平日"])
+        monthly_work_count = self._str_to_int(c["平日"])
         return monthly_work_count
 
     def get_work_count(self, yukyu_count):
         work_count = self.soup.find("div", class_="work_count").string
-        work_count = self.str_to_int(work_count)
+        work_count = self._str_to_int(work_count)
         work_count += yukyu_count
         return work_count
 
     def get_work_hour(self, yukyu_count):
-        work_hour = self.clean_text(self.soup.find("td", class_="custom2").string)
+        work_hour = self._clean_text(self.soup.find("td", class_="custom2").string)
         work_hour = float(work_hour)
         yukyu_hour = WORK_HOUR * yukyu_count
         work_hour += yukyu_hour
         return work_hour
 
     def get_today_work_start(self):
-        start_time_string = self.clean_text(
+        start_time_string = self._clean_text(
             self.soup.find_all("td", class_="start_end_timerecord specific-uncomplete")[
                 -2
             ].text
@@ -82,7 +82,9 @@ class Scraper:
         ic_place = start_time_string.find("IC")
         start_time_string = start_time_string[(ic_place + 2) : (ic_place + 7)]
         hhmm = start_time_string.split(":")
-        teiji_time_string = ":".join([str(int(hhmm[0]) + (WORK_HOUR + 1)), hhmm[1]])
+        teiji_time_string = ":".join(
+            [str(self._str_to_int(hhmm[0]) + (WORK_HOUR + 1)), hhmm[1]]
+        )
         return start_time_string, teiji_time_string
 
     def raw_data(self, html=None):
