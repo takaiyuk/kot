@@ -161,7 +161,7 @@ class Scraper:
         # 当日の出勤打刻時間
         try:
             start_time, teiji_time = self.get_today_work_start()
-        except IndexError:
+        except Exception:
             print("打刻しましたか？退勤後なら問題ないですが")
             start_time, teiji_time = None, None
 
