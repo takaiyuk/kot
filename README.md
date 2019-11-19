@@ -24,7 +24,7 @@ git clone https://github.com/takaiyuk/scrape-king-of-time.git
 cd scrape-king-of-time
 cp config.py.example config.py  # config.py に自分の King of Time の ID/PW 等を入力する
 docker build -t scrape-king-of-time .
-docker run -it --rm scrape-king-of-time
+docker run -v "${PWD}":/scrape_kot -v "${PWD}":/scrape_kot/drivers  -it --rm scrape-king-of-time run.py
 ```
 
 - Output example

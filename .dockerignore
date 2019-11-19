@@ -1,5 +1,6 @@
 Dockerfile
 README.md
+config.py
 config.py.example
 docs
 deploy_package  
