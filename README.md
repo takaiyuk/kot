@@ -78,13 +78,14 @@ docker run -v "${PWD}":/var/task -it --rm scrape-king-of-time
 
 実行後生成された `deploy_package.zip` を S3 に配置し、Lambda 関数を適切に設定する
 
-**注意！： `deploy_package.zip` は重要な情報（King of Time の ID/Password）を含むためアップロードする S3 は「確実に」プライベートな AWS アカウントを利用することを確認する**
+**注意！： `deploy_package.zip` は重要な情報（King of Time の ID/Password）を含むためアップロードする S3 は確実にプライベートな AWS アカウントであることを確認する**
 
 <br>
 
 ## How to install docker
 
-[Docker for Mac](https://hub.docker.com/editions/community/docker-ce-desktop-mac) をダウンロードする。ダウンロードするためにはアカウント作成が必要です。（不明な場合は[こちらの記事](https://qiita.com/kurkuru/items/127fa99ef5b2f0288b81#docker-for-mac%E3%82%92%E3%82%A4%E3%83%B3%E3%82%B9%E3%83%88%E3%83%BC%E3%83%AB-package)を参考に Docker for Mac をダウンロードしてください）
+（不明な場合は[こちらの記事](https://qiita.com/kurkuru/items/127fa99ef5b2f0288b81#docker-for-mac%E3%82%92%E3%82%A4%E3%83%B3%E3%82%B9%E3%83%88%E3%83%BC%E3%83%AB-package)等を参考にする）
 
-ダウンロード・インストールが完了したら、Docker for Mac を起動してください。
-ステータスバーにクジラのアイコンが出るので、先程作成した Docker の ID/Password でサインインしてください。
+1. [Docker for Mac](https://hub.docker.com/editions/community/docker-ce-desktop-mac) をダウンロードする（ダウンロードにはアカウント作成が必要）
+2. ダウンロード・インストールが完了したら、Docker for Mac を起動する
+3. ステータスバーにクジラのアイコンが出るので、先程作成した Docker の ID/Password でサインインする
