@@ -159,17 +159,21 @@ class Scraper:
         saveing_time = self.calc_saving_time(work_hours, work_count)
 
         # 当日の出勤打刻時間
-        start_time, teiji_time = self.get_today_work_start()
+        try:
+            start_time, teiji_time = self.get_today_work_start()
+        except IndexError:
+            print("打刻しましたか？退勤後なら問題ないですが")
+            start_time, teiji_time = None, None
 
         return {
             "work_count_remain": work_count_remain,
             "work_count": work_count,
             "monthly_work_count": monthly_work_count,
-            "work_hour_remain": work_hours_remain,
-            "work_hour": work_hours,
-            "monthly_work_hour": monthly_work_hours,
+            "work_hours_remain": work_hours_remain,
+            "work_hours": work_hours,
+            "monthly_work_hours": monthly_work_hours,
             "saveing_time": saveing_time,
-            "work_hour_remain_by_day": work_hours_remain_by_day,
+            "work_hours_remain_by_day": work_hours_remain_by_day,
             "start_time": start_time,
             "teiji_time": teiji_time,
         }

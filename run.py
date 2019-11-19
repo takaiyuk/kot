@@ -15,11 +15,11 @@ def console(params):
         """
     残り{work_count_remain}営業日: ({work_count}/{monthly_work_count} 日)
 
-    あと{work_hour_remain:.2f}h必要: ({work_hour}/{monthly_work_hour}h)
+    あと{work_hours_remain:.2f}h必要: ({work_hours}/{monthly_work_hours}h)
 
     貯金: {saveing_time:.2f}h
 
-    貯金を元に残り営業日の必要勤務時間数を算出すると: {work_hour_remain_by_day:.2f}h
+    貯金を元に残り営業日の必要勤務時間数を算出すると: {work_hours_remain_by_day:.2f}h
 
     {today:%Y-%m-%d}の出勤・定時
         出勤: {start_time}
