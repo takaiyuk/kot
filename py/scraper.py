@@ -108,11 +108,8 @@ class Scraper:
         return work_count
 
     def get_work_hour(self):
-        work_hour = self._clean_text(self.soup.find("td", class_="custom2").string)
-        work_hour = float(work_hour)
-        yukyu_hour = WORK_HOUR * self.holiday_count
-        work_hour += yukyu_hour
-        return work_hour
+        work_hour = self._clean_text(self.soup.find("td", class_="custom3").string)
+        return float(work_hour)
 
     def get_today_work_start(self):
         start_time_string = self._clean_text(
