@@ -4,3 +4,4 @@ __pycache__
 py/__pycache__
 deploy_package/*
 !deploy_package/Dockerfile
+*.html
