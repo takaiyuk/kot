@@ -1,10 +1,10 @@
 # scrape-king-of-time
 
-## What is This?
+## これは何か？
 
 King of Time をスクレイピングして、 勤務時間の貯金等を計算＆通知してくれる君
 
-## How to Use?
+## 使い方
 
 ### Run with Docker
 
@@ -19,19 +19,19 @@ cp config.py.example config.py  # config.py に自分の King of Time の ID/PW 
 docker run -v "${PWD}":/scrape_kot -v "${PWD}":/scrape_kot/drivers -it --rm takaiyuk/scrape-kot run.py
 ```
 
-- Output example
+出力イメージ
 
 ![Slack Notify Image](https://github.com/takaiyuk/scrape-king-of-time/blob/master/docs/source/_static/img/slack-notify-message-image.png)
 
 <br>
 
-If you do not want to notify on slack channel, you can make the result output only on your console with `console` command:
+Slack チャンネルに通知させたくない場合は `console` コマンドをつけて実行することで自身のコンソール上のみに出力させることできる
 
 ```
 docker run -v "${PWD}":/scrape_kot -v "${PWD}":/scrape_kot/drivers -it --rm takaiyuk/scrape-kot run.py console
 ```
 
-- Output example
+出力イメージ
 
 ```
     残り12営業日: (8/20 日)
@@ -51,7 +51,7 @@ docker run -v "${PWD}":/scrape_kot -v "${PWD}":/scrape_kot/drivers -it --rm taka
 
 ### Run on Local
 
-You can run without docker. Python 3.6 or later are required.
+Docker を利用せずにローカル実行もできる（その場合 Python 3.6 以降が必須）
 
 ```
 git clone https://github.com/takaiyuk/scrape-king-of-time.git
@@ -66,7 +66,7 @@ python run.py  # slack に 通知させたくない場合は `python run.py cons
 
 ### Run on AWS Lambda
 
-Prepare lambda deploy package with docker
+Lambda デプロイパッケージを用意する
 
 ```
 python py/utils/lambda_prepare.py
@@ -76,9 +76,9 @@ docker build -t scrape-king-of-time .
 docker run -v "${PWD}":/var/task -it --rm scrape-king-of-time
 ```
 
-Place the created `deploy_package.zip` on S3 and set the Lambda function appropriately.
+実行後生成された `deploy_package.zip` を S3 に配置し、Lambda 関数を適切に設定する
 
-**Note: MAKE SURE to use your PRIVATE S3 accoount because `deploy_package.zip` includes very important information (ID and password for king-of-time).**
+**注意！： `deploy_package.zip` は重要な情報（King of Time の ID/Password）を含むためアップロードする S3 は「確実に」プライベートな AWS アカウントを利用することを確認する**
 
 <br>
 
