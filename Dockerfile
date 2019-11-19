@@ -9,9 +9,12 @@ COPY . .
 RUN apk add --update --no-cache\
   chromium \
   chromium-chromedriver \
+  tzdata \
   && pip install poetry \
   && poetry config settings.virtualenvs.create false \
-  && poetry install --no-interaction --no-ansi
+  && poetry install --no-interaction --no-ansi \
+  && cp /usr/share/zoneinfo/Asia/Tokyo /etc/localtime \
+  && apk del tzdata
 
 ENTRYPOINT ["python"]
 CMD ["./run.py"]
