@@ -13,6 +13,7 @@ class Scraper:
 
     def _clean_text(self, x):
         x = x.replace("\n", "")
+        x = x.replace(" ", "")
         x = x.strip()
         return x
 
