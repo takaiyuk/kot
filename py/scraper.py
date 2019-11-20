@@ -162,7 +162,7 @@ class Scraper:
             print("打刻しましたか？退勤後なら問題ないですが")
             start_time, teiji_time = None, None
 
-        return {
+        results = {
             "work_count_remain": work_count_remain,
             "work_count": work_count,
             "monthly_work_count": monthly_work_count,
@@ -175,8 +175,10 @@ class Scraper:
             "teiji_time": teiji_time,
         }
 
+        return (results, saveing_time)
+
     def run(self, html=None):
-        values = self.raw_data(html=html)
+        values, saveing_time = self.raw_data(html=html)
 
         message1, message2, message3, message4, message5, message6 = [
             x.format(**values)
@@ -193,4 +195,4 @@ class Scraper:
         for message in [message1, message2, message3, message4, message5, message6]:
             print(message)
 
-        return [message5, message6, message3]
+        return [message5, message6, message3], saveing_time

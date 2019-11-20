@@ -10,7 +10,7 @@ from py.notifyer import notify
 
 def console(params):
     src = Crawler(params).get_source()
-    dct = Scraper().raw_data(src)
+    dct, saveing_time = Scraper().raw_data(src)
     print(
         """
     残り{work_count_remain}営業日: ({work_count}/{monthly_work_count} 日)
@@ -33,15 +33,15 @@ def console(params):
 def notify_to_slack(params):
     try:
         page_source = Crawler(params).get_source()
-        messages = Scraper().run(page_source)
+        messages, saveing_time = Scraper().run(page_source)
         dt_now = datetime.now()
         title = f"{dt_now.year}/{dt_now.month}/{dt_now.day}"
-        notify(title, "\n".join(messages))
+        notify(title, "\n".join(messages), saveing_time)
     except Exception as e:
         # 打刻ない時に要素を取得できずエラー発生する
         t, v, tb = sys.exc_info()
         x = traceback.format_exception(t, v, tb)
-        notify("error", f"error occurred: {''.join(x)}")
+        notify("error", f"error occurred: {''.join(x)}", "")
         raise e
 
 
