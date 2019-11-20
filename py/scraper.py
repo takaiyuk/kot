@@ -183,12 +183,12 @@ class Scraper:
         message1, message2, message3, message4, message5, message6 = [
             x.format(**values)
             for x in (
-                "REMAIN-DAYS={work_count_remain}days(done={work_count}/{monthly_work_count})",
-                "REMAIN-HOURS={work_hours_remain:.2f}h(done={work_hours}/{monthly_work_hours})",
-                ":bank:--{saveing_time:.2f}h",
-                "REMAIN-HOURS-BY-DAY={work_hours_remain_by_day:.2f}h",
-                ":shigyou:--{start_time}",
-                ":teiji:--{teiji_time}",
+                "残り営業日\t{work_count_remain}days(done={work_count}/{monthly_work_count})",
+                "残り必要時間\t{work_hours_remain:.2f}h(done={work_hours}/{monthly_work_hours})",
+                ":bank:\t{saveing_time:.2f}h",
+                "1日あたりの残り必要時間\t{work_hours_remain_by_day:.2f}h",
+                ":shigyou:\t{start_time}",
+                ":teiji:\t{teiji_time}",
             )
         ]
 
