@@ -51,39 +51,39 @@ class Scraper:
     def get_holiday_count(self):
         holiday_counts = self.soup.find_all("div", class_="holiday_count")
         # 有給
-        self.holiday_count += self._str_to_int(
+        self.holiday_count += float(
             self._clean_text(holiday_counts[0].text).split("(")[0]
         )
         # 代休
-        self.holiday_count += self._str_to_int(
+        self.holiday_count += float(
             self._clean_text(holiday_counts[1].text).split("(")[0]
         )
         # 夏季休暇
-        self.holiday_count += self._str_to_int(
+        self.holiday_count += float(
             self._clean_text(holiday_counts[3].text).split("(")[0]
         )
         # 特別休暇
-        self.holiday_count += self._str_to_int(
+        self.holiday_count += float(
             self._clean_text(holiday_counts[4].text).split("/")[0]
         )
         # 年末年始休暇
-        self.holiday_count += self._str_to_int(self._clean_text(holiday_counts[5].text))
+        self.holiday_count += float(self._clean_text(holiday_counts[5].text))
         # 輪番休暇
-        self.holiday_count += self._str_to_int(
+        self.holiday_count += float(
             self._clean_text(holiday_counts[6].text).split("(")[0]
         )
         # 産休・育休
-        self.holiday_count += self._str_to_int(self._clean_text(holiday_counts[7].text))
+        self.holiday_count += float(self._clean_text(holiday_counts[7].text))
         # 代休（土曜日・祝日）
-        self.holiday_count += self._str_to_int(
+        self.holiday_count += float(
             self._clean_text(holiday_counts[8].text).split("(")[0]
         )
         # 代休（日曜日）
-        self.holiday_count += self._str_to_int(
+        self.holiday_count += float(
             self._clean_text(holiday_counts[9].text).split("(")[0]
         )
         # 特別輪番休暇
-        self.holiday_count += self._str_to_int(
+        self.holiday_count += float(
             self._clean_text(holiday_counts[10].text).split("(")[0]
         )
 
@@ -103,16 +103,13 @@ class Scraper:
 
     def get_work_count(self):
         work_count = self.soup.find("div", class_="work_count").string
-        work_count = self._str_to_int(work_count)
+        work_count = float(work_count)
         work_count += self.holiday_count
         return work_count
 
     def get_work_hour(self):
-        work_hour = self._clean_text(self.soup.find("td", class_="custom2").string)
-        work_hour = float(work_hour)
-        yukyu_hour = WORK_HOUR * self.holiday_count
-        work_hour += yukyu_hour
-        return work_hour
+        work_hour = self._clean_text(self.soup.find("td", class_="custom3").string)
+        return float(work_hour)
 
     def get_today_work_start(self):
         start_time_string = self._clean_text(
