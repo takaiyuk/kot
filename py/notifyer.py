@@ -8,10 +8,10 @@ from config import NOTIFY_CHANNEL, WEBHOOK_URL
 from py.const import COLOR_RED, COLOR_YELLOW, COLOR_GREEN
 
 
-def notify(title, message, saveing_time):
-    if saveing_time < 0:
+def notify(title, message, saving_time):
+    if saving_time < 0:
         color = COLOR_RED
-    elif saveing_time < 1:
+    elif saving_time < 1:
         color = COLOR_YELLOW
     else:
         color = COLOR_GREEN

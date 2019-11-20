@@ -153,7 +153,7 @@ class Scraper:
         )
 
         # 暫定残業時間を計算
-        saveing_time = self.calc_saving_time(work_hours, work_count)
+        saving_time = self.calc_saving_time(work_hours, work_count)
 
         # 当日の出勤打刻時間
         try:
@@ -169,23 +169,23 @@ class Scraper:
             "work_hours_remain": work_hours_remain,
             "work_hours": work_hours,
             "monthly_work_hours": monthly_work_hours,
-            "saveing_time": saveing_time,
+            "saving_time": saving_time,
             "work_hours_remain_by_day": work_hours_remain_by_day,
             "start_time": start_time,
             "teiji_time": teiji_time,
         }
 
-        return (results, saveing_time)
+        return (results, saving_time)
 
     def run(self, html=None):
-        values, saveing_time = self.raw_data(html=html)
+        values, saving_time = self.raw_data(html=html)
 
         message1, message2, message3, message4, message5, message6 = [
             x.format(**values)
             for x in (
                 "残り営業日\t{work_count_remain}days(done={work_count}/{monthly_work_count})",
                 "残り必要時間\t{work_hours_remain:.2f}h(done={work_hours}/{monthly_work_hours})",
-                ":bank:\t{saveing_time:.2f}h",
+                ":bank:\t{saving_time:.2f}h",
                 "1日あたりの残り必要時間\t{work_hours_remain_by_day:.2f}h",
                 ":shigyou:\t{start_time}",
                 ":teiji:\t{teiji_time}",
@@ -195,4 +195,4 @@ class Scraper:
         for message in [message1, message2, message3, message4, message5, message6]:
             print(message)
 
-        return [message5, message6, message3], saveing_time
+        return [message5, message6, message3], saving_time
