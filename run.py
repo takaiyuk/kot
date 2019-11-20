@@ -41,7 +41,7 @@ def notify_to_slack(params):
         # 打刻ない時に要素を取得できずエラー発生する
         t, v, tb = sys.exc_info()
         x = traceback.format_exception(t, v, tb)
-        notify("error", f"error occurred: {''.join(x)}", "")
+        notify("error", f"error occurred: {''.join(x)}", 0)
         raise e
 
 
