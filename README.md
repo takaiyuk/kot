@@ -70,10 +70,10 @@ Lambda デプロイパッケージを用意する
 
 ```
 python py/utils/lambda_prepare.py
-rsync -ar ./* ./deploy_package --exclude 'deploy_package' --exclude 'drivers/chromedriver'
+rsync -ar ./* ./deploy_package --exclude 'deploy_package' --exclude 'drivers/chromedriver' --exclude 'Dockerfile'
 cd deploy_package
-docker build -t scrape-king-of-time .
-docker run -v "${PWD}":/var/task -it --rm scrape-king-of-time
+docker build -t scrape-kot-lambda .
+docker run -v "${PWD}":/var/task -it --rm scrape-kot-lambda
 ```
 
 実行後生成された `deploy_package.zip` を S3 に配置し、Lambda 関数を適切に設定する
