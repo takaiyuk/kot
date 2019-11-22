@@ -46,7 +46,8 @@ class Scraper:
         return remain_hours_by_day
 
     def calc_saving_time(self, work_hour, work_count):
-        return work_hour - WORK_HOUR * work_count
+        # work_hourは実労働時間でwork_countは実労働日数+休暇なので、休暇分は減らす
+        return work_hour - WORK_HOUR * (work_count - self.holiday_count)
 
     def get_holiday_count(self):
         holiday_counts = self.soup.find_all("div", class_="holiday_count")
