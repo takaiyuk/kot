@@ -16,7 +16,7 @@ Docker がインストールされてない場合は、[こちら](https://githu
 git clone https://github.com/takaiyuk/scrape-king-of-time.git
 cd scrape-king-of-time
 cp config.py.example config.py  # config.py に自分の King of Time の ID/PW 等を入力する
-docker run -v "${PWD}":/scrape_kot -v "${PWD}":/scrape_kot/drivers -it --rm takaiyuk/scrape-kot run.py
+./notify.sh
 ```
 
 出力イメージ
@@ -28,7 +28,7 @@ docker run -v "${PWD}":/scrape_kot -v "${PWD}":/scrape_kot/drivers -it --rm taka
 Slack チャンネルに通知させたくない場合は `console` コマンドをつけて実行することで自身のコンソール上のみに出力させることできる
 
 ```
-docker run -v "${PWD}":/scrape_kot -v "${PWD}":/scrape_kot/drivers -it --rm takaiyuk/scrape-kot run.py console
+./console.sh
 ```
 
 出力イメージ
