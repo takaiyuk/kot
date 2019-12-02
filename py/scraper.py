@@ -1,6 +1,6 @@
 # Import
-from collections import Counter
 from bs4 import BeautifulSoup
+from collections import Counter
 
 from .const import WORK_HOUR
 from .crawler import Crawler
@@ -26,8 +26,16 @@ class Scraper:
     def _str_to_int(self, string):
         return int(float(string))
 
-    def calc_monthly_work_hour(self, monthly_work_count):
-        return WORK_HOUR * monthly_work_count
+    def calc_monthly_work_hour(self):
+        monthly_work_hour = (
+            self.soup.find("table", class_="specific-table_800")
+            .find("tbody")
+            .find("tr")
+            .find("td")
+            .text
+        )
+        monthly_work_hour = self._clean_text(monthly_work_hour)
+        return float(monthly_work_hour)
 
     def calc_count_remain(self, monthly_work_count, work_count):
         return monthly_work_count - work_count
@@ -87,18 +95,8 @@ class Scraper:
             self._clean_text(holiday_counts[10].text).split("(")[0]
         )
 
-    def get_monthly_work_count(self):
-        work_day_types = []
-        for i in range(31):
-            try:
-                work_day_type = self._clean_text(
-                    self.soup.find_all("td", class_="work_day_type")[i].p.string
-                )
-                work_day_types.append(work_day_type)
-            except IndexError:
-                break
-        c = Counter(work_day_types)
-        monthly_work_count = self._str_to_int(c["平日"])
+    def get_monthly_work_count(self, monthly_work_hour):
+        monthly_work_count = monthly_work_hour / WORK_HOUR
         return monthly_work_count
 
     def get_work_count(self):
@@ -137,11 +135,11 @@ class Scraper:
         # 有給等の取得日数を取得
         self.get_holiday_count()
 
-        # 今月の必要勤務日を取得
-        monthly_work_count = self.get_monthly_work_count()
-
         # 今月の必要勤務時間を計算
-        monthly_work_hours = self.calc_monthly_work_hour(monthly_work_count)
+        monthly_work_hours = self.calc_monthly_work_hour()
+
+        # 今月の必要勤務日を取得
+        monthly_work_count = self.get_monthly_work_count(monthly_work_hours)
 
         # 前日までの勤務日数を取得
         work_count = self.get_work_count()
