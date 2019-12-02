@@ -109,7 +109,11 @@ class Scraper:
 
     def get_work_hour(self):
         work_hour = self._clean_text(self.soup.find("td", class_="custom3").string)
-        return float(work_hour)
+        try:
+            return float(work_hour)
+        except ValueError:
+            # 月初は前日までの勤務時間を取得できないので ValueError になる
+            return 0
 
     def get_today_work_start(self):
         start_time_string = self._clean_text(
