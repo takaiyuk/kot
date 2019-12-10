@@ -194,9 +194,9 @@ class Scraper:
             x.format(**values)
             for x in (
                 "残り営業日\t{work_count_remain}days(done={work_count}/{monthly_work_count})",
-                "残り必要時間\t{work_hours_remain:.2f}h(done={work_hours}/{monthly_work_hours})",
-                ":bank:\t{saving_time:.2f}h",
-                "1日あたりの残り必要時間\t{work_hours_remain_by_day:.2f}h",
+                "残り必要時間\t{work_hours_remain}(done={work_hours}/{monthly_work_hours})",
+                ":bank:\t{saving_time}",
+                "1日あたりの残り必要時間\t{work_hours_remain_by_day}",
                 ":shigyou:\t{start_time}",
                 ":teiji:\t{teiji_time}",
             )
