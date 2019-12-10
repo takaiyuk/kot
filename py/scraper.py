@@ -26,28 +26,36 @@ class Scraper:
     def _str_to_int(self, string):
         return int(float(string))
 
+    def _change_notation(self, str_time):
+        """
+        2.31 -> 2時間31分
+        """
+        str_time = str(str_time)
+        return f'{str_time.split(".")[0]}時間{str_time.split(".")[1]}分'
+
     def calc_monthly_work_count(self, monthly_work_hour):
         monthly_work_count = monthly_work_hour / WORK_HOUR
-        return monthly_work_count
+        return round(monthly_work_count, 2)
 
     def calc_count_remain(self, monthly_work_count, work_count):
-        return monthly_work_count - work_count
+        return round(monthly_work_count - work_count, 2)
 
     def calc_hour_remain(self, total_hours, finished_hours):
         total_minutes = self._hour_to_minute(total_hours)
         finished_minites = self._hour_to_minute(finished_hours)
         remain_minutes = total_minutes - finished_minites
         remain_hour = self._minute_to_hour(remain_minutes)
-        return remain_hour
+        return round(remain_hour, 2)
 
     def calc_hour_remain_by_day(self, remain_hours, remain_count):
         remain_minutes = self._hour_to_minute(remain_hours)
         remain_minutes_by_day = remain_minutes / remain_count
         remain_hours_by_day = self._minute_to_hour(remain_minutes_by_day)
-        return remain_hours_by_day
+        return round(remain_hours_by_day, 2)
 
     def calc_saving_time(self, work_hour, work_count):
-        return work_hour - WORK_HOUR * work_count
+        saving_time = work_hour - WORK_HOUR * work_count
+        return round(saving_time, 2)
 
     def get_holiday_count(self):
         holiday_counts = self.soup.find_all("div", class_="holiday_count")
@@ -168,11 +176,11 @@ class Scraper:
             "work_count_remain": work_count_remain,
             "work_count": work_count,
             "monthly_work_count": monthly_work_count,
-            "work_hours_remain": work_hours_remain,
-            "work_hours": work_hours,
-            "monthly_work_hours": monthly_work_hours,
-            "saving_time": saving_time,
-            "work_hours_remain_by_day": work_hours_remain_by_day,
+            "work_hours_remain": self._change_notation(work_hours_remain),
+            "work_hours": self._change_notation(work_hours),
+            "monthly_work_hours": self._change_notation(monthly_work_hours),
+            "saving_time": self._change_notation(saving_time),
+            "work_hours_remain_by_day": self._change_notation(work_hours_remain_by_day),
             "start_time": start_time,
             "teiji_time": teiji_time,
         }
