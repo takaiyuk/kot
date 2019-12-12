@@ -21,7 +21,7 @@ class Scraper:
         return round(hours // 1.0 * 60 + hours % 1.0 * 100)
 
     def _minute_to_hour(self, minutes):
-        return minutes // 60 + round(minutes % 60 / 100, 2)
+        return minutes // 60 + round(minutes % 60 / 60, 2)
 
     def _str_to_int(self, string):
         return int(float(string))
