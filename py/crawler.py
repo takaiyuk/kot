@@ -13,7 +13,6 @@ from .const import (
 )
 
 
-# Class
 class Browser:
     def __init__(self, driver):
         self.driver = driver
@@ -50,7 +49,7 @@ class Browser:
         return self.driver.page_source
 
 
-class Crawler:
+class Driver:
     def __init__(self, params):
         options = webdriver.ChromeOptions()
         options.add_argument("--headless")
@@ -78,6 +77,11 @@ class Crawler:
                 )
             else:
                 self.driver = webdriver.Chrome(options=options)
+
+
+class Crawler:
+    def __init__(self, params):
+        self.driver = Driver(params).driver
         self.browser = Browser(self.driver)
 
     def get_source(self):
