@@ -112,12 +112,6 @@ class Aggregator:
     def __init__(self):
         pass
 
-
-class Scraper:
-    def __init__(self):
-        self.soup = None
-        self.holiday_count = 0
-
     def _clean_text(self, x):
         x = x.replace("\n", "")
         x = x.replace(" ", "")
@@ -173,10 +167,7 @@ class Scraper:
         )
         return round(self._minute_to_hour(saving_time), 2)
 
-    def raw_data(self, html=None):
-        if html is None:
-            html = Crawler().get_source()
-
+    def aggregate(self):
         # 今月の必要勤務日を計算
         monthly_work_count = self.calc_monthly_work_count(monthly_work_hours)
 
@@ -189,6 +180,16 @@ class Scraper:
 
         # 暫定残業時間を計算
         saving_time = self.calc_saving_time(work_hours, work_count)
+
+
+class Scraper:
+    def __init__(self):
+        self.soup = None
+        self.holiday_count = 0
+
+    def raw_data(self, html=None):
+        if html is None:
+            html = Crawler().get_source()
 
         results = {
             "work_count_remain": work_count_remain,
