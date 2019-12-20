@@ -9,7 +9,12 @@ from .crawler import Crawler
 class Parser:
     def __init__(self, html: str) -> None:
         self.soup = BeautifulSoup(html, "html.parser")
-        self.holiday_count = 0
+        self.holiday_count = 0.0
+        self.monthly_work_hours = 0.0
+        self.your_work_hours = 0.0
+        self.your_work_count = 0.0
+        self.start_time = None
+        self.teiji_time = None
 
     def _str_to_int(self, string) -> int:
         return int(float(string))
@@ -97,25 +102,28 @@ class Parser:
         self.get_holiday_count()
 
         # 今月の必要勤務時間を取得
-        monthly_work_hours = self.get_monthly_work_hour()
-
-        # 前日までの勤務日数を取得
-        your_work_count = self.get_your_work_count()
+        self.monthly_work_hours = self.get_monthly_work_hour()
 
         # 前日までの勤務時間を取得
-        your_work_hours = self.get_your_work_hour()
+        self.your_work_hours = self.get_your_work_hour()
+
+        # 前日までの勤務日数を取得
+        self.your_work_count = self.get_your_work_count()
 
         # 当日の出勤打刻時間
         try:
-            start_time, teiji_time = self.get_today_kintai()
+            self.start_time, self.teiji_time = self.get_today_kintai()
         except Exception:
             print("打刻しましたか？退勤後なら問題ないですが")
-            start_time, teiji_time = None, None
 
 
 class Aggregator:
     def __init__(self) -> None:
-        pass
+        self.monthly_work_count = 0.0
+        self.your_work_hours_remain = 0.0
+        self.your_work_count_remain = 0.0
+        self.your_work_hours_remain_by_day = 0.0
+        self.saving_time = 0.0
 
     def _clean_text(self, x: str) -> str:
         x = x.replace("\n", "")
@@ -164,23 +172,27 @@ class Aggregator:
         )
         return round(self._minute_to_hour(saving_time), 2)
 
-    def aggregate(self):
+    def aggregate(self, parser: Parser):
         # 今月の必要勤務日を計算
-        monthly_work_count = self.calc_monthly_work_count(monthly_work_hours)
+        self.monthly_work_count = self.calc_monthly_work_count(
+            parser.monthly_work_hours
+        )
 
         # 残り日数と残り必要時間、1日あたりの必要時間を計算
-        your_work_count_remain = self.calc_count_remain(
-            monthly_work_count, your_work_count
+        self.your_work_hours_remain = self.calc_hour_remain(
+            parser.monthly_work_hours, parser.your_work_hours
         )
-        your_work_hours_remain = self.calc_hour_remain(
-            monthly_work_hours, your_work_hours
+        self.your_work_count_remain = self.calc_count_remain(
+            self.monthly_work_count, parser.your_work_count
         )
-        your_work_hours_remain_by_day = self.calc_hour_remain_by_day(
-            your_work_hours_remain, your_work_count_remain
+        self.your_work_hours_remain_by_day = self.calc_hour_remain_by_day(
+            self.your_work_hours_remain, self.your_work_count_remain
         )
 
         # 暫定残業時間を計算
-        saving_time = self.calc_saving_time(your_work_hours, your_work_count)
+        self.saving_time = self.calc_saving_time(
+            parser.your_work_hours, parser.your_work_count
+        )
 
 
 class Scraper:
@@ -198,21 +210,27 @@ class Scraper:
         return f'{str_time.split(".")[0]}時間{str_time.split(".")[1]}分'
 
     def raw_data(self):
+        self.parser.parse()
+        self.aggregator.aggregate(self.parser)
 
         results = {
-            "work_count_remain": work_count_remain,
-            "work_count": work_count,
-            "monthly_work_count": monthly_work_count,
-            "work_hours_remain": self._change_notation(work_hours_remain),
-            "work_hours": self._change_notation(work_hours),
-            "monthly_work_hours": self._change_notation(monthly_work_hours),
-            "saving_time": self._change_notation(saving_time),
-            "work_hours_remain_by_day": self._change_notation(work_hours_remain_by_day),
-            "start_time": start_time,
-            "teiji_time": teiji_time,
+            "work_count_remain": self.aggregator.your_work_count_remain,
+            "work_count": self.parser.your_work_count,
+            "monthly_work_count": self.aggregator.monthly_work_count,
+            "work_hours_remain": self._change_notation(
+                self.aggregator.your_work_hours_remain
+            ),
+            "work_hours": self._change_notation(self.parser.your_work_hours),
+            "monthly_work_hours": self._change_notation(self.parser.monthly_work_hours),
+            "saving_time": self._change_notation(self.aggregator.saving_time),
+            "work_hours_remain_by_day": self._change_notation(
+                self.aggregator.work_hours_remain_by_day
+            ),
+            "start_time": self.parser.start_time,
+            "teiji_time": self.parser.teiji_time,
         }
 
-        return (results, saving_time)
+        return (results, self.aggregator.saving_time)
 
     def run(self):
         values, saving_time = self.raw_data()
