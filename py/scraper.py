@@ -142,7 +142,14 @@ class Aggregator:
         hm = minutes // 60 + round(minutes % 60 / 100, 2)
         if is_minus:
             hm *= -1
-        return hm
+        return round(hm, 2)
+
+    def _diff_hours(self, h1: float, h2: float) -> float:
+        m1 = self._hour_to_minute(h1)
+        m2 = self._hour_to_minute(h2)
+        m_diff = m1 - m2
+        h_diff = self._minute_to_hour(m_diff)
+        return round(h_diff, 2)
 
     def calc_monthly_work_count(self, monthly_work_hour: float) -> float:
         monthly_work_count = monthly_work_hour / WORK_HOUR
@@ -152,11 +159,8 @@ class Aggregator:
         return round(monthly_work_count - work_count, 2)
 
     def calc_hour_remain(self, total_hours: float, finished_hours: float) -> float:
-        total_minutes = self._hour_to_minute(total_hours)
-        finished_minites = self._hour_to_minute(finished_hours)
-        remain_minutes = total_minutes - finished_minites
-        remain_hour = self._minute_to_hour(remain_minutes)
-        return round(remain_hour, 2)
+        remain_hour = self._diff_hours(total_hours, finished_hours)
+        return remain_hour
 
     def calc_hour_remain_by_day(
         self, remain_hours: float, remain_count: float
@@ -164,13 +168,11 @@ class Aggregator:
         remain_minutes = self._hour_to_minute(remain_hours)
         remain_minutes_by_day = remain_minutes / remain_count
         remain_hours_by_day = self._minute_to_hour(remain_minutes_by_day)
-        return round(remain_hours_by_day, 2)
+        return remain_hours_by_day
 
     def calc_saving_time(self, work_hour: float, work_count: float) -> float:
-        saving_time = self._hour_to_minute(work_hour) - self._hour_to_minute(
-            WORK_HOUR * work_count
-        )
-        return round(self._minute_to_hour(saving_time), 2)
+        saving_time = self._diff_hours(work_hour, WORK_HOUR * work_count)
+        return saving_time
 
     def aggregate(self, parser: Parser):
         # 今月の必要勤務日を計算
@@ -178,18 +180,22 @@ class Aggregator:
             parser.monthly_work_hours
         )
 
-        # 残り日数と残り必要時間、1日あたりの必要時間を計算
+        # 残り日数を計算
         self.your_work_hours_remain = self.calc_hour_remain(
             parser.monthly_work_hours, parser.your_work_hours
         )
+
+        # 残り必要時間を計算
         self.your_work_count_remain = self.calc_count_remain(
             self.monthly_work_count, parser.your_work_count
         )
+
+        # 1日あたりの必要時間を計算
         self.your_work_hours_remain_by_day = self.calc_hour_remain_by_day(
             self.your_work_hours_remain, self.your_work_count_remain
         )
 
-        # 暫定残業時間を計算
+        # 貯金時間を計算
         self.saving_time = self.calc_saving_time(
             parser.your_work_hours, parser.your_work_count
         )
