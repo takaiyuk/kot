@@ -6,4 +6,5 @@ deploy_package/*
 !deploy_package/Dockerfile
 *.html
 .mypy_cache/
+.DS_Store
 
