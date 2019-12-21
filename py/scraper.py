@@ -122,6 +122,7 @@ class Parser:
                 [str(self._str_to_int(hhmm[0]) + (WORK_HOUR + 1)), hhmm[1]]
             )
         except Exception:
+            start_time_string, teiji_time_string = None, None
             print("打刻しましたか？退勤後なら問題ないですが")
         finally:
             return start_time_string, teiji_time_string
