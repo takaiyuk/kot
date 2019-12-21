@@ -21,7 +21,14 @@ class Scraper:
         return round(hours // 1.0 * 60 + hours % 1.0 * 100)
 
     def _minute_to_hour(self, minutes):
-        return minutes // 60 + round(minutes % 60 / 100, 2)
+        is_minus = False
+        if minutes < 0:
+            is_minus = True
+            minutes *= -1
+        hm = minutes // 60 + round(minutes % 60 / 100, 2)
+        if is_minus:
+            hm *= -1
+        return hm
 
     def _str_to_int(self, string):
         return int(float(string))
@@ -54,8 +61,10 @@ class Scraper:
         return round(remain_hours_by_day, 2)
 
     def calc_saving_time(self, work_hour, work_count):
-        saving_time = work_hour - WORK_HOUR * work_count
-        return round(saving_time, 2)
+        saving_time = self._hour_to_minute(work_hour) - self._hour_to_minute(
+            WORK_HOUR * work_count
+        )
+        return round(self._minute_to_hour(saving_time), 2)
 
     def get_holiday_count(self):
         holiday_counts = self.soup.find_all("div", class_="holiday_count")
