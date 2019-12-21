@@ -17,9 +17,15 @@ class Parser:
         self.teiji_time = None
 
     def _str_to_int(self, string) -> int:
+        """
+        文字列(string)を離散値(int)に変更する
+        """
         return int(float(string))
 
     def get_holiday_count(self) -> None:
+        """
+        有給や半休等の日数を数え上げる
+        """
         holiday_counts = self.soup.find_all("div", class_="holiday_count")
         # 有給
         self.holiday_count += float(
@@ -59,6 +65,9 @@ class Parser:
         )
 
     def get_monthly_work_hour(self) -> float:
+        """
+        当月の必要総労働時間（営業日 * 8時間）を取得する
+        """
         monthly_work_hour = (
             self.soup.find("table", class_="specific-table_800")
             .find("tbody")
@@ -70,12 +79,18 @@ class Parser:
         return float(monthly_work_hour)
 
     def get_your_work_count(self) -> float:
+        """
+        ユーザーの打刻が発生した（即ち有給や半休等を除いた）労働日数を数え上げる
+        """
         your_work_count = self.soup.find("div", class_="work_count").string
         your_work_count = float(your_work_count)
         your_work_count += self.holiday_count
         return your_work_count
 
     def get_your_work_hour(self) -> float:
+        """
+        ユーザーの前日までの総労働時間（「フレ労働時間」）を取得する
+        """
         your_work_hour = self._clean_text(self.soup.find("td", class_="custom3").string)
         try:
             return float(your_work_hour)
@@ -84,6 +99,9 @@ class Parser:
             return 0.0
 
     def get_today_kintai(self) -> Tuple[str, str]:
+        """
+        ユーザーの当日の出勤打刻時間の取得と、8時間勤務した場合の退勤時間の計算を行う
+        """
         start_time_string = self._clean_text(
             self.soup.find_all("td", class_="start_end_timerecord specific-uncomplete")[
                 -2
@@ -145,6 +163,17 @@ class Aggregator:
         return round(hm, 2)
 
     def _diff_hours(self, h1: float, h2: float) -> float:
+        """
+        (ex.)
+        Parameters
+        ----------
+        h1: 18.45(=18h45m)
+        h2: 16.0(=16h00m)
+
+        Returns
+        -------
+        h1 - h2: 2.45(=2h45m)
+        """
         m1 = self._hour_to_minute(h1)
         m2 = self._hour_to_minute(h2)
         m_diff = m1 - m2
@@ -152,19 +181,31 @@ class Aggregator:
         return round(h_diff, 2)
 
     def calc_monthly_work_count(self, monthly_work_hour: float) -> float:
+        """
+        当月の営業日数を必要総労働時間から割り出す
+        """
         monthly_work_count = monthly_work_hour / WORK_HOUR
         return round(monthly_work_count, 2)
 
     def calc_count_remain(self, monthly_work_count: float, work_count: float) -> float:
+        """
+        当月の残り営業日数
+        """
         return round(monthly_work_count - work_count, 2)
 
     def calc_hour_remain(self, total_hours: float, finished_hours: float) -> float:
+        """
+        当月の残り必要勤務時間
+        """
         remain_hour = self._diff_hours(total_hours, finished_hours)
         return remain_hour
 
     def calc_hour_remain_by_day(
         self, remain_hours: float, remain_count: float
     ) -> float:
+        """
+        当月の1日あたりの残り必要勤務時間
+        """
         remain_minutes = self._hour_to_minute(remain_hours)
         remain_minutes_by_day = remain_minutes / remain_count
         remain_hours_by_day = self._minute_to_hour(remain_minutes_by_day)
@@ -215,7 +256,7 @@ class Scraper:
         str_time = str(str_time)
         return f'{str_time.split(".")[0]}時間{str_time.split(".")[1]}分'
 
-    def raw_data(self):
+    def raw_data(self) -> Tuple[dict, float]:
         self.parser.parse()
         self.aggregator.aggregate(self.parser)
 
@@ -238,7 +279,7 @@ class Scraper:
 
         return (results, self.aggregator.saving_time)
 
-    def run(self):
+    def run(self) -> Tuple[list, float]:
         values, saving_time = self.raw_data()
 
         message1, message2, message3, message4, message5, message6 = [
@@ -256,4 +297,6 @@ class Scraper:
         for message in [message1, message2, message3, message4, message5, message6]:
             print(message)
 
-        return [message5, message6, message3], saving_time
+        notify_messages = [message5, message6, message3]
+
+        return notify_messages, saving_time
