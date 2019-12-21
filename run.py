@@ -2,13 +2,14 @@ import argparse
 from datetime import datetime
 import traceback
 import sys
+from typing import Any
 
 from py.crawler import Crawler
 from py.scraper import Scraper
 from py.notifyer import notify
 
 
-def console(params):
+def console(params: argparse.Namespace) -> None:
     src = Crawler(params).get_source()
     dct, saving_time = Scraper().raw_data(src)
     print(
@@ -30,7 +31,7 @@ def console(params):
     )
 
 
-def notify_to_slack(params):
+def notify_to_slack(params: argparse.Namespace) -> None:
     try:
         page_source = Crawler(params).get_source()
         messages, saving_time = Scraper().run(page_source)
@@ -46,7 +47,7 @@ def notify_to_slack(params):
 
 
 # Function for lambda execution
-def main(event=None, context=None):
+def main(event: Any = None, context: Any = None) -> None:
     parser = argparse.ArgumentParser()
     parser.set_defaults(func=notify_to_slack)
 

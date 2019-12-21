@@ -16,7 +16,7 @@ class Parser:
         self.start_time = None
         self.teiji_time = None
 
-    def _str_to_int(self, string) -> int:
+    def _str_to_int(self, string: str) -> int:
         """
         文字列(string)を離散値(int)に変更する
         """
@@ -115,7 +115,7 @@ class Parser:
         )
         return start_time_string, teiji_time_string
 
-    def parse(self):
+    def parse(self) -> None:
         # 有給等の取得日数を取得
         self.get_holiday_count()
 
@@ -215,7 +215,7 @@ class Aggregator:
         saving_time = self._diff_hours(work_hour, WORK_HOUR * work_count)
         return saving_time
 
-    def aggregate(self, parser: Parser):
+    def aggregate(self, parser: Parser) -> None:
         # 今月の必要勤務日を計算
         self.monthly_work_count = self.calc_monthly_work_count(
             parser.monthly_work_hours
