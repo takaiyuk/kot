@@ -1,6 +1,6 @@
 # Import
 from bs4 import BeautifulSoup
-from typing import Tuple
+from typing import Any, Tuple
 
 from .const import WORK_HOUR
 from .crawler import Crawler
@@ -21,6 +21,12 @@ class Parser:
         文字列(string)を離散値(int)に変更する
         """
         return int(float(string))
+
+    def _clean_text(self, x: str) -> str:
+        x = x.replace("\n", "")
+        x = x.replace(" ", "")
+        x = x.strip()
+        return x
 
     def get_holiday_count(self) -> None:
         """
@@ -98,22 +104,27 @@ class Parser:
             # 月初は前日までの勤務時間を取得できないので ValueError になる
             return 0.0
 
-    def get_today_kintai(self) -> Tuple[str, str]:
+    def get_today_kintai(self) -> Tuple[Any, Any]:
         """
         ユーザーの当日の出勤打刻時間の取得と、8時間勤務した場合の退勤時間の計算を行う
         """
-        start_time_string = self._clean_text(
-            self.soup.find_all("td", class_="start_end_timerecord specific-uncomplete")[
-                -2
-            ].text
-        )
-        ic_place = start_time_string.find("IC")
-        start_time_string = start_time_string[(ic_place + 2) : (ic_place + 7)]
-        hhmm = start_time_string.split(":")
-        teiji_time_string = ":".join(
-            [str(self._str_to_int(hhmm[0]) + (WORK_HOUR + 1)), hhmm[1]]
-        )
-        return start_time_string, teiji_time_string
+        start_time_string, teiji_time_string = None, None
+        try:
+            start_time_string = self._clean_text(
+                self.soup.find_all(
+                    "td", class_="start_end_timerecord specific-uncomplete"
+                )[-2].text
+            )
+            ic_place = start_time_string.find("IC")
+            start_time_string = start_time_string[(ic_place + 2) : (ic_place + 7)]
+            hhmm = start_time_string.split(":")
+            teiji_time_string = ":".join(
+                [str(self._str_to_int(hhmm[0]) + (WORK_HOUR + 1)), hhmm[1]]
+            )
+        except Exception:
+            print("打刻しましたか？退勤後なら問題ないですが")
+        finally:
+            return start_time_string, teiji_time_string
 
     def parse(self) -> None:
         # 有給等の取得日数を取得
@@ -129,10 +140,7 @@ class Parser:
         self.your_work_count = self.get_your_work_count()
 
         # 当日の出勤打刻時間
-        try:
-            self.start_time, self.teiji_time = self.get_today_kintai()
-        except Exception:
-            print("打刻しましたか？退勤後なら問題ないですが")
+        self.start_time, self.teiji_time = self.get_today_kintai()
 
 
 class Aggregator:
@@ -143,16 +151,19 @@ class Aggregator:
         self.your_work_hours_remain_by_day = 0.0
         self.saving_time = 0.0
 
-    def _clean_text(self, x: str) -> str:
-        x = x.replace("\n", "")
-        x = x.replace(" ", "")
-        x = x.strip()
-        return x
-
     def _hour_to_minute(self, hours: float) -> float:
+        """
+        (ex.)
+        1.24(=1h24m) -> 84
+        """
         return round(hours // 1.0 * 60 + hours % 1.0 * 100)
 
     def _minute_to_hour(self, minutes: float) -> float:
+        """
+        (ex.)
+        84 -> 1.24(=1h24m)
+        -84 -> -1.24(=-1h24m)
+        """
         is_minus = False
         if minutes < 0:
             is_minus = True
@@ -243,13 +254,11 @@ class Aggregator:
 
 
 class Scraper:
-    def __init__(self, html: str = None) -> None:
-        if html is None:
-            html = Crawler().get_source()
+    def __init__(self, html) -> None:
         self.parser = Parser(html)
         self.aggregator = Aggregator()
 
-    def _change_notation(self, str_time: str) -> str:
+    def _change_notation(self, str_time: Any) -> str:
         """
         2.31 -> 2時間31分
         """
@@ -271,7 +280,7 @@ class Scraper:
             "monthly_work_hours": self._change_notation(self.parser.monthly_work_hours),
             "saving_time": self._change_notation(self.aggregator.saving_time),
             "work_hours_remain_by_day": self._change_notation(
-                self.aggregator.work_hours_remain_by_day
+                self.aggregator.your_work_hours_remain_by_day
             ),
             "start_time": self.parser.start_time,
             "teiji_time": self.parser.teiji_time,
@@ -279,7 +288,7 @@ class Scraper:
 
         return (results, self.aggregator.saving_time)
 
-    def run(self) -> Tuple[list, float]:
+    def scrape(self) -> Tuple[list, float]:
         values, saving_time = self.raw_data()
 
         message1, message2, message3, message4, message5, message6 = [
