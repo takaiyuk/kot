@@ -1,4 +1,5 @@
 # Import
+import argparse
 import random
 from selenium import webdriver
 import time
@@ -13,45 +14,44 @@ from .const import (
 )
 
 
-# Class
 class Browser:
-    def __init__(self, driver):
+    def __init__(self, driver: webdriver.Chrome) -> None:
         self.driver = driver
 
-    def _get_random(self, a=1, b=3):
+    def _get_random(self, a: int = 1, b: int = 3) -> float:
         return random.uniform(a, b)
 
-    def back(self):
+    def back(self) -> None:
         self.driver.back()
 
-    def click(self, xpath):
+    def click(self, xpath: str) -> None:
         self.driver.find_element_by_xpath(xpath).click()
 
-    def get(self, url):
+    def get(self, url: str) -> None:
         self.driver.get(url)
         ts = self._get_random(1, 1)
         time.sleep(ts)
 
-    def get_url(self):
+    def get_url(self) -> str:
         return self.driver.current_url
 
-    def save(self, filepath):
+    def save(self, filepath: str) -> None:
         html = self.driver.page_source
         with open(filepath, "w", encoding="utf-8") as f:
             f.write(html)
 
-    def scroll(self, height):
+    def scroll(self, height: int) -> None:
         self.driver.execute_script("window.scrollTo(0, " + str(height) + ");")
 
-    def send(self, xpath, strings):
-        self.driver.find_element_by_xpath(xpath).send_keys(strings)
+    def send(self, xpath: str, string: str) -> None:
+        self.driver.find_element_by_xpath(xpath).send_keys(string)
 
-    def source(self):
+    def source(self) -> str:
         return self.driver.page_source
 
 
-class Crawler:
-    def __init__(self, params):
+class Driver:
+    def __init__(self, params: argparse.Namespace) -> None:
         options = webdriver.ChromeOptions()
         options.add_argument("--headless")
         options.add_argument("--no-sandbox")
@@ -78,9 +78,14 @@ class Crawler:
                 )
             else:
                 self.driver = webdriver.Chrome(options=options)
+
+
+class Crawler:
+    def __init__(self, params: argparse.Namespace) -> None:
+        self.driver = Driver(params).driver
         self.browser = Browser(self.driver)
 
-    def get_source(self):
+    def get_source(self) -> str:
         # トップページ
         self.browser.get(TOP_URL)
 
