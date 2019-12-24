@@ -2,13 +2,13 @@
 from bs4 import BeautifulSoup
 from typing import Any, Tuple
 
-from .const import WORK_HOUR
-from .crawler import Crawler
+WORK_HOUR = 8
 
 
 class Parser:
     def __init__(self, html: str) -> None:
-        self.soup = BeautifulSoup(html, "html.parser")
+        if html is not None:
+            self.soup = BeautifulSoup(html, "html.parser")
         self.holiday_count = 0.0
         self.monthly_work_hours = 0.0
         self.your_work_hours = 0.0
@@ -122,6 +122,7 @@ class Parser:
                 [str(self._str_to_int(hhmm[0]) + (WORK_HOUR + 1)), hhmm[1]]
             )
         except Exception:
+            start_time_string, teiji_time_string = None, None
             print("打刻しましたか？退勤後なら問題ないですが")
         finally:
             return start_time_string, teiji_time_string
@@ -155,8 +156,16 @@ class Aggregator:
         """
         (ex.)
         1.24(=1h24m) -> 84
+        -1.24(=1h24m) -> -84
         """
-        return round(hours // 1.0 * 60 + hours % 1.0 * 100)
+        is_minus = False
+        if hours < 0:
+            is_minus = True
+            hours *= -1
+        minutes = round(hours // 1.0 * 60 + hours % 1.0 * 100)
+        if is_minus:
+            minutes *= -1
+        return round(minutes, 2)
 
     def _minute_to_hour(self, minutes: float) -> float:
         """
