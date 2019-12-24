@@ -16,6 +16,7 @@ Docker がインストールされてない場合は、[こちら](https://githu
 git clone https://github.com/takaiyuk/scrape-king-of-time.git
 cd scrape-king-of-time
 cp config.py.example config.py  # config.py に自分の King of Time の ID/PW 等を入力する
+docker pull takaiyuk/scrape-kot:latest
 ./notify.sh
 ```
 
