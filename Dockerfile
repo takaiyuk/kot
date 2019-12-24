@@ -6,15 +6,16 @@ WORKDIR $APP_HOME
 
 COPY . .
 
-RUN apk add --update --no-cache\
+RUN apk add --update --no-cache \
+  gcc musl-dev libffi-dev openssl-dev \
   chromium \
   chromium-chromedriver \
   tzdata \
   && pip install poetry \
-  && poetry config settings.virtualenvs.create false \
+  && poetry config virtualenvs.create false \
   && poetry install --no-interaction --no-ansi \
   && cp /usr/share/zoneinfo/Asia/Tokyo /etc/localtime \
-  && apk del tzdata
+  && apk del tzdata gcc musl-dev libffi-dev openssl-dev
 
 ENTRYPOINT ["python"]
 CMD ["./run.py"]
