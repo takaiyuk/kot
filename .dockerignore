@@ -1,7 +1,16 @@
 Dockerfile
+LICENSE
 README.md
 config.py
 config.py.example
 docs
 deploy_package  
 drivers
+htmls
+*.sh
+.DS_Store
+.git
+.gitignore
+.mypy_cache
+.pytest_cache
+__pycache__
