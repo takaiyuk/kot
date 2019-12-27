@@ -1,0 +1,16 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Build and push the Docker image
+      run: 
+        docker build . --file Dockerfile --tag takaiyuk/scrape-kot:$(date +%s)
+        docker push takaiyuk/scrape-kot
