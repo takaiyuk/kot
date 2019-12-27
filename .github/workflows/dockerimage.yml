@@ -10,7 +10,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
+    - name: Docker login
+      env:
+        DOCKER_USER: ${{ secrets.DOCKER_USERNAME }}
+        DOCKER_PASS: ${{ secrets.DOCKER_PASSWORD }}
+      run: docker login -u $DOCKER_USER -p $DOCKER_PASS
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag takaiyuk/scrape-kot:$(date +%s)
+      run: docker build . -t takaiyuk/scrape-kot:latest
     - name: Push the Docker image
-      run: docker push takaiyuk/scrape-kot
+      run: docker push takaiyuk/scrape-kot:latest
