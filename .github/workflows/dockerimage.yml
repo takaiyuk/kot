@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
-    - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag takaiyuk/scrape-kot:$(date +%s)
-    - name: Push the Docker image
-      run: docker push takaiyuk/scrape-kot
+    - name: Build and push the Docker image
+      run: 
+        docker build . --file Dockerfile --tag takaiyuk/scrape-kot:$(date +%s)
+        docker push takaiyuk/scrape-kot
