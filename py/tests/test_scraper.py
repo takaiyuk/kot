@@ -83,5 +83,23 @@ def test_scraper_change_notation():
     change_notation = Scraper(None)._change_notation("2.31")
     assert change_notation == "2時間31分"
 
+    change_notation = Scraper(None)._change_notation("2.5")
+    assert change_notation == "2時間50分"
+
+    change_notation = Scraper(None)._change_notation("2.50")
+    assert change_notation == "2時間50分"
+
+    change_notation = Scraper(None)._change_notation("2.05")
+    assert change_notation == "2時間05分"
+
     change_notation = Scraper(None)._change_notation("-2.31")
     assert change_notation == "-2時間31分"
+
+    change_notation = Scraper(None)._change_notation("-2.5")
+    assert change_notation == "-2時間50分"
+
+    change_notation = Scraper(None)._change_notation("-2.50")
+    assert change_notation == "-2時間50分"
+
+    change_notation = Scraper(None)._change_notation("-2.05")
+    assert change_notation == "-2時間05分"
