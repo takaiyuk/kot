@@ -1,4 +1,4 @@
 #!/bin/sh
 
-docker push takaiyuk/scrape-kot:latest
+docker push takaiyuk/scrape-kot
 
