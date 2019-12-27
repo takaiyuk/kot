@@ -270,9 +270,16 @@ class Scraper:
     def _change_notation(self, str_time: Any) -> str:
         """
         2.31 -> 2時間31分
+        2.5 -> 2時間50分
+        2.50 -> 2時間50分
         """
         str_time = str(str_time)
-        return f'{str_time.split(".")[0]}時間{str_time.split(".")[1]}分'
+        hh = str_time.split(".")[0]
+        mm = str_time.split(".")[1]
+        # 2.5 -> 2時間5分となってしまうのを回避する(本来は 2.5 = 2.50 -> 2時間50分なので)
+        if len(mm) == 1:
+            mm += "0"
+        return f"{hh}時間{mm}分"
 
     def raw_data(self) -> Tuple[dict, float]:
         self.parser.parse()
