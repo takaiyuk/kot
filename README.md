@@ -67,14 +67,12 @@ python run.py  # slack に 通知させたくない場合は `python run.py cons
 
 ### Run on AWS Lambda
 
-Lambda デプロイパッケージを用意する
+Lambda デプロイパッケージを用意する (cf. https://qiita.com/nabehide/items/754eb7b7e9fff9a1047d)
 
 ```
-python py/utils/lambda_prepare.py
-rsync -ar ./* ./deploy_package --exclude 'deploy_package' --exclude 'drivers/chromedriver' --exclude 'Dockerfile'
+./lambda_prepare.sh
 cd deploy_package
-docker build -t scrape-kot-lambda .
-docker run -v "${PWD}":/var/task -it --rm scrape-kot-lambda
+./lambda_build.sh
 ```
 
 実行後生成された `deploy_package.zip` を S3 に配置し、Lambda 関数を適切に設定する

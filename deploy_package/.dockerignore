@@ -1,0 +1,15 @@
+Dockerfile
+LICENSE
+README.md
+config.py.example
+docs
+deploy_package.zip
+drivers/chromedriver
+htmls
+*.sh
+.DS_Store
+.git
+.gitignore
+.mypy_cache
+.pytest_cache
+__pycache__
