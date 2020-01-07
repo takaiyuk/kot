@@ -16,7 +16,7 @@ Docker がインストールされてない場合は、[こちら](https://githu
 git clone https://github.com/takaiyuk/scrape-king-of-time.git
 cd scrape-king-of-time
 cp config.py.example config.py  # config.py に自分の King of Time の ID/PW 等を入力する
-docker pull takaiyuk/scrape-kot:latest
+./pull.sh
 ./notify.sh
 ```
 
@@ -88,3 +88,4 @@ cd deploy_package
 1. [Docker for Mac](https://hub.docker.com/editions/community/docker-ce-desktop-mac) をダウンロードする（ダウンロードにはアカウント作成が必要）
 2. ダウンロード・インストールが完了したら、Docker for Mac を起動する
 3. ステータスバーにクジラのアイコンが出るので、先程作成した Docker の ID/Password でサインインする
+
