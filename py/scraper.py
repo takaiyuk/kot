@@ -50,7 +50,8 @@ class Parser:
             self._clean_text(holiday_counts[4].text).split("/")[0]
         )
         # 年末年始休暇
-        self.holiday_count += float(self._clean_text(holiday_counts[5].text))
+        # 年末年始休暇は勤務日種別が法定休日なのでカウントしない
+        # self.holiday_count += float(self._clean_text(holiday_counts[5].text))
         # 輪番休暇
         self.holiday_count += float(
             self._clean_text(holiday_counts[6].text).split("(")[0]
