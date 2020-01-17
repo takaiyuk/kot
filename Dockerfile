@@ -1,7 +1,7 @@
 FROM python:3.8-alpine as builder
 COPY poetry.lock pyproject.toml ./
 # hadolint ignore=DL4006, SC2094
-RUN apk add --update --no-cache gcc=8.3.0-r0 musl-dev=1.1.22-r3 libffi-dev=3.2.1-r6 openssl-dev=1.1.1d-r2 tzdata=2019c-r0 \
+RUN apk add --update --no-cache gcc=9.2.0-r3 musl-dev=1.1.24-r0 libffi-dev=3.2.1-r6 openssl-dev=1.1.1d-r3 tzdata=2019c-r0 \
   && pip install poetry==1.0.2 \
   && poetry config virtualenvs.create false \
   && poetry install --no-interaction --no-ansi
