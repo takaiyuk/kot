@@ -14,8 +14,8 @@ ENV APP_HOME /scrape_kot
 WORKDIR $APP_HOME
 COPY . .
 RUN apk add --update --no-cache \
-  chromium=77.0.3865.120-r0 \
-  chromium-chromedriver=77.0.3865.120-r0
+  chromium=79.0.3945.88-r0 \
+  chromium-chromedriver=79.0.3945.88-r0
 
 ENTRYPOINT ["python"]
 CMD ["./run.py"]

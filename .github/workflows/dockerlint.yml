@@ -3,7 +3,7 @@ name: Dockerfile linter
 on: [push]
 
 jobs:
-  lint:
+  lint-and-build:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
@@ -16,3 +16,5 @@ jobs:
       run: docker pull hadolint/hadolint
     - name: Run hadolint
       run: docker run --rm -i hadolint/hadolint < Dockerfile
+    - name: Build
+      run: docker build . -t takaiyuk/scrape-kot:latest
