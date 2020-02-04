@@ -65,6 +65,8 @@ if __name__ == "__main__":
     parser.set_defaults(func=notify_to_slack)
 
     sub = parser.add_subparsers()
+    _notify = sub.add_parser("notify")
+    _notify.set_defaults(func=notify_to_slack)
     _console = sub.add_parser("console")
     _console.set_defaults(func=console)
 
