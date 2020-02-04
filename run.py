@@ -48,16 +48,22 @@ def notify_to_slack(params: argparse.Namespace) -> None:
 
 # Function for lambda execution
 def main(event: Any = None, context: Any = None) -> None:
-    parser = argparse.ArgumentParser()
-    parser.set_defaults(func=notify_to_slack)
+    try:
+        parser = argparse.ArgumentParser()
+        parser.set_defaults(func=notify_to_slack)
 
-    sub = parser.add_subparsers()
-    _console = sub.add_parser("console")
-    _console.set_defaults(func=console)
+        sub = parser.add_subparsers()
+        _console = sub.add_parser("console")
+        _console.set_defaults(func=console)
 
-    params = parser.parse_args()
-    params.lambda_deploy = True
-    params.func(params)
+        params = parser.parse_args()
+        params.lambda_deploy = True
+        params.func(params)
+    except Exception:
+        # 打刻ない時に要素を取得できずエラー発生するが通常終了させる
+        t, v, tb = sys.exc_info()
+        x = traceback.format_exception(t, v, tb)
+        notify("error", f"error occurred: {''.join(x)}", 0)
 
 
 if __name__ == "__main__":
