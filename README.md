@@ -86,8 +86,14 @@ cd deploy_package
 
 ブラウザから打刻できるやつ（My Recorder）で打刻をコマンドから行う
 
+- Docker
 ```
 ./myrecorder.sh ${CMD}
+```
+
+- python
+```
+./myrecorder-py.sh ${CMD}
 ```
 
 ${CMD} は以下の通り

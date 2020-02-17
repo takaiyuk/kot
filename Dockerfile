@@ -18,4 +18,3 @@ RUN apk add --update --no-cache \
   chromium-chromedriver=79.0.3945.130-r0
 
 ENTRYPOINT ["python"]
-CMD ["./run.py"]
