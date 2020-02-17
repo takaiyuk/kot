@@ -65,7 +65,7 @@ class Browser:
 class Driver:
     def __init__(self, params: argparse.Namespace = None) -> None:
         options = webdriver.ChromeOptions()
-        options.add_argument("--headless")
+        # options.add_argument("--headless")
         options.add_argument("--no-sandbox")
         if os.path.exists(DRIVER_PATH):
             self.driver = webdriver.Chrome(executable_path=DRIVER_PATH, options=options)
@@ -100,7 +100,7 @@ class Puncher:
         else:
             assert cmd in CMD_DICT.keys()
             xpath = CMD_DICT[cmd]
-            # self.browser.click(xpath)
+            self.browser.click(xpath)
             print(f"{CMD_NAME_DICT[cmd]}ボタンが押されました（多分）")
 
         # プロセス消す
