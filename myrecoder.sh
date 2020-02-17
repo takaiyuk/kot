@@ -5,4 +5,4 @@ if [ ! -f "$DIR/config.py" ]; then
   DIR=${PWD}
 fi
 
-docker run -v "${DIR}/config.py":/scrape_kot/config.py -v ${PWD}/my_recorder:/scrape_kot/my_recorder -it --rm takaiyuk/scrape-kot -m my_recorder.run -c "$1"
+docker run -v "${DIR}/config.py":/scrape_kot/config.py -it --rm takaiyuk/scrape-kot -m my_recorder.run -c "$1"
