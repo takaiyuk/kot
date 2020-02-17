@@ -2,6 +2,7 @@
 import argparse
 import random
 from selenium import webdriver
+from selenium.common.exceptions import NoSuchElementException
 import time
 import os
 
@@ -9,8 +10,8 @@ from config import YOUR_ID, YOUR_PW
 from .const import (
     DRIVER_PATH,
     TOP_URL,
-    AMAZONLINUX_CHROME_PATH,
-    AMAZONLINUX_DRIVER_PATH,
+    CMD_DICT,
+    CMD_NAME_DICT,
 )
 
 
@@ -51,33 +52,14 @@ class Browser:
 
 
 class Driver:
-    def __init__(self, params: argparse.Namespace) -> None:
+    def __init__(self, params: argparse.Namespace = None) -> None:
         options = webdriver.ChromeOptions()
         options.add_argument("--headless")
         options.add_argument("--no-sandbox")
-        if params.lambda_deploy is True:
-            options.binary_location = AMAZONLINUX_CHROME_PATH
-            options.add_argument("--disable-gpu")
-            options.add_argument("--window-size=1280x1696")
-            options.add_argument("--disable-application-cache")
-            options.add_argument("--disable-infobars")
-            options.add_argument("--no-sandbox")
-            options.add_argument("--hide-scrollbars")
-            options.add_argument("--enable-logging")
-            options.add_argument("--log-level=0")
-            options.add_argument("--single-process")
-            options.add_argument("--ignore-certificate-errors")
-            options.add_argument("--homedir=/tmp")
-            self.driver = webdriver.Chrome(
-                executable_path=AMAZONLINUX_DRIVER_PATH, options=options
-            )
+        if os.path.exists(DRIVER_PATH):
+            self.driver = webdriver.Chrome(executable_path=DRIVER_PATH, options=options)
         else:
-            if os.path.exists(DRIVER_PATH):
-                self.driver = webdriver.Chrome(
-                    executable_path=DRIVER_PATH, options=options
-                )
-            else:
-                self.driver = webdriver.Chrome(options=options)
+            self.driver = webdriver.Chrome(options=options)
 
 
 class Crawler:
@@ -85,26 +67,39 @@ class Crawler:
         self.driver = Driver(params).driver
         self.browser = Browser(self.driver)
 
-    def get_source(self) -> str:
+    def get_source(self) -> None:
         # トップページ
         self.browser.get(TOP_URL)
 
         # ID/PASS 入力
-        self.browser.send('//*[@id="login_id"]', YOUR_ID)
-        self.browser.send('//*[@id="login_password"]', YOUR_PW)
+
+        self.browser.send('//*[@id="id"]', YOUR_ID)
+        self.browser.send('//*[@id="password"]', YOUR_PW)
 
         # ログイン
-        self.browser.click('//*[@id="login_button"]')
+        self.browser.click('//*[@id="modal_window"]/div/div/div[3]/div/div')
 
         # ログイン成功したか確認
-        url = self.browser.get_url()
-        if url == TOP_URL:
+        try:
+            # ログイン成功していたらこの要素は存在していないはずなのでエラーを発生させる
+            self.browser.click('//*[@id="id"]')
             raise Exception("login failed")
+        except NoSuchElementException:
+            # ログイン成功時の想定通りのエラーなのでこのまま進める
+            pass
 
-        # ソースを取得
-        page_source = self.browser.source()
+        # 実行する
+        assert cmd in CMD_DICT.keys()
+        xpath = CMD_DICT[cmd]
+        self.browser.click(xpath)
 
         # プロセス消す
         self.driver.quit()
 
-        return page_source
+        f"{CMD_NAME_DICT[cmd]}のボタンが押されました（多分）"
+
+        return
+
+
+if __name__ == "__main__":
+    Crawler().get_source()
