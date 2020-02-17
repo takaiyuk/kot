@@ -82,6 +82,22 @@ cd deploy_package
 
 <br>
 
+## My Recorder
+
+ブラウザから打刻できるやつ（My Recorder）で打刻をコマンドから行う
+
+```
+./myrecorder.sh ${CMD}
+```
+
+${CMD} は以下の通り
+
+- `start`: 出勤
+- `end`: 退勤
+- `rest-start`: 休憩開始
+- `rest-end`: 休憩終了
+
+
 ## How to install docker
 
 （不明な場合は[こちらの記事](https://qiita.com/kurkuru/items/127fa99ef5b2f0288b81#docker-for-mac%E3%82%92%E3%82%A4%E3%83%B3%E3%82%B9%E3%83%88%E3%83%BC%E3%83%AB-package)等を参考にする）
