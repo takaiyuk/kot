@@ -1,18 +1,29 @@
 # Import
 import argparse
+import os
 import random
 from selenium import webdriver
-from selenium.common.exceptions import NoSuchElementException
 import time
-import os
 
 from config import YOUR_ID, YOUR_PW
-from .const import (
+from my_recorder.const import (
     DRIVER_PATH,
     TOP_URL,
     CMD_DICT,
     CMD_NAME_DICT,
 )
+
+
+parser = argparse.ArgumentParser("parser of command that define which botton to click")
+parser.add_argument(
+    "-c",
+    type=str,
+    required=True,
+    choices=["start", "end", "rest-start", "rest-end"],
+    help="command",
+)
+ns = parser.parse_args()
+cmd = vars(ns)["c"]
 
 
 class Browser:
@@ -63,7 +74,7 @@ class Driver:
 
 
 class Puncher:
-    def __init__(self, params: argparse.Namespace) -> None:
+    def __init__(self, params: argparse.Namespace = None) -> None:
         self.driver = Driver(params).driver
         self.browser = Browser(self.driver)
 
@@ -78,24 +89,22 @@ class Puncher:
         # ログイン
         self.browser.click('//*[@id="modal_window"]/div/div/div[3]/div/div')
 
-        # ログイン成功したか確認
-        try:
-            # ログイン成功していたらこの要素は存在していないはずなのでエラーを発生させる
-            self.browser.click('//*[@id="id"]')
-            raise Exception("login failed")
-        except NoSuchElementException:
-            # ログイン成功時の想定通りのエラーなのでこのまま進める
-            pass
+        # TODO: ログイン成功したか確認
+        # 何かしらの方法で確認する：ヘッドレスにせず目視...?
+        # 成功時もURLの遷移なし・失敗時もモーダルが出るだけなのでseleniumでのログインの成否判断が難しい
 
         # 実行する
-        assert cmd in CMD_DICT.keys()
-        xpath = CMD_DICT[cmd]
-        self.browser.click(xpath)
+        val = input(f"{CMD_NAME_DICT[cmd]}ボタンを押していいですか？[y/n]: ")
+        if val != "y":
+            print(f"{CMD_NAME_DICT[cmd]}ボタンはスキップしました")
+        else:
+            assert cmd in CMD_DICT.keys()
+            xpath = CMD_DICT[cmd]
+            # self.browser.click(xpath)
+            print(f"{CMD_NAME_DICT[cmd]}ボタンが押されました（多分）")
 
         # プロセス消す
         self.driver.quit()
-
-        f"{CMD_NAME_DICT[cmd]}のボタンが押されました（多分）"
 
         return
 

@@ -9,4 +9,3 @@ deploy_package/*
 *.html
 .mypy_cache/
 .DS_Store
-
