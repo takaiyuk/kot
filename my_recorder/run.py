@@ -41,7 +41,7 @@ class Browser:
 
     def get(self, url: str) -> None:
         self.driver.get(url)
-        ts = self._get_random(1, 1)
+        ts = self._get_random(2, 3)
         time.sleep(ts)
 
     def get_url(self) -> str:
