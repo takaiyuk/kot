@@ -62,17 +62,16 @@ class Driver:
             self.driver = webdriver.Chrome(options=options)
 
 
-class Crawler:
+class Puncher:
     def __init__(self, params: argparse.Namespace) -> None:
         self.driver = Driver(params).driver
         self.browser = Browser(self.driver)
 
-    def get_source(self) -> None:
+    def click(self) -> None:
         # トップページ
         self.browser.get(TOP_URL)
 
         # ID/PASS 入力
-
         self.browser.send('//*[@id="id"]', YOUR_ID)
         self.browser.send('//*[@id="password"]', YOUR_PW)
 
@@ -102,4 +101,4 @@ class Crawler:
 
 
 if __name__ == "__main__":
-    Crawler().get_source()
+    Puncher().click()
