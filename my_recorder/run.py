@@ -65,8 +65,10 @@ class Browser:
 class Driver:
     def __init__(self, params: argparse.Namespace = None) -> None:
         options = webdriver.ChromeOptions()
-        # options.add_argument("--headless")
+        options.add_argument("--headless")
         options.add_argument("--no-sandbox")
+        options.add_argument("--disable-gpu")
+        options.add_argument("--window-size=1280x1696")
         if os.path.exists(DRIVER_PATH):
             self.driver = webdriver.Chrome(executable_path=DRIVER_PATH, options=options)
         else:
