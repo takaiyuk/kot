@@ -86,16 +86,16 @@ cd deploy_package
 
 ブラウザから打刻できるやつ（My Recorder）で打刻をコマンドから行う
 
-**挙動が不明な箇所が多いので、最初のうちはブラウザの挙動が確認できる一番目の方法で行うことを推奨**
-
-- python
-```
-python -m my_recorder.run -c ${CMD}
-```
+**挙動が不明な箇所が多いので、最初のうちは随時打刻できているか確認することを推奨**
 
 - Docker
 ```
 ./myrecorder.sh ${CMD}
+```
+
+- python
+```
+python -m my_recorder.run -c ${CMD}
 ```
 
 ${CMD} は以下の通り
