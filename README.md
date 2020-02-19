@@ -105,6 +105,18 @@ ${CMD} は以下の通り
 - `rest-start`: 休憩開始
 - `rest-end`: 休憩終了
 
+また `-y` オプションでプロンプトをスキップして実行可能
+
+- Docker
+```
+./myrecorder.sh ${CMD} -y
+```
+
+- python
+```
+python -m my_recorder.run -c ${CMD} -y
+```
+
 <br>
 
 ## How to install docker
