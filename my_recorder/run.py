@@ -23,11 +23,11 @@ parser.add_argument(
     help="command",
 )
 parser.add_argument(
-    "-y", type=bool, required=False, action="store_true", help="yes option",
+    "-y", required=False, action="store_true", help="yes option",
 )
 arguments = parser.parse_args()
 cmd = vars(arguments)["c"]
-yes = vars(arguments)["c"]
+yes = vars(arguments)["y"]
 
 
 class Browser:
