@@ -4,18 +4,35 @@ on:
   push:
     branches:
       - master
+      - develop
+
+env:
+  IMAGE_NAME: scrape-kot
 
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v1
-    - name: Docker login
-      env:
-        DOCKER_USER: ${{ secrets.DOCKER_USERNAME }}
-        DOCKER_PASS: ${{ secrets.DOCKER_PASSWORD }}
-      run: docker login -u $DOCKER_USER -p $DOCKER_PASS
-    - name: Build the Docker image
-      run: docker build . -t takaiyuk/scrape-kot:latest
-    - name: Push the Docker image
-      run: docker push takaiyuk/scrape-kot:latest
+    - uses: actions/checkout@v2
+    - name: Build image
+      run: docker build . -t image
+    - name: Log into registry
+      run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u ${{ github.actor }} --password-stdin
+    - name: Push image
+      run: |
+        IMAGE_ID=${{ github.actor }}/$IMAGE_NAME
+
+        # Strip git ref prefix from version
+        IMAGE_TAG=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
+
+        # Strip "-" from tag name
+        # IMAGE_TAG=$(echo $IMAGE_TAG | sed -e 's/-//g -e 's/_//g')
+
+        # Use Docker `latest` tag convention
+        [ "$IMAGE_TAG" == "master" ] && IMAGE_TAG=latest
+        
+        echo IMAGE_ID=$IMAGE_ID
+        echo IMAGE_TAG=$IMAGE_TAG
+
+        docker tag image $IMAGE_ID:$IMAGE_TAG
+        docker push $IMAGE_ID:$IMAGE_TAG
