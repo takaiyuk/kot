@@ -5,7 +5,6 @@ on:
     branches:
       - master
       - develop
-      - git-flow-setting  # To Delete
 
 env:
   IMAGE_NAME: scrape-kot
