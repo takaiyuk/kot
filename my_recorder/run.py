@@ -100,6 +100,7 @@ class Puncher:
         # 確認する
         if yes:
             val = "y"
+            time.sleep(3)
         else:
             val = input(f"{CMD_NAME_DICT[cmd]}ボタンを押していいですか？[y/n]: ")
         # 実行する
