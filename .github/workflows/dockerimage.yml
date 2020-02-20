@@ -3,9 +3,7 @@ name: Docker Image CI
 on:
   push:
     branches:
-      - master
-      - develop
-      - *
+      - "*"
 
 env:
   IMAGE_NAME: scrape-kot
