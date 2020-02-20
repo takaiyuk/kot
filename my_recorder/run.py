@@ -22,9 +22,7 @@ parser.add_argument(
     choices=["start", "end", "rest-start", "rest-end"],
     help="command",
 )
-parser.add_argument(
-    "-y", required=False, action="store_true", help="yes option",
-)
+parser.add_argument("-y", action="store_true", help="yes option")
 arguments = parser.parse_args()
 cmd = vars(arguments)["c"]
 yes = vars(arguments)["y"]
