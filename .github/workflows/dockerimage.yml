@@ -5,6 +5,7 @@ on:
     branches:
       - master
       - develop
+      - *
 
 env:
   IMAGE_NAME: scrape-kot
@@ -23,13 +24,15 @@ jobs:
         IMAGE_ID=${{ github.actor }}/$IMAGE_NAME
 
         # Strip git ref prefix from version
-        IMAGE_TAG=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
+        BRANCH_NAME=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
 
-        # Strip "-" from tag name
-        # IMAGE_TAG=$(echo $IMAGE_TAG | sed -e 's/-//g -e 's/_//g')
+        # Strip "-"/"_" from tag name
+        # BRANCH_NAME=$(echo $BRANCH_NAME | sed -e 's/-//g -e 's/_//g')
 
         # Use Docker `latest` tag convention
-        [ "$IMAGE_TAG" == "master" ] && IMAGE_TAG=latest
+        [ "$BRANCH_NAME" == "master" ] && IMAGE_TAG=latest
+        [ "$BRANCH_NAME" == "develop" ] && IMAGE_TAG=stg
+        [ "$BRANCH_NAME" != "master" ] && [ "$BRANCH_NAME" != "develop" ] && IMAGE_TAG=dev
         
         echo IMAGE_ID=$IMAGE_ID
         echo IMAGE_TAG=$IMAGE_TAG
