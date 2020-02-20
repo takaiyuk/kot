@@ -57,10 +57,12 @@ Slack チャンネルに通知させたくない場合は `console` コマンド
 
 Docker を利用せずにローカル実行もできる（Python 3.6 以降が必須）
 
+Chromedriver のバージョンは自身の環境の Chrome と互換性のあるバージョンを指定する
+
 ```
 git clone https://github.com/takaiyuk/scrape-king-of-time.git
 cd scrape-king-of-time
-python py/utils/download_chromedriver.py  # or --os=linux (default: --os=mac)
+python py/utils/download_chromedriver.py --os=mac --version=79.0.3945.36  # or --os=linux
 pip install -r requirements.txt
 cp config.py.example config.py  # config.py に自分のKing of TimeのID/PW等を入力する
 python run.py  # slackに通知させたくない場合は `python run.py console`
