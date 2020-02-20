@@ -53,7 +53,7 @@ Slack チャンネルに通知させたくない場合は `console` コマンド
 
 <br>
 
-### Run on Local
+### Run on Local (非推奨)
 
 Docker を利用せずにローカル実行もできる（Python 3.6 以降が必須）
 
@@ -95,7 +95,7 @@ cd deploy_package
 ./myrecorder.sh ${CMD}
 ```
 
-- Python
+- Python (非推奨)
 ```
 ./shell/myrecorder-py.sh ${CMD}
 ```
@@ -116,7 +116,7 @@ ${CMD} は以下の通り
 ./myrecorder.sh ${CMD} -y
 ```
 
-- Python
+- Python (非推奨)
 ```
 ./shell/myrecorder-py.sh ${CMD} -y
 ```
