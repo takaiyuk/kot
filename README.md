@@ -80,7 +80,7 @@ cd deploy_package
 
 実行後生成された `deploy_package.zip` を S3 に配置し、Lambda 関数を適切に設定する
 
-**注意！： `deploy_package.zip` は重要な情報（King of Time の ID/Password）を含むためアップロードする S3 は確実にプライベートな AWS アカウントであることを確認する**
+**`deploy_package.zip` は重要な情報を含むためアップロードするアカウントに注意する**
 
 <br>
 
@@ -93,7 +93,7 @@ cd deploy_package
 ./myrecorder.sh ${CMD}
 ```
 
-- python
+- Python
 ```
 ./shell/myrecorder-py.sh ${CMD}
 ```
@@ -105,6 +105,8 @@ ${CMD} は以下の通り
 - `rest-start`: 休憩開始
 - `rest-end`: 休憩終了
 
+<br>
+
 また `-y` オプションでプロンプトをスキップして実行可能（打刻なので注意）
 
 - Docker
@@ -112,14 +114,14 @@ ${CMD} は以下の通り
 ./myrecorder.sh ${CMD} -y
 ```
 
-- python
+- Python
 ```
 ./shell/myrecorder-py.sh ${CMD} -y
 ```
 
 <br>
 
-## How to install docker
+## How to install docker (macOS)
 
 （不明な場合は[こちらの記事](https://qiita.com/kurkuru/items/127fa99ef5b2f0288b81#docker-for-mac%E3%82%92%E3%82%A4%E3%83%B3%E3%82%B9%E3%83%88%E3%83%BC%E3%83%AB-package)等を参考にする）
 
