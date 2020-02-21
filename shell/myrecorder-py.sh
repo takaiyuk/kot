@@ -1,7 +1,7 @@
 #!/bin/sh
 
 if [ "$2" == "-y" ]; then
-  python -m my_recorder.run -c "$1" "$2"
+  python -m my_recorder.run --cmd "$1" --yes
 else
-  python -m my_recorder.run -c "$1"
+  python -m my_recorder.run --cmd "$1"
 fi
