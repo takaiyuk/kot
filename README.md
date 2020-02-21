@@ -4,7 +4,7 @@
 
 King of Time をスクレイピングして、 勤務時間の貯金等を計算＆通知してくれる君
 
-[My Recorder で打刻をする機能も追加](https://github.com/takaiyuk/scrape-king-of-time/tree/master#my-recorder)した
+[My Recorder で打刻をする機能も追加](https://github.com/takaiyuk/scrape-king-of-time#my-recorder)した
 
 ## 使い方
 
