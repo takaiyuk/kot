@@ -111,13 +111,15 @@ class Parser:
         """
         start_time_string, teiji_time_string = None, None
         try:
-            start_time_string = self._clean_text(
-                self.soup.find_all(
-                    "td", class_="start_end_timerecord specific-uncomplete"
-                )[-2].text
+            st_string_dirty = self.soup.find_all(
+                "td", class_="start_end_timerecord specific-uncomplete"
+            )[-2].text
+            # 上記の出力例: '\n\n\nIC\n\n09:02\n\n'
+            start_time_string = (
+                st_string_dirty.split(":")[0][-2:]
+                + ":"
+                + st_string_dirty.split(":")[1][:2]
             )
-            ic_place = start_time_string.find("IC")
-            start_time_string = start_time_string[(ic_place + 2) : (ic_place + 7)]
             hhmm = start_time_string.split(":")
             teiji_time_string = ":".join(
                 [str(self._str_to_int(hhmm[0]) + (WORK_HOUR + 1)), hhmm[1]]
