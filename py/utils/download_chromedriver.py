@@ -10,10 +10,17 @@ parser.add_argument(
     choices=["mac", "linux"],
     default="mac",
 )
+parser.add_argument(
+    "--version",
+    help="Chromedriver version (need to be compatibility with your chrome)",
+    type=str,
+    default="79.0.3945.36",
+)
 args = parser.parse_args()
 
 # https://chromedriver.chromium.org/downloads
-url = f"https://chromedriver.storage.googleapis.com/79.0.3945.36/chromedriver_{args.os}64.zip"
+version = args.version
+url = f"https://chromedriver.storage.googleapis.com/{version}/chromedriver_{args.os}64.zip"
 drivers_prefix = "drivers"
 
 command = f"mkdir {drivers_prefix}".split(" ")

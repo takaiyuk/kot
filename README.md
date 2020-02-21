@@ -4,6 +4,8 @@
 
 King of Time をスクレイピングして、 勤務時間の貯金等を計算＆通知してくれる君
 
+[My Recorder で打刻をする機能も追加](https://github.com/takaiyuk/scrape-king-of-time/tree/master#my-recorder)した
+
 ## 使い方
 
 ### Run with Docker
@@ -16,21 +18,21 @@ Docker がインストールされてない場合は、[こちら](https://githu
 git clone https://github.com/takaiyuk/scrape-king-of-time.git
 cd scrape-king-of-time
 mkdir ~/.scrape_kot
-cp config.py.example ~/.scrape_kot/config.py  # config.py に自分の King of Time の ID/PW 等を入力する
-./pull.sh
-./notify.sh
+cp config.py.example ~/.scrape_kot/config.py  # config.py に自分のKing of TimeのID/PW等を入力する
+./shell/pull.sh
+./scrapekot.sh
 ```
 
 出力イメージ
 
-![Slack Notify Image](https://github.com/takaiyuk/scrape-king-of-time/blob/master/docs/source/_static/img/slack-notify-message-image.png)
+![Slack Notify Image](https://github.com/takaiyuk/scrape-king-of-time/blob/master/docs/source/_static/img/notify-green.png)
 
 <br>
 
-Slack チャンネルに通知させたくない場合は `console` コマンドをつけて実行することで自身のコンソール上のみに出力させることできる
+Slack チャンネルに通知させたくない場合は `console` コマンドをつけて実行することで自身のコンソール上のみに出力させることも可能
 
 ```
-./console.sh
+./scrapekot.sh console
 ```
 
 出力イメージ
@@ -51,17 +53,19 @@ Slack チャンネルに通知させたくない場合は `console` コマンド
 
 <br>
 
-### Run on Local
+### Run on Local (非推奨)
 
-Docker を利用せずにローカル実行もできる（その場合 Python 3.6 以降が必須）
+Docker を利用せずにローカル実行もできる（Python 3.6 以降が必須）
+
+Chromedriver のバージョンは自身の環境の Chrome と互換性のあるバージョンを指定する
 
 ```
 git clone https://github.com/takaiyuk/scrape-king-of-time.git
 cd scrape-king-of-time
-python py/utils/download_chromedriver.py --os=mac # or --os=linux. default is --os=mac.
+python py/utils/download_chromedriver.py --os=mac --version=79.0.3945.36  # or --os=linux
 pip install -r requirements.txt
-cp config.py.example config.py  # config.py に自分の King of Time の ID/PW 等を入力する
-python run.py  # slack に 通知させたくない場合は `python run.py console`
+cp config.py.example config.py  # config.py に自分のKing of TimeのID/PW等を入力する
+python run.py  # slackに通知させたくない場合は `python run.py console`
 ```
 
 <br>
@@ -78,7 +82,7 @@ cd deploy_package
 
 実行後生成された `deploy_package.zip` を S3 に配置し、Lambda 関数を適切に設定する
 
-**注意！： `deploy_package.zip` は重要な情報（King of Time の ID/Password）を含むためアップロードする S3 は確実にプライベートな AWS アカウントであることを確認する**
+**`deploy_package.zip` は重要な情報を含むためアップロードするアカウントに注意する**
 
 <br>
 
@@ -86,16 +90,14 @@ cd deploy_package
 
 ブラウザから打刻できるやつ（My Recorder）で打刻をコマンドから行う
 
-**挙動が不明な箇所が多いので、最初のうちは随時打刻できているか確認することを推奨**
-
 - Docker
 ```
 ./myrecorder.sh ${CMD}
 ```
 
-- python
+- Python (非推奨)
 ```
-python -m my_recorder.run -c ${CMD}
+./shell/myrecorder-py.sh ${CMD}
 ```
 
 ${CMD} は以下の通り
@@ -107,11 +109,24 @@ ${CMD} は以下の通り
 
 <br>
 
-## How to install docker
+また `-y` オプションでプロンプトをスキップして実行可能（打刻なので注意）
+
+- Docker
+```
+./myrecorder.sh ${CMD} -y
+```
+
+- Python (非推奨)
+```
+./shell/myrecorder-py.sh ${CMD} -y
+```
+
+<br>
+
+## How to install docker (macOS)
 
 （不明な場合は[こちらの記事](https://qiita.com/kurkuru/items/127fa99ef5b2f0288b81#docker-for-mac%E3%82%92%E3%82%A4%E3%83%B3%E3%82%B9%E3%83%88%E3%83%BC%E3%83%AB-package)等を参考にする）
 
 1. [Docker for Mac](https://hub.docker.com/editions/community/docker-ce-desktop-mac) をダウンロードする（ダウンロードにはアカウント作成が必要）
 2. ダウンロード・インストールが完了したら、Docker for Mac を起動する
 3. ステータスバーにクジラのアイコンが出るので、先程作成した Docker の ID/Password でサインインする
-

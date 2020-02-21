@@ -22,8 +22,10 @@ parser.add_argument(
     choices=["start", "end", "rest-start", "rest-end"],
     help="command",
 )
-ns = parser.parse_args()
-cmd = vars(ns)["c"]
+parser.add_argument("-y", action="store_true", help="yes option")
+arguments = parser.parse_args()
+cmd = vars(arguments)["c"]
+yes = vars(arguments)["y"]
 
 
 class Browser:
@@ -95,8 +97,13 @@ class Puncher:
         # 何かしらの方法で確認する：ヘッドレスにせず目視...?
         # 成功時もURLの遷移なし・失敗時もモーダルが出るだけなのでseleniumでのログインの成否判断が難しい
 
+        # 確認する
+        if yes:
+            val = "y"
+            time.sleep(3)
+        else:
+            val = input(f"{CMD_NAME_DICT[cmd]}ボタンを押していいですか？[y/n]: ")
         # 実行する
-        val = input(f"{CMD_NAME_DICT[cmd]}ボタンを押していいですか？[y/n]: ")
         if val != "y":
             print(f"{CMD_NAME_DICT[cmd]}ボタンはスキップしました")
         else:
