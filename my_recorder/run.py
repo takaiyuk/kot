@@ -16,16 +16,16 @@ from my_recorder.const import (
 
 parser = argparse.ArgumentParser("parser of command that define which botton to click")
 parser.add_argument(
-    "-c",
+    "--cmd",
     type=str,
     required=True,
     choices=["start", "end", "rest-start", "rest-end"],
     help="command",
 )
-parser.add_argument("-y", action="store_true", help="yes option")
+parser.add_argument("--yes", action="store_true", help="yes option")
 arguments = parser.parse_args()
-cmd = vars(arguments)["c"]
-yes = vars(arguments)["y"]
+cmd = vars(arguments)["cmd"]
+yes = vars(arguments)["yes"]
 
 
 class Browser:

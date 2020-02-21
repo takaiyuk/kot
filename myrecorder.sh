@@ -6,8 +6,8 @@ if [ ! -f "$DIR/config.py" ]; then
 fi
 
 if [ "$2" == "-y" ]; then
-  docker run -v "${DIR}/config.py":/scrape_kot/config.py -it --rm takaiyuk/scrape-kot -m my_recorder.run -c "$1" "$2"
+  docker run -v "${DIR}/config.py":/scrape_kot/config.py -it --rm takaiyuk/scrape-kot -m my_recorder.run --cmd "$1" --yes
 else
-  docker run -v "${DIR}/config.py":/scrape_kot/config.py -it --rm takaiyuk/scrape-kot -m my_recorder.run -c "$1"
+  docker run -v "${DIR}/config.py":/scrape_kot/config.py -it --rm takaiyuk/scrape-kot -m my_recorder.run --cmd "$1"
 fi
 
