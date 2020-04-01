@@ -230,8 +230,12 @@ class Aggregator:
         当月の1日あたりの残り必要勤務時間
         """
         remain_minutes = self._hour_to_minute(remain_hours)
-        remain_minutes_by_day = remain_minutes / remain_count
-        remain_hours_by_day = self._minute_to_hour(remain_minutes_by_day)
+        try:
+            remain_minutes_by_day = remain_minutes / remain_count
+            remain_hours_by_day = self._minute_to_hour(remain_minutes_by_day)
+        except ZeroDivisionError:
+            # 労働基準時間が設定されてないと当月の残り営業日数（remain_count）が0になる
+            remain_hours_by_day = 0.0
         return remain_hours_by_day
 
     def calc_saving_time(self, work_hour: float, work_count: float) -> float:
