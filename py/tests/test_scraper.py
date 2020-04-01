@@ -70,6 +70,9 @@ def test_aggregator_calc_hour_remain_by_day():
     calc_hour_remain_by_day = Aggregator().calc_hour_remain_by_day(54.10, 8)
     assert calc_hour_remain_by_day == 6.46
 
+    calc_hour_remain_by_day = Aggregator().calc_hour_remain_by_day(0, 0)
+    assert calc_hour_remain_by_day == 0.0
+
 
 def test_aggregator_calc_saving_time():
     calc_saving_time = Aggregator().calc_saving_time(89.50, 10)
