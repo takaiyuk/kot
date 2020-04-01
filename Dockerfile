@@ -3,7 +3,7 @@ COPY poetry.lock pyproject.toml ./
 # hadolint ignore=DL4006, SC2094
 RUN echo @3.11 http://nl.alpinelinux.org/alpine/v3.11/community >> /etc/apk/repositories \
   && echo @3.11 http://nl.alpinelinux.org/alpine/v3.11/main >> /etc/apk/repositories \
-  && apk add --update --no-cache gcc@3.11=9.2.0-r3 musl-dev@3.11=1.1.24-r0 libffi-dev@3.11=3.2.1-r6 openssl-dev@3.11=1.1.1d-r3 tzdata@3.11=2019c-r0 \
+  && apk add --update --no-cache gcc@3.11=9.2.0-r4 musl-dev@3.11=1.1.24-r2 libffi-dev@3.11=3.2.1-r6 openssl-dev@3.11=1.1.1d-r3 tzdata@3.11=2019c-r0 \
   && pip install poetry==1.0.2 \
   && poetry config virtualenvs.create false \
   && poetry install --no-interaction --no-ansi
