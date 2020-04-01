@@ -26,7 +26,7 @@ function load_chromedriver_linux() {
 }
 
 function copy_files() {
-    rsync -ar ./* ./deploy_package --exclude 'deploy_package' --exclude 'drivers/chromedriver' --exclude 'Dockerfile'
+    rsync -ar --ignore-times ./* ./deploy_package --exclude 'deploy_package' --exclude 'drivers/chromedriver' --exclude 'Dockerfile'
 }
 
 mkdirs
