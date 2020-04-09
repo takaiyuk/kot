@@ -16,4 +16,3 @@ else
 fi
 
 docker run -v "${DIR}/config.py":/scrape_kot/config.py -it --rm takaiyuk/scrape-kot run.py ${SUBCMD}
-
