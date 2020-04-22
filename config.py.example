@@ -3,6 +3,5 @@ YOUR_PW = "Your password for King-of-Time"
 WEBHOOK_URL = "Your Slack WebHook URL"
 NOTIFY_CHANNEL = "Your channel for which bot notify"
 
-MYRECORDER_DISPLAY_NAME = ""
 MYRECORDER_WEBHOOK_URL = ""
 MYRECORDER_NOTIFY_CHANNEL = ""
