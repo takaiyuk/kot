@@ -128,13 +128,15 @@ class Puncher:
             MYRECORDER_NOTIFY_CHANNEL,
         )
 
-        title = CMD_STAMP_DICT[cmd]
+        kintai_stamp = CMD_STAMP_DICT[cmd]
         requests.post(
             MYRECORDER_WEBHOOK_URL,
             data=json.dumps(
                 {
                     "channel": MYRECORDER_NOTIFY_CHANNEL,
-                    "attachments": [{"pretext": f"{MYRECORDER_DISPLAY_NAME}: {title}"}],
+                    "attachments": [
+                        {"pretext": f"{MYRECORDER_DISPLAY_NAME}: {kintai_stamp}"}
+                    ],
                 }
             ),
         )
