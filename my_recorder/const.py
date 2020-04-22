@@ -12,3 +12,9 @@ CMD_NAME_DICT = {
     "rest-start": "休憩開始",
     "rest-end": "休憩終了",
 }
+CMD_STAMP_DICT = {
+    "start": ":shukkin:",
+    "end": ":taikin:",
+    "rest-start": ":kyuu::hajime:",
+    "rest-end": ":kyuu::owari:",
+}
