@@ -1,16 +1,25 @@
 # Import
 import argparse
+import json
 import os
 import random
+import requests
 from selenium import webdriver
 import time
 
-from config import YOUR_ID, YOUR_PW
+from config import (
+    YOUR_ID,
+    YOUR_PW,
+    MYRECORDER_DISPLAY_NAME,
+    MYRECORDER_WEBHOOK_URL,
+    MYRECORDER_NOTIFY_CHANNEL,
+)
 from my_recorder.const import (
     DRIVER_PATH,
     TOP_URL,
     CMD_DICT,
     CMD_NAME_DICT,
+    CMD_STAMP_DICT,
 )
 
 
@@ -115,8 +124,28 @@ class Puncher:
         # プロセス消す
         self.driver.quit()
 
-        return
+    def notify(self) -> None:
+        title = CMD_STAMP_DICT[cmd]
+        requests.post(
+            MYRECORDER_WEBHOOK_URL,
+            data=json.dumps(
+                {
+                    "channel": MYRECORDER_NOTIFY_CHANNEL,
+                    "attachments": [{"pretext": f"{MYRECORDER_DISPLAY_NAME}: {title}"}],
+                }
+            ),
+        )
+
+    def run(self) -> None:
+        self.click()
+        if (
+            os.getenv("MYRECORDER_WEBHOOK_URL") is None
+            or os.getenv("MYRECORDER_WEBHOOK_URL") == ""
+        ):
+            pass
+        else:
+            self.notify()
 
 
 if __name__ == "__main__":
-    Puncher().click()
+    Puncher().run()
