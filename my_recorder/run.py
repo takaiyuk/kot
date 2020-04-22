@@ -10,9 +10,6 @@ import time
 from config import (
     YOUR_ID,
     YOUR_PW,
-    MYRECORDER_DISPLAY_NAME,
-    MYRECORDER_WEBHOOK_URL,
-    MYRECORDER_NOTIFY_CHANNEL,
 )
 from my_recorder.const import (
     DRIVER_PATH,
@@ -125,6 +122,12 @@ class Puncher:
         self.driver.quit()
 
     def notify(self) -> None:
+        from config import (
+            MYRECORDER_DISPLAY_NAME,
+            MYRECORDER_WEBHOOK_URL,
+            MYRECORDER_NOTIFY_CHANNEL,
+        )
+
         title = CMD_STAMP_DICT[cmd]
         requests.post(
             MYRECORDER_WEBHOOK_URL,
@@ -138,13 +141,10 @@ class Puncher:
 
     def run(self) -> None:
         self.click()
-        if (
-            os.getenv("MYRECORDER_WEBHOOK_URL") is None
-            or os.getenv("MYRECORDER_WEBHOOK_URL") == ""
-        ):
-            pass
-        else:
+        try:
             self.notify()
+        except ImportError:
+            pass
 
 
 if __name__ == "__main__":
