@@ -123,7 +123,6 @@ class Puncher:
 
     def notify(self) -> None:
         from config import (
-            MYRECORDER_DISPLAY_NAME,
             MYRECORDER_WEBHOOK_URL,
             MYRECORDER_NOTIFY_CHANNEL,
         )
@@ -134,9 +133,7 @@ class Puncher:
             data=json.dumps(
                 {
                     "channel": MYRECORDER_NOTIFY_CHANNEL,
-                    "attachments": [
-                        {"pretext": f"{MYRECORDER_DISPLAY_NAME}: {kintai_stamp}"}
-                    ],
+                    "attachments": [{"pretext": f"{kintai_stamp}"}],
                 }
             ),
         )
