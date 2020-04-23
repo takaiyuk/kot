@@ -123,10 +123,6 @@ ${CMD} は以下の通り
 
 <br>
 
-また My Recorder で打刻時に特定のSlackチャンネルに出勤・退勤のメッセージを送信可能
-
-`config.py` で `MYRECORDER_WEBHOOK_URL` 及び `MYRECORDER_NOTIFY_CHANNEL` を設定すれば特定のSlackチャンネルに incoming webhook で出勤・退勤のメッセージを送信することができる（未設定ならばスキップされる）
-
 ## How to install docker (macOS)
 
 （不明な場合は[こちらの記事](https://qiita.com/kurkuru/items/127fa99ef5b2f0288b81#docker-for-mac%E3%82%92%E3%82%A4%E3%83%B3%E3%82%B9%E3%83%88%E3%83%BC%E3%83%AB-package)等を参考にする）

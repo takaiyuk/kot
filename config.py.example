@@ -3,6 +3,5 @@ YOUR_PW = "Your password for King-of-Time"
 WEBHOOK_URL = "Your Slack WebHook URL"
 NOTIFY_CHANNEL = "Your channel for which bot notify"
 
-# My Recorderで打刻時に特定のSlackチャンネルに出勤・退勤のメッセージを送信できる。不要ならばコメントアウトしておく。
-# MYRECORDER_WEBHOOK_URL = ""
-# MYRECORDER_NOTIFY_CHANNEL = ""
+MYRECORDER_WEBHOOK_URL = ""
+MYRECORDER_NOTIFY_CHANNEL = ""
