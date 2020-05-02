@@ -121,6 +121,18 @@ ${CMD} は以下の通り
 ./shell/myrecorder-py.sh ${CMD} -y
 ```
 
+また `message` オプションでSlack通知するメッセージをカスタムで追加できる（デフォルトはconst.py以下の `CMD_MESSAGE_DICT` 内のKeyに相当するリストの中からランダムに選択される）
+
+- Docker
+```
+./myrecorder.sh ${CMD} -y 圧倒的出勤っ...!!
+```
+
+- Python (非推奨)
+```
+./shell/myrecorder-py.sh ${CMD} -y 圧倒的退勤っ...!!
+```
+
 <br>
 
 また My Recorder で打刻時に特定のSlackチャンネルに出勤・退勤のメッセージを送信可能
