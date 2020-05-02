@@ -28,10 +28,12 @@ parser.add_argument(
     choices=["start", "end", "rest-start", "rest-end"],
     help="command",
 )
+parser.add_argument("--debug", action="store_true", help="debug option")
 parser.add_argument("--message", type=str, required=False, help="message to notify")
 parser.add_argument("--yes", action="store_true", help="yes option")
 arguments = parser.parse_args()
 cmd = vars(arguments)["cmd"]
+debug = vars(arguments)["debug"]
 message = vars(arguments)["message"]
 yes = vars(arguments)["yes"]
 
@@ -117,8 +119,9 @@ class Puncher:
         else:
             assert cmd in CMD_DICT.keys()
             xpath = CMD_DICT[cmd]
-            self.browser.click(xpath)
-            print(f"{CMD_NAME_DICT[cmd]}ボタンが押されました（多分）")
+            if not debug:
+                self.browser.click(xpath)
+                print(f"{CMD_NAME_DICT[cmd]}ボタンが押されました（多分）")
 
         # プロセス消す
         self.driver.quit()
@@ -133,15 +136,18 @@ class Puncher:
             kintai_message = CMD_MESSAGE_DICT[cmd]
         else:
             kintai_message = message
-        requests.post(
-            MYRECORDER_WEBHOOK_URL,
-            data=json.dumps(
-                {
-                    "channel": MYRECORDER_NOTIFY_CHANNEL,
-                    "attachments": [{"pretext": f"{kintai_message}"}],
-                }
-            ),
-        )
+
+        if not debug:
+            print(f"slack notified: {kintai_message}")
+            requests.post(
+                MYRECORDER_WEBHOOK_URL,
+                data=json.dumps(
+                    {
+                        "channel": MYRECORDER_NOTIFY_CHANNEL,
+                        "attachments": [{"pretext": f"{kintai_message}"}],
+                    }
+                ),
+            )
 
     def run(self) -> None:
         self.click()
