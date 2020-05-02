@@ -16,7 +16,7 @@ from my_recorder.const import (
     TOP_URL,
     CMD_DICT,
     CMD_NAME_DICT,
-    CMD_STAMP_DICT,
+    CMD_MESSAGE_DICT,
 )
 
 
@@ -28,9 +28,11 @@ parser.add_argument(
     choices=["start", "end", "rest-start", "rest-end"],
     help="command",
 )
+parser.add_argument("--message", type=str, required=False, help="message to notify")
 parser.add_argument("--yes", action="store_true", help="yes option")
 arguments = parser.parse_args()
 cmd = vars(arguments)["cmd"]
+message = vars(arguments)["message"]
 yes = vars(arguments)["yes"]
 
 
@@ -127,13 +129,16 @@ class Puncher:
             MYRECORDER_NOTIFY_CHANNEL,
         )
 
-        kintai_stamp = CMD_STAMP_DICT[cmd]
+        if message is None:
+            kintai_message = CMD_MESSAGE_DICT[cmd]
+        else:
+            kintai_message = message
         requests.post(
             MYRECORDER_WEBHOOK_URL,
             data=json.dumps(
                 {
                     "channel": MYRECORDER_NOTIFY_CHANNEL,
-                    "attachments": [{"pretext": f"{kintai_stamp}"}],
+                    "attachments": [{"pretext": f"{kintai_message}"}],
                 }
             ),
         )
