@@ -132,7 +132,15 @@ ${CMD} は以下の通り
 ./shell/myrecorder-py.sh ${CMD} -y
 ```
 
-また `message` オプションでSlack通知するメッセージをカスタムで追加できる（デフォルトはconst.py以下の `CMD_MESSAGE_DICT` 内のKeyに相当するリストの中からランダムに選択される）
+<br>
+
+また My Recorder で打刻時に特定のSlackチャンネルに出勤・退勤のメッセージを送信可能
+
+`config.py` で `MYRECORDER_WEBHOOK_URL` 及び `MYRECORDER_NOTIFY_CHANNEL` を設定すれば特定のSlackチャンネルに incoming webhook で出勤・退勤のメッセージを送信することができる（未設定ならばスキップされる）
+
+<br>
+
+さらに `message` オプションでSlack通知するメッセージをカスタムで追加できる（デフォルトはconst.py以下の `CMD_MESSAGE_DICT` 内のKeyに相当するリストの中からランダムに選択される）
 
 - Docker
 ```
@@ -143,12 +151,6 @@ ${CMD} は以下の通り
 ```
 ./shell/myrecorder-py.sh ${CMD} -y 圧倒的退勤っ...!!
 ```
-
-<br>
-
-また My Recorder で打刻時に特定のSlackチャンネルに出勤・退勤のメッセージを送信可能
-
-`config.py` で `MYRECORDER_WEBHOOK_URL` 及び `MYRECORDER_NOTIFY_CHANNEL` を設定すれば特定のSlackチャンネルに incoming webhook で出勤・退勤のメッセージを送信することができる（未設定ならばスキップされる）
 
 ## How to install docker (macOS)
 
