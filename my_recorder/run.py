@@ -36,6 +36,8 @@ cmd = vars(arguments)["cmd"]
 debug = vars(arguments)["debug"]
 message = vars(arguments)["message"]
 yes = vars(arguments)["yes"]
+if debug:
+    print("This is debug mode (not to be punched and notified)")
 
 
 class Browser:
@@ -122,6 +124,8 @@ class Puncher:
             if not debug:
                 self.browser.click(xpath)
                 print(f"{CMD_NAME_DICT[cmd]}ボタンが押されました（多分）")
+            else:
+                print(f"{CMD_NAME_DICT[cmd]}ボタンは押されない")
 
         # プロセス消す
         self.driver.quit()
@@ -133,12 +137,13 @@ class Puncher:
         )
 
         if message is None:
-            kintai_message = CMD_MESSAGE_DICT[cmd]
+            kintai_messages = CMD_MESSAGE_DICT[cmd]
+            idx = random.randint(0, len(kintai_messages) - 1)
+            kintai_message = kintai_messages[idx]
         else:
             kintai_message = message
 
         if not debug:
-            print(f"slack notified: {kintai_message}")
             requests.post(
                 MYRECORDER_WEBHOOK_URL,
                 data=json.dumps(
@@ -148,6 +153,9 @@ class Puncher:
                     }
                 ),
             )
+            print(f"通知されるメッセージ: {kintai_message}")
+        else:
+            print(f"通知されないメッセージ: {kintai_message}")
 
     def run(self) -> None:
         self.click()
