@@ -13,10 +13,8 @@ ENV PYTHONPATH=/usr/local:$PYTHONPATH
 ENV APP_HOME /scrape_kot
 WORKDIR $APP_HOME
 COPY . .
-RUN echo @3.11 http://nl.alpinelinux.org/alpine/v3.11/community >> /etc/apk/repositories \
-  && echo @3.11 http://nl.alpinelinux.org/alpine/v3.11/main >> /etc/apk/repositories \
-  && apk add --update --no-cache \
-  chromium@3.11=79.0.3945.130-r0 \
-  chromium-chromedriver@3.11=79.0.3945.130-r0
+RUN apk add --update --no-cache \
+  chromium=81.0.4044.113-r0 \
+  chromium-chromedriver=81.0.4044.113-r0
 
 ENTRYPOINT ["python"]

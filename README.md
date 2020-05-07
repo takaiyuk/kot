@@ -1,5 +1,16 @@
 # scrape-king-of-time
 
+## TOC
+
+* [TOC](#TOC)
+* [これは何か？](#これは何か)
+* [使い方](#使い方)
+    * [Run with Docker](#run-with-docker)
+    * [Run on Local (非推奨)](#run-on-local-非推奨)
+    * [Run on AWS Lambda](#run-on-aws-lambda)
+* [My Recorder](#my-recorder)
+* [How to install docker (macOS)](#how-to-install-docker-macos)
+
 ## これは何か？
 
 King of Time をスクレイピングして、 勤務時間の貯金等を計算＆通知してくれる君
@@ -126,6 +137,20 @@ ${CMD} は以下の通り
 また My Recorder で打刻時に特定のSlackチャンネルに出勤・退勤のメッセージを送信可能
 
 `config.py` で `MYRECORDER_WEBHOOK_URL` 及び `MYRECORDER_NOTIFY_CHANNEL` を設定すれば特定のSlackチャンネルに incoming webhook で出勤・退勤のメッセージを送信することができる（未設定ならばスキップされる）
+
+<br>
+
+さらに `message` オプションでSlack通知するメッセージをカスタムで追加できる（デフォルトはconst.py以下の `CMD_MESSAGE_DICT` 内のKeyに相当するリストの中からランダムに選択される）
+
+- Docker
+```
+./myrecorder.sh ${CMD} -y 圧倒的出勤っ...!!
+```
+
+- Python (非推奨)
+```
+./shell/myrecorder-py.sh ${CMD} -y 圧倒的退勤っ...!!
+```
 
 ## How to install docker (macOS)
 
