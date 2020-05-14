@@ -134,6 +134,8 @@ class Puncher:
         from config import (
             MYRECORDER_WEBHOOK_URL,
             MYRECORDER_NOTIFY_CHANNEL,
+            MYRECORDER_ICON_EMOJI,
+            MYRECORDER_USERNAME,
         )
 
         if message is None:
@@ -148,6 +150,8 @@ class Puncher:
                 MYRECORDER_WEBHOOK_URL,
                 data=json.dumps(
                     {
+                        "username": MYRECORDER_USERNAME,
+                        "icon_emoji": MYRECORDER_ICON_EMOJI,
                         "channel": MYRECORDER_NOTIFY_CHANNEL,
                         "attachments": [{"pretext": f"{kintai_message}"}],
                     }
