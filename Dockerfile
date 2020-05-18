@@ -3,7 +3,7 @@ COPY poetry.lock pyproject.toml ./
 ADD https://chromedriver.storage.googleapis.com/2.45/chromedriver_linux64.zip /usr/bin
 # hadolint ignore=DL3008, DL4006, SC2094
 RUN apt-get -y update \
-  && apt-get -y install --no-install-recommends tzdata wget unzip \
+  && apt-get -y install --no-install-recommends libgconf-2-4 tzdata wget unzip \
   # pip
   && pip install poetry==1.0.2 \
   && poetry config virtualenvs.create false \
@@ -25,6 +25,7 @@ COPY --from=builder /usr/local/lib/python3.8/site-packages /usr/local/lib/python
 COPY --from=builder /usr/share/zoneinfo/Asia/Tokyo /etc/localtime
 COPY --from=builder /usr/bin/chromedriver /usr/bin/chromedriver
 COPY --from=builder /usr/bin/google-chrome-stable /usr/bin/google-chrome-stable
+COPY --from=builder /usr/lib/x86_64-linux-gnu/libgconf-2.so.4 /usr/lib/x86_64-linux-gnu/libgconf-2.so.4
 ENV PYTHONPATH=/usr/local:$PYTHONPATH
 ENV APP_HOME /scrape_kot
 WORKDIR $APP_HOME
