@@ -153,7 +153,7 @@ class Puncher:
                         "username": MYRECORDER_USERNAME,
                         "icon_emoji": MYRECORDER_ICON_EMOJI,
                         "channel": MYRECORDER_NOTIFY_CHANNEL,
-                        "attachments": [{"pretext": f"{kintai_message}"}],
+                        "text":  f"{kintai_message}",
                     }
                 ),
             )
