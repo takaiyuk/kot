@@ -1,0 +1,15 @@
+account:
+  id: 
+  password: 
+scrapekot:
+  slack: 
+    webhook_url: 
+    channel: 
+    icon_emoji: 
+    username: 
+myrecorder: 
+  slack:  
+    webhook_url: 
+    channel: 
+    icon_emoji: 
+    username: 
