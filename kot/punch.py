@@ -5,7 +5,7 @@ from dataclasses import dataclass
 import requests
 
 from kot.config import Config
-from kot.crawl import Browser, Driver, DriverOptions
+from kot.crawl import Browser
 from kot.logger import logger
 
 TOP_URL = "https://s3.kingtime.jp/independent/recorder/personal/"
@@ -50,12 +50,7 @@ class MyRecorderOptions:
 
 
 @dataclass
-class MyRecorderParams:
-    is_amazon_linux: bool
-    is_chrome: bool
-    is_chronium: bool
-    is_firefox: bool
-    is_headless: bool
+class PunchParams:
     command: str
     message: str
     yes: bool
@@ -63,23 +58,18 @@ class MyRecorderParams:
 
 
 class MyRecorder:
-    def __init__(self, params: MyRecorderParams) -> None:
-        driver_options = DriverOptions(
-            is_amazon_linux=params.is_amazon_linux,
-            is_chrome=params.is_chrome,
-            is_chronium=params.is_chronium,
-            is_firefox=params.is_firefox,
-            is_headless=params.is_headless,
-        )
-        driver = Driver.build(driver_options)
-        self.browser = Browser(driver)
-        self.params = params
+    def __init__(self, browser: Browser, params: PunchParams) -> None:
+        self.browser = browser
+        self.cmd = params.command
+        self.message = params.message
+        self.yes = params.yes
+        self.is_debug = params.is_debug
 
     def punch(self, cfg: Config) -> None:
-        self.click(cfg)
-        self.notify(cfg)
+        self._punch(cfg)
+        self._notify(cfg)
 
-    def click(self, cfg: Config) -> None:
+    def _punch(self, cfg: Config) -> None:
         try:
             # トップページ
             self.browser.get(TOP_URL)
@@ -92,12 +82,9 @@ class MyRecorder:
             # TODO: ログイン成功したか確認
             # 成功時もURLの遷移なし・失敗時もモーダルが出るだけなのでseleniumでのログインの成否判断が難しい
             """
-            cmd = self.params.command
-            yes = self.params.yes
-            is_debug = self.params.is_debug
-            myrecoder_option = getattr(MyRecorderOptions, cmd)
+            myrecoder_option = getattr(MyRecorderOptions, self.cmd)
             # 確認する
-            if yes:
+            if self.yes:
                 val = "y"
                 self.browser.sleep()
             else:
@@ -106,9 +93,9 @@ class MyRecorder:
             if val != "y":
                 logger.info(f"{myrecoder_option.name}ボタンはスキップしました")
             else:
-                assert cmd in MyRecorderOptions.__annotations__.keys()
+                assert self.cmd in MyRecorderOptions.__annotations__.keys()
                 xpath = myrecoder_option.xpath
-                if not is_debug:
+                if not self.is_debug:
                     raise ValueError  # FIXME: 開発中に誤ってボタンを押してしまわないように例外を発生させている
                     self.browser.click(xpath)
                     logger.info(f"{myrecoder_option.name}ボタンが押されました（多分）")
@@ -118,17 +105,14 @@ class MyRecorder:
             # プロセス消す
             self.browser.quit()
 
-    def notify(self, cfg: Config) -> None:
-        cmd = self.params.command
-        message = self.params.message
-        is_debug = self.params.is_debug
-        if message is None or message == "":
-            kintai_messages = getattr(MyRecorderOptions, cmd).messages
+    def _notify(self, cfg: Config) -> None:
+        if self.message is None or self.message == "":
+            kintai_messages = getattr(MyRecorderOptions, self.cmd).messages
             idx = random.randint(0, len(kintai_messages) - 1)
             kintai_message = kintai_messages[idx]
         else:
-            kintai_message = message
-        if not is_debug:
+            kintai_message = self.message
+        if not self.is_debug:
             raise ValueError  # FIXME: 開発中に誤ってSlackに投稿されてしまわないように例外を発生させている
             self._post_slack(cfg, kintai_message)
             logger.info(f"通知されるメッセージ: {kintai_message}")

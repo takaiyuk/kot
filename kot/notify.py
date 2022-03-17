@@ -1,4 +1,5 @@
 import json
+from dataclasses import dataclass
 from datetime import datetime
 from enum import Enum
 
@@ -15,23 +16,31 @@ class Color(Enum):
     RED = "#ff0000"
 
 
+@dataclass
+class NotifyData:
+    title: str
+    message: str
+    color: str
+
+
 class SlackClient:
     def notify(self, cfg: Config, aggregated_data: AggregatedData) -> None:
-        title = self._get_title()
+        dt_now = datetime.now()
+        title = self._get_title(dt_now)
         color = self._get_color(aggregated_data.saving_time)
         message = self._get_message(aggregated_data)
+        notify_data = NotifyData(title=title, message=message, color=color)
         raise ValueError  # FIXME: 開発中に誤ってSlackに投稿されてしまわないように例外を発生させている
-        self._post_slack(cfg, title, color, message)
+        self._post_slack(cfg, notify_data)
 
-    def _get_title(self) -> str:
-        dt_now = datetime.now()
+    def _get_title(self, dt_now: datetime) -> str:
         title = f"{dt_now.year}/{dt_now.month}/{dt_now.day}"
         return title
 
     def _get_color(self, saving_time: float) -> str:
         if saving_time >= 1:
             return Color.GREEN.value
-        elif saving_time > 0:
+        elif saving_time >= 0:
             return Color.YELLOW.value
         else:
             return Color.RED.value
@@ -45,14 +54,18 @@ class SlackClient:
         message = "\n".join(messages)
         return message
 
-    def _post_slack(self, cfg: Config, title: str, color: str, message: str) -> None:
+    def _post_slack(self, cfg: Config, notify_data: NotifyData) -> None:
         requests.post(
             cfg.scrapekot.slack.webhook_url,
             data=json.dumps(
                 {
                     "channel": cfg.scrapekot.slack.channel,
                     "attachments": [
-                        {"pretext": title, "color": color, "text": message}
+                        {
+                            "pretext": notify_data.title,
+                            "color": notify_data.color,
+                            "text": notify_data.message,
+                        }
                     ],
                 }
             ),
@@ -61,7 +74,7 @@ class SlackClient:
 
 class Console:
     @staticmethod
-    def display(aggregated_data: AggregatedData) -> None:
+    def display(aggregated_data: AggregatedData, dt_today: datetime) -> None:
         kwargs = {
             "work_counts_remain": aggregated_data.work_counts_remain,
             "work_counts": aggregated_data.work_counts,
@@ -88,6 +101,6 @@ class Console:
         出勤: {start_time}
         定時: {teiji_time}
 """.format(
-                today=datetime.today(), **kwargs
+                today=dt_today, **kwargs
             )
         )

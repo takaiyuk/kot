@@ -1,7 +1,7 @@
 import random
 import time
 from dataclasses import dataclass
-from typing import Union
+from typing import Type, TypeVar, Union
 
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service as ChromeService
@@ -14,6 +14,7 @@ from kot.config import Config
 
 TOP_URL = "https://s3.kingtime.jp/admin"
 DRIVER_PATH = "/tmp"
+B = TypeVar("B", bound="Browser")
 
 
 @dataclass
@@ -23,16 +24,6 @@ class DriverOptions:
     is_chronium: bool
     is_firefox: bool
     is_headless: bool
-
-
-@dataclass
-class ScrapeKOTParams:
-    is_amazon_linux: bool
-    is_chrome: bool
-    is_chronium: bool
-    is_firefox: bool
-    is_headless: bool
-    is_console: bool
 
 
 class Driver:
@@ -92,6 +83,11 @@ class Browser:
     def __init__(self, driver: Union[webdriver.Chrome, webdriver.Firefox]) -> None:
         self.driver = driver
 
+    @classmethod
+    def build(cls: Type[B], driver_options: DriverOptions) -> B:
+        driver = Driver.build(driver_options)
+        return cls(driver)
+
     def _get_random(self, a: int = 1, b: int = 3) -> float:
         return random.uniform(a, b)
 
@@ -136,16 +132,8 @@ class Browser:
 
 
 class Crawler:
-    def __init__(self, params: ScrapeKOTParams) -> None:
-        driver_options = DriverOptions(
-            is_amazon_linux=params.is_amazon_linux,
-            is_chrome=params.is_chrome,
-            is_chronium=params.is_chronium,
-            is_firefox=params.is_firefox,
-            is_headless=params.is_headless,
-        )
-        driver = Driver.build(driver_options)
-        self.browser = Browser(driver)
+    def __init__(self, browser: B) -> None:
+        self.browser = browser
 
     def get_page_source(self, cfg: Config) -> str:
         try:
