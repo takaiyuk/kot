@@ -1,4 +1,4 @@
-from kot.scrape import Scraper
+from kot.scrapekot.scrape import Scraper
 
 s = Scraper(html="")
 

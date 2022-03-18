@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from kot.scrape import ScrapedData
+from kot.scrapekot.scrape import ScrapedData
 
 WORK_HOUR = 8
 

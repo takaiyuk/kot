@@ -1,9 +1,9 @@
 from dataclasses import dataclass
-from typing import Any, Tuple
+from typing import Tuple
 
 from bs4 import BeautifulSoup
 
-from kot.logger import logger
+from kot.common.logger import logger
 
 WORK_HOUR = 8
 

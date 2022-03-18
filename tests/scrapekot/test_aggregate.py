@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
-from kot.aggregate import AggregatedData, Aggregator
-from kot.scrape import ScrapedData
+from kot.scrapekot.aggregate import AggregatedData, Aggregator
+from kot.scrapekot.scrape import ScrapedData
 
 a = Aggregator()
 

@@ -2,7 +2,7 @@ import os
 from dataclasses import dataclass
 from typing import Any
 
-from kot.config import (
+from kot.common.config import (
     Account,
     Config,
     MyRecorder,

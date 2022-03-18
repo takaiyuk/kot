@@ -1,6 +1,6 @@
 import typer
 
-from kot.logger import logger
+from kot.common.logger import logger
 from kot.service import MyRecorderParams, ScrapeKOTParams, punch_myrecorder, scrape_kot
 
 app = typer.Typer(add_completion=False)

@@ -23,5 +23,5 @@ jobs:
         mypy kot --install-types --non-interactive && mypy kot
     - name: Run pytest
       run: |
-        pip install pytest
+        pip install pytest pytest-mock
         pytest tests

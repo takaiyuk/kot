@@ -1,13 +1,20 @@
-import json
 from dataclasses import dataclass
 from datetime import datetime
 from enum import Enum
+from typing import Any
 
-import requests
+from kot.common.logger import logger
+from kot.common.notify import BaseSlackClient, NotifyData
+from kot.scrapekot.aggregate import AggregatedData
 
-from kot.aggregate import AggregatedData
-from kot.config import Config
-from kot.logger import logger
+
+@dataclass
+class SlackClientParams:
+    slack_webhook_url: str
+    slack_channel: str
+    slack_icon_emoji: str
+    slack_username: str
+    dt_now: datetime
 
 
 class Color(Enum):
@@ -16,22 +23,31 @@ class Color(Enum):
     RED = "#ff0000"
 
 
-@dataclass
-class NotifyData:
-    title: str
-    message: str
-    color: str
+class SlackClient(BaseSlackClient):
+    def _build_noitfy_data(
+        self, params: SlackClientParams, data: AggregatedData
+    ) -> NotifyData:
+        message = self._get_message(data)
+        title = self._get_title(params.dt_now)
+        color = self._get_color(data.saving_time)
+        return NotifyData(
+            slack_webhook_url=params.slack_webhook_url,
+            slack_channel=params.slack_channel,
+            slack_icon_emoji=params.slack_icon_emoji,
+            slack_username=params.slack_username,
+            message=message,
+            title=title,
+            color=color,
+        )
 
-
-class SlackClient:
-    def notify(self, cfg: Config, aggregated_data: AggregatedData) -> None:
-        dt_now = datetime.now()
-        title = self._get_title(dt_now)
-        color = self._get_color(aggregated_data.saving_time)
-        message = self._get_message(aggregated_data)
-        notify_data = NotifyData(title=title, message=message, color=color)
-        raise ValueError  # FIXME: 開発中に誤ってSlackに投稿されてしまわないように例外を発生させている
-        self._post_slack(cfg, notify_data)
+    def _get_message(self, aggregated_data: AggregatedData) -> str:
+        messages = [
+            f":shigyou:\t{aggregated_data.start_time}",
+            f":teiji:\t{aggregated_data.teiji_time}",
+            f":bank:\t{aggregated_data.saving_time}",
+        ]
+        message = "\n".join(messages)
+        return message
 
     def _get_title(self, dt_now: datetime) -> str:
         title = f"{dt_now.year}/{dt_now.month}/{dt_now.day}"
@@ -45,31 +61,20 @@ class SlackClient:
         else:
             return Color.RED.value
 
-    def _get_message(self, aggregated_data: AggregatedData) -> str:
-        messages = [
-            f":shigyou:\t{aggregated_data.start_time}",
-            f":teiji:\t{aggregated_data.teiji_time}",
-            f":bank:\t{aggregated_data.saving_time}",
-        ]
-        message = "\n".join(messages)
-        return message
+    def _slack_url(self, notify_data: NotifyData) -> str:
+        return notify_data.slack_webhook_url
 
-    def _post_slack(self, cfg: Config, notify_data: NotifyData) -> None:
-        requests.post(
-            cfg.scrapekot.slack.webhook_url,
-            data=json.dumps(
+    def _slack_data(self, notify_data: NotifyData) -> dict[str, Any]:
+        return {
+            "channel": notify_data.slack_channel,
+            "attachments": [
                 {
-                    "channel": cfg.scrapekot.slack.channel,
-                    "attachments": [
-                        {
-                            "pretext": notify_data.title,
-                            "color": notify_data.color,
-                            "text": notify_data.message,
-                        }
-                    ],
+                    "pretext": notify_data.title,
+                    "color": notify_data.color,
+                    "text": notify_data.message,
                 }
-            ),
-        )
+            ],
+        }
 
 
 class Console:

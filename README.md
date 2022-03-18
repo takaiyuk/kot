@@ -8,7 +8,10 @@
     * [Run with Docker](#run-with-docker)
     * [Run on AWS Lambda](#run-on-aws-lambda)
 * [My Recorder](#my-recorder)
-* [Typer Help](#typer-help)
+* [Development](#development)
+    * [Typer Help](#typer-help)
+    * [Pydeps](#pydeps)
+    * [Lint](#lint)
 * [How to install docker (macOS)](#how-to-install-docker-macos)
 
 ## What is this?
@@ -94,7 +97,9 @@ ${CMD} は以下の通り
 
 <br>
 
-## Typer Help
+## Development
+
+### Typer Help
 
 `Typer` ヘルプ
 
@@ -143,6 +148,28 @@ Options:
   --firefox / --no-firefox        [default: no-firefox]
   --headless / --no-headless      [default: headless]
   --help                          Show this message and exit.
+```
+
+### Pydeps
+
+```
+$ make pydeps
+```
+
+![kot.svg](https://github.com/takaiyuk/kot/blob/master/kot.svg)
+
+### Lint
+
+type check
+
+```
+$ make mypy
+```
+
+test
+
+```
+$ make test
 ```
 
 ## How to install docker (macOS)

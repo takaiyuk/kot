@@ -1,7 +1,7 @@
 import random
 import time
 from dataclasses import dataclass
-from typing import Type, TypeVar, Union
+from typing import Any, Optional, Type, TypeVar, Union
 
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service as ChromeService
@@ -9,8 +9,6 @@ from selenium.webdriver.firefox.service import Service as GeckoService
 from webdriver_manager.chrome import ChromeDriverManager
 from webdriver_manager.firefox import GeckoDriverManager
 from webdriver_manager.utils import ChromeType
-
-from kot.config import Config
 
 TOP_URL = "https://s3.kingtime.jp/admin"
 DRIVER_PATH = "/tmp"
@@ -100,7 +98,6 @@ class Browser:
         self.sleep()
 
     def get(self, url: str) -> None:
-        # The `driver.get` method will navigate to a page given by the URL.
         self.driver.get(url)
         self.sleep()
 
@@ -131,26 +128,9 @@ class Browser:
         return self.driver.page_source
 
 
-class Crawler:
+class BaseCrawler:
     def __init__(self, browser: B) -> None:
         self.browser = browser
 
-    def get_page_source(self, cfg: Config) -> str:
-        try:
-            # トップページ
-            self.browser.get(TOP_URL)
-            # ID/PASS 入力
-            self.browser.send('//*[@id="login_id"]', cfg.account.id)
-            self.browser.send('//*[@id="login_password"]', cfg.account.password)
-            # ログイン
-            self.browser.click('//*[@id="login_button"]')
-            # ログイン成功したか確認
-            url = self.browser.current_url
-            if url == TOP_URL:
-                raise Exception("login failed")
-            # ソースを取得
-            page_source = self.browser.page_source
-        finally:
-            # プロセス消す
-            self.browser.quit()
-        return page_source
+    def run(self, params: Any) -> Optional[str]:
+        raise NotImplementedError
