@@ -1,6 +1,7 @@
+from kot.scrapekot.crawl import CrawledData
 from kot.scrapekot.scrape import Scraper
 
-s = Scraper(html="")
+s = Scraper(crawled_data=CrawledData(page_source="<html></html>"))
 
 
 def test_Scraper__str_to_int():

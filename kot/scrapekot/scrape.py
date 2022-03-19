@@ -4,6 +4,7 @@ from typing import Tuple
 from bs4 import BeautifulSoup
 
 from kot.common.logger import logger
+from kot.scrapekot.crawl import CrawledData
 
 WORK_HOUR = 8
 
@@ -19,8 +20,8 @@ class ScrapedData:
 
 
 class Scraper:
-    def __init__(self, html: str) -> None:
-        self.soup = BeautifulSoup(html, "html.parser")
+    def __init__(self, crawled_data: CrawledData) -> None:
+        self.soup = BeautifulSoup(crawled_data.page_source, "html.parser")
 
     def extract(self) -> ScrapedData:
         # 今月の必要勤務時間を取得

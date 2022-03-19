@@ -57,8 +57,8 @@ def scrape_kot(params: ScrapeKOTParams) -> None:
             dt_now=datetime.now(),
         )
         browser = Browser.build(driver_options)
-        page_source = ScrapeKOTCrawler(browser).run(crawler_params)
-        scraped_data = Scraper(page_source).extract()
+        crawled_data = ScrapeKOTCrawler(browser).run(crawler_params)
+        scraped_data = Scraper(crawled_data).extract()
         aggregated_data = Aggregator().aggregate(scraped_data)
         if params.is_console:
             Console.display(aggregated_data, datetime.today())

@@ -132,5 +132,5 @@ class BaseCrawler:
     def __init__(self, browser: B) -> None:
         self.browser = browser
 
-    def run(self, params: Any) -> Optional[str]:
+    def run(self, params: Any) -> Any:
         raise NotImplementedError

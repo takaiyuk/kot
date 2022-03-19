@@ -11,9 +11,15 @@ class CrawlerParams:
     account_password: str
 
 
+@dataclass
+class CrawledData:
+    page_source: str
+
+
 class Crawler(BaseCrawler):
-    def run(self, params: CrawlerParams) -> str:
-        return self._get_page_source(params)
+    def run(self, params: CrawlerParams) -> CrawledData:
+        page_source = self._get_page_source(params)
+        return CrawledData(page_source=page_source)
 
     def _get_page_source(self, params: CrawlerParams) -> str:
         try:
