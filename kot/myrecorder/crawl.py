@@ -48,7 +48,6 @@ class Crawler(BaseCrawler):
                 assert params.command in MyRecorderOptions.__annotations__.keys()
                 xpath = myrecoder_option.xpath
                 if not params.is_debug:
-                    raise ValueError  # FIXME: 開発中に誤ってボタンを押してしまわないように例外を発生させている
                     self.browser.click(xpath)
                     logger.info(f"{myrecoder_option.name}ボタンが押されました（多分）")
                 else:

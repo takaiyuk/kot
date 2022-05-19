@@ -19,7 +19,6 @@ class NotifyData:
 class BaseSlackClient:
     def notify(self, params: Any, data: Any = None) -> None:
         notify_data = self._build_noitfy_data(params, data)
-        raise ValueError  # FIXME: 開発中に誤ってSlackに投稿されてしまわないように例外を発生させている
         self._post_slack(notify_data)
 
     def _build_noitfy_data(self, params: Any, data: Any) -> NotifyData:
