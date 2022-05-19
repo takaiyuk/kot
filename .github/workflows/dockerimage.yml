@@ -1,9 +1,6 @@
 name: Docker Image CI
 
-on:
-  push:
-    branches:
-      - "*"
+on: [push]
 
 env:
   IMAGE_NAME: kot
