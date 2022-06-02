@@ -32,7 +32,7 @@ def myrecorder(
     command: str,
     yes: bool = False,
     message: str = "",
-    debug: bool = True,
+    debug: bool = False,
     amazon_linux: bool = False,
     chrome: bool = True,
     chronium: bool = False,

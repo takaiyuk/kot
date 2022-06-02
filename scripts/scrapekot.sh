@@ -5,14 +5,14 @@ if [ ! -f "$CONFIG_PATH" ]; then
   CONFIG_PATH=${PWD}/config.yaml
 fi
 
-if [ "$1" == "notify" ]; then
+if [ "$1" == "slack" ]; then
   CONSOLE="--no-console"
   echo ${CONSOLE}
 elif [ "$1" == "" ] || [ "$1" == "console" ]; then
   CONSOLE="--console"
   echo ${CONSOLE}
 else
-  echo "Error: you need one of the following arguments: '', 'notify' or 'console'"
+  echo "Error: you need one of the following arguments: '', 'slack' or 'console'"
   exit 1
 fi
 

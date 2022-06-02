@@ -1,7 +1,7 @@
 import random
 import time
 from dataclasses import dataclass
-from typing import Any, Optional, Type, TypeVar, Union
+from typing import Any, Type, TypeVar, Union
 
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service as ChromeService

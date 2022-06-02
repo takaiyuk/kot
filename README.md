@@ -2,55 +2,88 @@
 
 ## TOC
 
-* [TOC](#TOC)
-* [What is this?](#what-is-this?)
-* [Scrape KOT](#scrape-kot)
-    * [Run with Docker](#run-with-docker)
-    * [Run on AWS Lambda](#run-on-aws-lambda)
-* [My Recorder](#my-recorder)
-* [Development](#development)
-    * [Typer Help](#typer-help)
-    * [Pydeps](#pydeps)
-    * [Lint](#lint)
-* [How to install docker (macOS)](#how-to-install-docker-macos)
+- [TOC](#TOC)
+- [概要](#概要)
+- [実行環境の準備](#実行環境の準備)
+- [Scrape KOT](#scrape-kot)
+  - [Slack に通知](#slack-に通知)
+  - [Console に通知](#console-に通知)
+  - [AWS Lambda で実行](#aws-lambda-で実行)
+- [My Recorder](#my-recorder)
+- [Development](#development)
+  - [Typer Help](#typer-help)
+  - [Lint](#lint)
+    - [type check](#type-check)
+    - [test](#test)
+  - [Pydeps](#pydeps)
 
-## What is this?
+## 概要
 
-Selenium を利用して以下の2機能を実現している
+以下の機能が CLI で操作できる
 
-- King of Time の勤怠データから勤務時間の貯金時間等を計算する
-- My Recorder で打刻する
+- KING OF TIME の勤怠データから勤務時間の貯金時間等を計算する
+- My レコーダーで打刻する
 
-## Scrape KOT
+## 実行環境の準備
 
-### Run with Docker
+### Docker で実行
 
-事前に Docker を起動し、サインインしておく
-
-Docker がインストールされてない場合は、[こちら](https://github.com/takaiyuk/kot#how-to-install-docker)を参照
-
-```
+```shell
 $ git clone https://github.com/takaiyuk/kot.git
 $ cd kot
 $ mkdir ~/.kot
-$ cp config.yaml.example ~/.kot/config.yaml
+# config.yaml を適宜書き換える
+$ cp ./config.yaml.example ~/.kot/config.yaml
 $ ./scripts/docker/kot/pull.sh
-$ ./scripts/scrapekot.sh notify
 ```
 
-出力イメージ
+### ローカルで実行
+
+```shell
+$ git clone https://github.com/takaiyuk/kot.git
+$ cd kot
+# config.yaml を適宜書き換える
+$ cp ./config.yaml.example ./config.yaml
+$ pip install -r requirements.txt
+```
+
+## Scrape KOT
+
+### Slack に通知
+
+#### Docker で実行
+
+```shell
+$ ./scripts/scrapekot.sh slack
+```
+
+#### ローカルで実行
+
+```shell
+$ python -m kot scrape --no-console
+```
+
+#### 出力イメージ
 
 ![Slack Notify Image](https://github.com/takaiyuk/kot/blob/master/docs/source/_static/img/notify-green.png)
 
-<br>
+### Console に通知
 
 Slack チャンネルに通知させたくない場合は `console` をつけて実行することで自身のコンソール上のみに出力させることも可能
 
-```
+#### Docker で実行
+
+```shell
 $ ./scripts/scrapekot.sh console
 ```
 
-出力イメージ
+#### ローカルで実行
+
+```shell
+$ python -m kot scrape --console
+```
+
+#### 出力イメージ
 
 ```
     残り12営業日: (8.0/20.0 日)
@@ -66,13 +99,12 @@ $ ./scripts/scrapekot.sh console
         定時: 19:15
 ```
 
-<br>
-
-### Run on AWS Lambda
+### AWS Lambda で実行
 
 AWS Lambda で動かすためにコンテナイメージを利用して Lambda 関数コードをデプロイすることができる（ref. [コンテナイメージで Python Lambda 関数をデプロイする](https://docs.aws.amazon.com/ja_jp/lambda/latest/dg/python-image.html)）
 
-```
+```shell
+# config.yaml を適宜書き換える
 $ cp scripts/docker/lambda/.env.example scripts/docker/lambda/.env
 $ ./scripts/docker/lambda/build.sh
 $ ./scripts/docker/lambda/push.sh
@@ -80,28 +112,42 @@ $ ./scripts/docker/lambda/push.sh
 
 **上記のコンテナイメージには `config.yaml` 等重要な情報を含むためアップロードするアカウントに注意する**
 
-<br>
-
 ## My Recorder
 
-```
-$ ./scripts/myrecorder.sh ${CMD}
-```
-
-${CMD} は以下の通り
+利用可能な `${CMD}` は以下の通り
 
 - `start`: 出勤
 - `end`: 退勤
 - `rest_start`: 休憩開始
 - `rest_end`: 休憩終了
 
-<br>
+### Docker で実行
+
+```shell
+$ ./scripts/myrecorder.sh ${CMD}
+```
+
+Slack に特定のメッセージを通知する場合には以下のようにする
+
+```shell
+$ ./scripts/myrecorder.sh ${CMD} "Some messages"
+```
+
+### ローカルで実行
+
+```shell
+$ python -m kot myrecorder ${CMD}
+```
+
+Slack に特定のメッセージを通知する場合には以下のようにする
+
+```shell
+$ python -m kot myrecorder ${CMD} --message "Some messages"
+```
 
 ## Development
 
 ### Typer Help
-
-`Typer` ヘルプ
 
 ```
 $ python -m kot --help
@@ -140,7 +186,7 @@ Arguments:
 Options:
   --yes / --no-yes                [default: no-yes]
   --message TEXT
-  --debug / --no-debug            [default: debug]
+  --debug / --no-debug            [default: no-debug]
   --amazon-linux / --no-amazon-linux
                                   [default: no-amazon-linux]
   --chrome / --no-chrome          [default: chrome]
@@ -150,32 +196,24 @@ Options:
   --help                          Show this message and exit.
 ```
 
+### Lint
+
+#### type check
+
+```shell
+$ make mypy
+```
+
+#### test
+
+```shell
+$ make test
+```
+
 ### Pydeps
 
-```
+```shell
 $ make pydeps
 ```
 
 ![kot.svg](https://github.com/takaiyuk/kot/blob/master/kot.svg)
-
-### Lint
-
-type check
-
-```
-$ make mypy
-```
-
-test
-
-```
-$ make test
-```
-
-## How to install docker (macOS)
-
-（不明な場合は[こちらの記事](https://qiita.com/kurkuru/items/127fa99ef5b2f0288b81#docker-for-mac%E3%82%92%E3%82%A4%E3%83%B3%E3%82%B9%E3%83%88%E3%83%BC%E3%83%AB-package)等を参考にする）
-
-1. [Docker for Mac](https://hub.docker.com/editions/community/docker-ce-desktop-mac) をダウンロードする（ダウンロードにはアカウント作成が必要）
-2. ダウンロード・インストールが完了したら、Docker for Mac を起動する
-3. ステータスバーにクジラのアイコンが出るので、先程作成した Docker の ID/Password でサインインする

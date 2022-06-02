@@ -1,3 +1,5 @@
 #!/bin/sh
 
-docker build -f ./docker/lambda/Dockerfile -t takaiyuk/kot-lambda:latest .
+source ./scripts/docker/lambda/.env
+
+docker build -f ./docker/lambda/Dockerfile -t $IMAGE:$TAG .
