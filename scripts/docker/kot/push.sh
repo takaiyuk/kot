@@ -1,3 +1,3 @@
 #!/bin/sh
 
-docker push takaiyuk/kot
+docker push takaiyuk/kot:latest
