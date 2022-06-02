@@ -1,52 +1,89 @@
-# scrape-king-of-time
+# kot
 
 ## TOC
 
-* [TOC](#TOC)
-* [これは何か？](#これは何か)
-* [使い方](#使い方)
-    * [Run with Docker](#run-with-docker)
-    * [Run on Local (非推奨)](#run-on-local-非推奨)
-    * [Run on AWS Lambda](#run-on-aws-lambda)
-* [My Recorder](#my-recorder)
-* [How to install docker (macOS)](#how-to-install-docker-macos)
+- [TOC](#TOC)
+- [概要](#概要)
+- [実行環境の準備](#実行環境の準備)
+- [Scrape KOT](#scrape-kot)
+  - [Slack に通知](#slack-に通知)
+  - [Console に通知](#console-に通知)
+  - [AWS Lambda で実行](#aws-lambda-で実行)
+- [My Recorder](#my-recorder)
+- [Development](#development)
+  - [Typer Help](#typer-help)
+  - [Lint](#lint)
+    - [type check](#type-check)
+    - [test](#test)
+  - [Pydeps](#pydeps)
 
-## これは何か？
+## 概要
 
-King of Time をスクレイピングして、 勤務時間の貯金等を計算＆通知してくれる君
+以下の機能が CLI で操作できる
 
-[My Recorder で打刻をする機能も追加](https://github.com/takaiyuk/scrape-king-of-time#my-recorder)した
+- KING OF TIME の勤怠データから勤務時間の貯金時間等を計算する
+- My レコーダーで打刻する
 
-## 使い方
+## 実行環境の準備
 
-### Run with Docker
+### Docker で実行
 
-事前に Docker を起動し、サインインしておく
-
-Docker がインストールされてない場合は、[こちら](https://github.com/takaiyuk/scrape-king-of-time#how-to-install-docker)を参照
-
-```
-git clone https://github.com/takaiyuk/scrape-king-of-time.git
-cd scrape-king-of-time
-mkdir ~/.scrape_kot
-cp config.py.example ~/.scrape_kot/config.py  # config.py に自分のKing of TimeのID/PW等を入力する
-./shell/pull.sh
-./scrapekot.sh
-```
-
-出力イメージ
-
-![Slack Notify Image](https://github.com/takaiyuk/scrape-king-of-time/blob/master/docs/source/_static/img/notify-green.png)
-
-<br>
-
-Slack チャンネルに通知させたくない場合は `console` コマンドをつけて実行することで自身のコンソール上のみに出力させることも可能
-
-```
-./scrapekot.sh console
+```shell
+$ git clone https://github.com/takaiyuk/kot.git
+$ cd kot
+$ mkdir ~/.kot
+# config.yaml を適宜書き換える
+$ cp ./config.yaml.example ~/.kot/config.yaml
+$ ./scripts/docker/kot/pull.sh
 ```
 
-出力イメージ
+### ローカルで実行
+
+```shell
+$ git clone https://github.com/takaiyuk/kot.git
+$ cd kot
+# config.yaml を適宜書き換える
+$ cp ./config.yaml.example ./config.yaml
+$ pip install -r requirements.txt
+```
+
+## Scrape KOT
+
+### Slack に通知
+
+#### Docker で実行
+
+```shell
+$ ./scripts/scrapekot.sh slack
+```
+
+#### ローカルで実行
+
+```shell
+$ python -m kot scrape --no-console
+```
+
+#### 出力イメージ
+
+![Slack Notify Image](https://github.com/takaiyuk/kot/blob/master/statics/img/notify-green.png)
+
+### Console に通知
+
+Slack チャンネルに通知させたくない場合は `console` をつけて実行することで自身のコンソール上のみに出力させることも可能
+
+#### Docker で実行
+
+```shell
+$ ./scripts/scrapekot.sh console
+```
+
+#### ローカルで実行
+
+```shell
+$ python -m kot scrape --console
+```
+
+#### 出力イメージ
 
 ```
     残り12営業日: (8.0/20.0 日)
@@ -62,100 +99,121 @@ Slack チャンネルに通知させたくない場合は `console` コマンド
         定時: 19:15
 ```
 
-<br>
+### AWS Lambda で実行
 
-### Run on Local (非推奨)
+AWS Lambda で動かすためにコンテナイメージを利用して Lambda 関数コードをデプロイすることができる（ref. [コンテナイメージで Python Lambda 関数をデプロイする](https://docs.aws.amazon.com/ja_jp/lambda/latest/dg/python-image.html)）
 
-Docker を利用せずにローカル実行もできる（Python 3.6 以降が必須）
-
-Chromedriver のバージョンは自身の環境の Chrome と互換性のあるバージョンを指定する
-
-```
-git clone https://github.com/takaiyuk/scrape-king-of-time.git
-cd scrape-king-of-time
-python py/utils/download_chromedriver.py --os=mac --version=79.0.3945.36  # or --os=linux
-pip install -r requirements.txt
-cp config.py.example config.py  # config.py に自分のKing of TimeのID/PW等を入力する
-python run.py  # slackに通知させたくない場合は `python run.py console`
+```shell
+# config.yaml を適宜書き換える
+$ cp scripts/docker/lambda/.env.example scripts/docker/lambda/.env
+$ ./scripts/docker/lambda/build.sh
+$ ./scripts/docker/lambda/push.sh
 ```
 
-<br>
-
-### Run on AWS Lambda
-
-Lambda デプロイパッケージを用意する (cf. https://qiita.com/nabehide/items/754eb7b7e9fff9a1047d)
-
-```
-./lambda_prepare.sh
-cd deploy_package
-./lambda_build.sh
-```
-
-実行後生成された `deploy_package.zip` を S3 に配置し、Lambda 関数を適切に設定する
-
-**`deploy_package.zip` は重要な情報を含むためアップロードするアカウントに注意する**
-
-<br>
+**上記のコンテナイメージには `config.yaml` 等重要な情報を含むためアップロードするアカウントに注意する**
 
 ## My Recorder
 
-ブラウザから打刻できるやつ（My Recorder）で打刻をコマンドから行う
-
-- Docker
-```
-./myrecorder.sh ${CMD}
-```
-
-- Python (非推奨)
-```
-./shell/myrecorder-py.sh ${CMD}
-```
-
-${CMD} は以下の通り
+利用可能な `${CMD}` は以下の通り
 
 - `start`: 出勤
 - `end`: 退勤
-- `rest-start`: 休憩開始
-- `rest-end`: 休憩終了
+- `rest_start`: 休憩開始
+- `rest_end`: 休憩終了
 
-<br>
+### Docker で実行
 
-また `-y` オプションでプロンプトをスキップして実行可能（打刻なので注意）
-
-- Docker
-```
-./myrecorder.sh ${CMD} -y
+```shell
+$ ./scripts/myrecorder.sh ${CMD}
 ```
 
-- Python (非推奨)
-```
-./shell/myrecorder-py.sh ${CMD} -y
-```
+Slack に特定のメッセージを通知する場合には以下のようにする
 
-<br>
-
-また My Recorder で打刻時に特定のSlackチャンネルに出勤・退勤のメッセージを送信可能
-
-`config.py` で `MYRECORDER_WEBHOOK_URL` 及び `MYRECORDER_NOTIFY_CHANNEL` を設定すれば特定のSlackチャンネルに incoming webhook で出勤・退勤のメッセージを送信することができる（未設定ならばスキップされる）
-
-<br>
-
-さらに `message` オプションでSlack通知するメッセージをカスタムで追加できる（デフォルトはconst.py以下の `CMD_MESSAGE_DICT` 内のKeyに相当するリストの中からランダムに選択される）
-
-- Docker
-```
-./myrecorder.sh ${CMD} -y 圧倒的出勤っ...!!
+```shell
+$ ./scripts/myrecorder.sh ${CMD} "Some messages"
 ```
 
-- Python (非推奨)
+### ローカルで実行
+
+```shell
+$ python -m kot myrecorder ${CMD}
 ```
-./shell/myrecorder-py.sh ${CMD} -y 圧倒的退勤っ...!!
+
+Slack に特定のメッセージを通知する場合には以下のようにする
+
+```shell
+$ python -m kot myrecorder ${CMD} --message "Some messages"
 ```
 
-## How to install docker (macOS)
+## Development
 
-（不明な場合は[こちらの記事](https://qiita.com/kurkuru/items/127fa99ef5b2f0288b81#docker-for-mac%E3%82%92%E3%82%A4%E3%83%B3%E3%82%B9%E3%83%88%E3%83%BC%E3%83%AB-package)等を参考にする）
+### Typer Help
 
-1. [Docker for Mac](https://hub.docker.com/editions/community/docker-ce-desktop-mac) をダウンロードする（ダウンロードにはアカウント作成が必要）
-2. ダウンロード・インストールが完了したら、Docker for Mac を起動する
-3. ステータスバーにクジラのアイコンが出るので、先程作成した Docker の ID/Password でサインインする
+```
+$ python -m kot --help
+Usage: python -m kot [OPTIONS] COMMAND [ARGS]...
+
+Options:
+  --help  Show this message and exit.
+
+Commands:
+  myrecorder
+  scrape
+```
+
+```
+$ python -m kot scrape --help
+Usage: python -m kot scrape [OPTIONS]
+
+Options:
+  --amazon-linux / --no-amazon-linux
+                                  [default: no-amazon-linux]
+  --chrome / --no-chrome          [default: chrome]
+  --chronium / --no-chronium      [default: no-chronium]
+  --firefox / --no-firefox        [default: no-firefox]
+  --headless / --no-headless      [default: headless]
+  --console / --no-console        [default: console]
+  --help                          Show this message and exit.
+```
+
+```
+$ python -m kot myrecorder --help
+Usage: python -m kot myrecorder [OPTIONS] COMMAND
+
+Arguments:
+  COMMAND  [required]
+
+Options:
+  --yes / --no-yes                [default: no-yes]
+  --message TEXT
+  --debug / --no-debug            [default: no-debug]
+  --amazon-linux / --no-amazon-linux
+                                  [default: no-amazon-linux]
+  --chrome / --no-chrome          [default: chrome]
+  --chronium / --no-chronium      [default: no-chronium]
+  --firefox / --no-firefox        [default: no-firefox]
+  --headless / --no-headless      [default: headless]
+  --help                          Show this message and exit.
+```
+
+### Lint
+
+#### type check
+
+```shell
+$ make mypy
+```
+
+#### test
+
+```shell
+$ make test
+```
+
+### Pydeps
+
+```shell
+$ make pydeps
+```
+
+![kot.svg](https://github.com/takaiyuk/kot/blob/master/statics/img/kot.svg)
