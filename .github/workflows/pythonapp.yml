@@ -8,23 +8,20 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v1
-    - name: Set up Python 3.7
-      uses: actions/setup-python@v1
+    - uses: actions/checkout@v2
+    - name: Set up Python 3.9
+      uses: actions/setup-python@v2
       with:
-        python-version: 3.7
+        python-version: 3.9
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install poetry
-        poetry export -f requirements.txt > requirements.txt
-        pip freeze | xargs pip uninstall -y
         pip install --user -r requirements.txt
-    - name: Check type with mypy
+    - name: Run mypy
       run: |
         pip install mypy
-        mypy py --ignore-missing-imports
-    - name: Test with pytest
+        mypy kot --install-types --non-interactive && mypy kot
+    - name: Run pytest
       run: |
-        pip install pytest
-        pytest py/tests
+        pip install pytest pytest-mock
+        pytest tests
