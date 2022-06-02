@@ -17,15 +17,18 @@ test:
 
 pydeps:
 	# brew install graphviz && dot -c && pip install pydeps
-	pydeps kot --cluster --exclude-exact \
-		bs4 \
-		requests \
-		selenium \
-		typer \
-		yaml \
-		webdriver_manager \
-		kot.common \
-		kot.common.config \
-		kot.common.logger \
-		kot.myrecorder \
-		kot.scrapekot
+	pydeps kot \
+		-o statics/img/kot.svg \
+		--cluster \
+		--exclude-exact \
+			bs4 \
+			requests \
+			selenium \
+			typer \
+			yaml \
+			webdriver_manager \
+			kot.common \
+			kot.common.config \
+			kot.common.logger \
+			kot.myrecorder \
+			kot.scrapekot
