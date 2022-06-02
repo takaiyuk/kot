@@ -44,7 +44,7 @@ class SlackClient(BaseSlackClient):
         messages = [
             f":shigyou:\t{aggregated_data.start_time}",
             f":teiji:\t{aggregated_data.teiji_time}",
-            f":bank:\t{aggregated_data.saving_time}",
+            f":bank:\t{format_hours(aggregated_data.saving_time)}",
         ]
         message = "\n".join(messages)
         return message
@@ -66,6 +66,8 @@ class SlackClient(BaseSlackClient):
 
     def _slack_data(self, notify_data: NotifyData) -> dict[str, Any]:
         return {
+            "username": notify_data.slack_username,
+            "icon_emoji": notify_data.slack_icon_emoji,
             "channel": notify_data.slack_channel,
             "attachments": [
                 {
@@ -80,22 +82,6 @@ class SlackClient(BaseSlackClient):
 class Console:
     @staticmethod
     def display(aggregated_data: AggregatedData, dt_today: datetime) -> None:
-        def format_hours(hours: float) -> str:
-            """
-            1.05 -> 1時間05分
-            1.5 -> 1時間50分
-            1.50 -> 1時間50分
-            0 -> 0時間00分
-            """
-            if hours == 0:
-                return "0時間00分"
-            hour_str = str(hours).split(".")[0]
-            minute_str = str(hours).split(".")[1]
-            # hours=2.5 を `2時間5分` ではなく `2時間50分` に変換するための対応
-            if len(minute_str) == 1:
-                minute_str += "0"
-            return f"{hour_str}時間{minute_str}分"
-
         kwargs = {
             "work_counts_remain": aggregated_data.work_counts_remain,
             "work_counts": aggregated_data.work_counts,
@@ -127,3 +113,20 @@ class Console:
                 today=dt_today, **kwargs
             )
         )
+
+
+def format_hours(hours: float) -> str:
+    """
+    1.05 -> 1時間05分
+    1.5 -> 1時間50分
+    1.50 -> 1時間50分
+    0 -> 0時間00分
+    """
+    if hours == 0:
+        return "0時間00分"
+    hour_str = str(hours).split(".")[0]
+    minute_str = str(hours).split(".")[1]
+    # hours=2.5 を `2時間5分` ではなく `2時間50分` に変換するための対応
+    if len(minute_str) == 1:
+        minute_str += "0"
+    return f"{hour_str}時間{minute_str}分"

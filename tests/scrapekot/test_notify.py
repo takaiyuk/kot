@@ -10,6 +10,7 @@ from kot.scrapekot.notify import (
     NotifyData,
     SlackClient,
     SlackClientParams,
+    format_hours,
 )
 
 api = SlackClient()
@@ -75,6 +76,8 @@ def test_SlackClient__post_slack(mocker):
         assert url == "scrapekot_url"
         assert data == json.dumps(
             {
+                "username": "scrapekot_username",
+                "icon_emoji": "scrapekot_emoji",
                 "channel": "scrapekot_channel",
                 "attachments": [
                     {
@@ -120,7 +123,7 @@ def test_SlackClient__get_message():
         start_time="09:00",
         teiji_time="18:00",
     )
-    expected = "\n".join([":shigyou:\t09:00", ":teiji:\t18:00", ":bank:\t1.25"])
+    expected = "\n".join([":shigyou:\t09:00", ":teiji:\t18:00", ":bank:\t1時間25分"])
     fixtures = [Fixture("", aggregated_data, expected)]
     for fixture in fixtures:
         actual = api._get_message(fixture.input)
@@ -188,6 +191,8 @@ def test_SlackClient__slack_data():
         color="green",
     )
     expected = {
+        "username": "scrapekot_username",
+        "icon_emoji": "scrapekot_emoji",
         "channel": "scrapekot_channel",
         "attachments": [
             {
@@ -236,3 +241,22 @@ def test_Console_display(mocker):
     )
     mocker.patch("kot.common.logger.logger.info", side_effect=mock_func_logger_info)
     Console.display(aggregated_data, dt_today)
+
+
+def test_format_hours():
+    @dataclass
+    class Fixture:
+        desc: str
+        hours: float
+        expected: str
+
+    hours = [
+        -1.05,
+        1.5,
+        1.50,
+        0,
+    ]
+    expected = ["-1時間05分", "1時間50分", "1時間50分", "0時間00分"]
+    fixtures = [Fixture("", h, e) for h, e in zip(hours, expected)]
+    for fixture in fixtures:
+        assert format_hours(fixture.hours) == fixture.expected, fixture.desc
