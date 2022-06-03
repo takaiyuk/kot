@@ -19,9 +19,12 @@ class NotifyData:
 class BaseSlackClient:
     def notify(self, params: Any, data: Any = None) -> None:
         notify_data = self._build_noitfy_data(params, data)
-        self._post_slack(notify_data)
+        if notify_data is None:
+            pass
+        else:
+            self._post_slack(notify_data)
 
-    def _build_noitfy_data(self, params: Any, data: Any) -> NotifyData:
+    def _build_noitfy_data(self, params: Any, data: Any) -> Optional[NotifyData]:
         raise NotImplementedError
 
     def _post_slack(self, notify_data: NotifyData) -> None:

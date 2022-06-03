@@ -1,6 +1,6 @@
 import random
 from dataclasses import dataclass
-from typing import Any
+from typing import Any, Optional
 
 from kot.common.logger import logger
 from kot.common.notify import BaseSlackClient, NotifyData
@@ -22,17 +22,18 @@ class SlackClientParams:
 class SlackClient(BaseSlackClient):
     def _build_noitfy_data(
         self, params: SlackClientParams, data: Any = None
-    ) -> NotifyData:
+    ) -> Optional[NotifyData]:
         if params.message is None or params.message == "":
             kintai_messages = getattr(MyRecorderOptions, params.command).messages
             idx = random.randint(0, len(kintai_messages) - 1)
             kintai_message = kintai_messages[idx]
         else:
             kintai_message = params.message
-        if not params.is_debug:
+        if not params.is_debug and params.yes:
             logger.info(f"通知されるメッセージ: {kintai_message}")
         else:
-            logger.info(f"通知されないメッセージ: {kintai_message}")
+            logger.info(f"以下の通知はスキップされます: {kintai_message}")
+            return None
         return NotifyData(
             slack_webhook_url=params.slack_webhook_url,
             slack_channel=params.slack_channel,
