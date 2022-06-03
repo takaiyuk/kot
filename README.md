@@ -44,7 +44,7 @@ $ git clone https://github.com/takaiyuk/kot.git
 $ cd kot
 # config.yaml を適宜書き換える
 $ cp ./config.yaml.example ./config.yaml
-$ pip install -r requirements.txt
+$ poetry install
 ```
 
 ## Scrape KOT
@@ -60,7 +60,7 @@ $ ./scripts/scrapekot.sh slack
 #### ローカルで実行
 
 ```shell
-$ python -m kot scrape --no-console
+$ poetry run python -m kot scrape --no-console
 ```
 
 #### 出力イメージ
@@ -80,7 +80,7 @@ $ ./scripts/scrapekot.sh console
 #### ローカルで実行
 
 ```shell
-$ python -m kot scrape --console
+$ poetry run python -m kot scrape --console
 ```
 
 #### 出力イメージ
@@ -136,13 +136,13 @@ $ ./scripts/myrecorder.sh ${CMD} "Some messages"
 ### ローカルで実行
 
 ```shell
-$ python -m kot myrecorder ${CMD}
+$ poetry run python -m kot myrecorder ${CMD}
 ```
 
 Slack に特定のメッセージを通知する場合には以下のようにする
 
 ```shell
-$ python -m kot myrecorder ${CMD} --message "Some messages"
+$ poetry run python -m kot myrecorder ${CMD} --message "Some messages"
 ```
 
 ## Development
@@ -150,7 +150,7 @@ $ python -m kot myrecorder ${CMD} --message "Some messages"
 ### Typer Help
 
 ```
-$ python -m kot --help
+$ poetry run python -m kot --help
 Usage: python -m kot [OPTIONS] COMMAND [ARGS]...
 
 Options:
@@ -162,7 +162,7 @@ Commands:
 ```
 
 ```
-$ python -m kot scrape --help
+$ poetry run python -m kot scrape --help
 Usage: python -m kot scrape [OPTIONS]
 
 Options:
@@ -177,7 +177,7 @@ Options:
 ```
 
 ```
-$ python -m kot myrecorder --help
+$ poetry run python -m kot myrecorder --help
 Usage: python -m kot myrecorder [OPTIONS] COMMAND
 
 Arguments:
