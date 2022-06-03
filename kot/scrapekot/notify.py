@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from datetime import datetime
 from enum import Enum
-from typing import Any
+from typing import Any, Optional
 
 from kot.common.logger import logger
 from kot.common.notify import BaseSlackClient, NotifyData
@@ -26,7 +26,7 @@ class Color(Enum):
 class SlackClient(BaseSlackClient):
     def _build_noitfy_data(
         self, params: SlackClientParams, data: AggregatedData
-    ) -> NotifyData:
+    ) -> Optional[NotifyData]:
         message = self._get_message(data)
         title = self._get_title(params.dt_now)
         color = self._get_color(data.saving_time)
