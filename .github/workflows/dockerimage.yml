@@ -25,9 +25,9 @@ jobs:
         # BRANCH_NAME=$(echo $BRANCH_NAME | sed -e 's/-//g -e 's/_//g')
 
         # Use Docker `latest` tag convention
-        [ "$BRANCH_NAME" == "master" ] && IMAGE_TAG=latest
+        [ "$BRANCH_NAME" == "main" ] && IMAGE_TAG=latest
         [ "$BRANCH_NAME" == "develop" ] && IMAGE_TAG=stg
-        [ "$BRANCH_NAME" != "master" ] && [ "$BRANCH_NAME" != "develop" ] && IMAGE_TAG=dev
+        [ "$BRANCH_NAME" != "main" ] && [ "$BRANCH_NAME" != "develop" ] && IMAGE_TAG=dev
         
         echo IMAGE_ID=$IMAGE_ID
         echo IMAGE_TAG=$IMAGE_TAG
