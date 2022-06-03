@@ -65,7 +65,7 @@ $ python -m kot scrape --no-console
 
 #### 出力イメージ
 
-![Slack Notify Image](https://github.com/takaiyuk/kot/blob/master/statics/img/notify-green.png)
+![Slack Notify Image](https://github.com/takaiyuk/kot/blob/main/statics/img/notify-green.png)
 
 ### Console に通知
 
@@ -216,4 +216,4 @@ $ make test
 $ make pydeps
 ```
 
-![kot.svg](https://github.com/takaiyuk/kot/blob/master/statics/img/kot.svg)
+![kot.svg](https://github.com/takaiyuk/kot/blob/main/statics/img/kot.svg)
