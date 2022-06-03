@@ -7,17 +7,14 @@ myrecorder:
 	python -m kot myrecorder
 
 mypy:
-	# pip install mypy
-	mypy kot --install-types --non-interactive
-	mypy kot
+	poetry run mypy kot --install-types --non-interactive
 
 test:
-	# pip install pytest pytest-mock
-	pytest tests
+	poetry run pytest tests
 
 pydeps:
-	# brew install graphviz && dot -c && pip install pydeps
-	pydeps kot \
+	# brew install graphviz && dot -c
+	poetry run pydeps kot \
 		-o statics/img/kot.svg \
 		--cluster \
 		--exclude-exact \
