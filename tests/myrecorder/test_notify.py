@@ -20,24 +20,50 @@ def test_SlackClient__build_noitfy_data(mocker):
 
     mocker.patch("random.randint", return_value=0)
 
-    params = SlackClientParams(
-        slack_webhook_url="myrecorder_url",
-        slack_channel="myrecorder_channel",
-        slack_icon_emoji="myrecorder_emoji",
-        slack_username="myrecorder_username",
-        command="start",
-        message="",
-        yes=True,
-        is_debug=True,
-    )
-    expected = NotifyData(
-        slack_webhook_url="myrecorder_url",
-        slack_channel="myrecorder_channel",
-        slack_icon_emoji="myrecorder_emoji",
-        slack_username="myrecorder_username",
-        message=":shukkin:",
-    )
-    fixtures = [Fixture("", params, expected)]
+    params = [
+        SlackClientParams(
+            slack_webhook_url="myrecorder_url",
+            slack_channel="myrecorder_channel",
+            slack_icon_emoji="myrecorder_emoji",
+            slack_username="myrecorder_username",
+            command="start",
+            message="",
+            yes=True,
+            is_debug=False,
+        ),
+        SlackClientParams(
+            slack_webhook_url="myrecorder_url",
+            slack_channel="myrecorder_channel",
+            slack_icon_emoji="myrecorder_emoji",
+            slack_username="myrecorder_username",
+            command="start",
+            message="",
+            yes=True,
+            is_debug=True,
+        ),
+        SlackClientParams(
+            slack_webhook_url="myrecorder_url",
+            slack_channel="myrecorder_channel",
+            slack_icon_emoji="myrecorder_emoji",
+            slack_username="myrecorder_username",
+            command="start",
+            message="",
+            yes=False,
+            is_debug=False,
+        ),
+    ]
+    expected = [
+        NotifyData(
+            slack_webhook_url="myrecorder_url",
+            slack_channel="myrecorder_channel",
+            slack_icon_emoji="myrecorder_emoji",
+            slack_username="myrecorder_username",
+            message=":shukkin:",
+        ),
+        None,
+        None,
+    ]
+    fixtures = [Fixture("", p, e) for p, e in zip(params, expected)]
     for fixture in fixtures:
         assert api._build_noitfy_data(fixture.params) == fixture.expected, fixture.desc
 
