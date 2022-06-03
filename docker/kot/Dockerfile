@@ -1,10 +1,10 @@
-FROM python:3.10.2-bullseye as builder
+FROM python:3.10.4-buster as builder
 COPY requirements.txt ./
 RUN apt -y update \
   && apt -y install tzdata \
   && pip install -r requirements.txt
 
-FROM python:3.10.2-slim-bullseye
+FROM python:3.10.4-slim-buster
 COPY --from=builder /usr/local/lib/python3.10/site-packages /usr/local/lib/python3.10/site-packages
 COPY --from=builder /usr/share/zoneinfo/Asia/Tokyo /etc/localtime
 ENV PYTHONPATH=/usr/local:$PYTHONPATH
