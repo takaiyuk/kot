@@ -2,7 +2,7 @@
 name = "kot"
 version = "0.1.0"
 description = ""
-authors = ["takaiyuk <takaishikawa1225@gmail.com>"]
+authors = ["takaiyuk"]
 
 [tool.poetry.dependencies]
 python = "^3.10"
