@@ -1,5 +1,4 @@
 #!/bin/sh
-
 source ./scripts/docker/lambda/.env
 
 aws ecr get-login-password | docker login --username AWS --password-stdin $ECR_URI

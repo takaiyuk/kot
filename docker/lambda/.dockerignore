@@ -15,6 +15,7 @@ tmp
 .gitignore
 .isort.cfg
 .python-version
+config.yaml
 config.yaml.example
 LICENSE
 Makefile
