@@ -103,14 +103,29 @@ $ poetry run python -m kot scrape --console
 
 AWS Lambda で動かすためにコンテナイメージを利用して Lambda 関数コードをデプロイすることができる（ref. [コンテナイメージで Python Lambda 関数をデプロイする](https://docs.aws.amazon.com/ja_jp/lambda/latest/dg/python-image.html)）
 
+`.env` で定義したイメージレポジトリをあらかじめ作成しておく必要がある
+
 ```shell
-# config.yaml を適宜書き換える
+# .env を適宜書き換える
 $ cp scripts/docker/lambda/.env.example scripts/docker/lambda/.env
 $ ./scripts/docker/lambda/build.sh
 $ ./scripts/docker/lambda/push.sh
 ```
 
-**上記のコンテナイメージには `config.yaml` 等重要な情報を含むためアップロードするアカウントに注意する**
+**NOTE: AWS Lambda で環境変数の設定が必要**
+
+CLI で以下のようにして例えば `my-function` という名前の関数に環境変数を設定できる
+
+```shell
+$ aws lambda update-function-configuration --function-name my-function \
+    --environment "Variables={ACCOUNT_ID=id,ACCOUNT_PAWSSWORD=password,SLACK_WEBHOOK_URL=webhook_url,SLACK_CHANNEL=channel,SLACK_ICON_EMOJI=icon_emoji,SLACK_USERNAME=usename}"
+```
+
+以下のコマンドで現在の設定を取得できる
+
+```shell
+$ aws lambda get-function-configuration --function-name my-function
+```
 
 ## My Recorder
 
