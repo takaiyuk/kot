@@ -88,6 +88,8 @@ def punch_myrecorder(params: MyRecorderParams) -> None:
             yes=params.yes,
             is_debug=params.is_debug,
         )
+        browser = Browser.build(driver_options)
+        is_punched = MyRecorderCrawler(browser).run(crawler_params)
         slack_client_params = MyRecorderSlackClientParams(
             slack_webhook_url=cfg.myrecorder.slack.webhook_url,
             slack_channel=cfg.myrecorder.slack.channel,
@@ -97,9 +99,8 @@ def punch_myrecorder(params: MyRecorderParams) -> None:
             message=params.message,
             yes=params.yes,
             is_debug=params.is_debug,
+            is_punched=is_punched,
         )
-        browser = Browser.build(driver_options)
-        MyRecorderCrawler(browser).run(crawler_params)
         MyRecorderSlackClient().notify(slack_client_params)
     except Exception as e:
         t, v, tb = sys.exc_info()

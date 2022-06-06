@@ -20,6 +20,17 @@ def test_SlackClient__build_noitfy_data(mocker):
 
     mocker.patch("random.randint", return_value=0)
 
+    # params.yes にかかわらず params.is_debug=False and params.is_punched=True のときのみ notify_data が返却される
+    yes_debug_punch_tuple = [
+        (True, False, True),
+        (True, False, False),
+        (True, True, True),
+        (True, True, False),
+        (False, False, True),
+        (False, False, False),
+        (False, True, True),
+        (False, True, False),
+    ]
     params = [
         SlackClientParams(
             slack_webhook_url="myrecorder_url",
@@ -28,29 +39,11 @@ def test_SlackClient__build_noitfy_data(mocker):
             slack_username="myrecorder_username",
             command="start",
             message="",
-            yes=True,
-            is_debug=False,
-        ),
-        SlackClientParams(
-            slack_webhook_url="myrecorder_url",
-            slack_channel="myrecorder_channel",
-            slack_icon_emoji="myrecorder_emoji",
-            slack_username="myrecorder_username",
-            command="start",
-            message="",
-            yes=True,
-            is_debug=True,
-        ),
-        SlackClientParams(
-            slack_webhook_url="myrecorder_url",
-            slack_channel="myrecorder_channel",
-            slack_icon_emoji="myrecorder_emoji",
-            slack_username="myrecorder_username",
-            command="start",
-            message="",
-            yes=False,
-            is_debug=False,
-        ),
+            yes=yes,
+            is_debug=is_debug,
+            is_punched=is_punched,
+        )
+        for yes, is_debug, is_punched in yes_debug_punch_tuple
     ]
     expected = [
         NotifyData(
@@ -60,6 +53,17 @@ def test_SlackClient__build_noitfy_data(mocker):
             slack_username="myrecorder_username",
             message=":shukkin:",
         ),
+        None,
+        None,
+        None,
+        NotifyData(
+            slack_webhook_url="myrecorder_url",
+            slack_channel="myrecorder_channel",
+            slack_icon_emoji="myrecorder_emoji",
+            slack_username="myrecorder_username",
+            message=":shukkin:",
+        ),
+        None,
         None,
         None,
     ]

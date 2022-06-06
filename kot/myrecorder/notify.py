@@ -17,6 +17,7 @@ class SlackClientParams:
     message: str
     yes: bool
     is_debug: bool
+    is_punched: bool
 
 
 class SlackClient(BaseSlackClient):
@@ -29,7 +30,7 @@ class SlackClient(BaseSlackClient):
             kintai_message = kintai_messages[idx]
         else:
             kintai_message = params.message
-        if not params.is_debug and params.yes:
+        if not params.is_debug and params.is_punched:
             logger.info(f"通知されるメッセージ: {kintai_message}")
         else:
             logger.info(f"以下の通知はスキップされます: {kintai_message}")

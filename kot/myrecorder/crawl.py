@@ -18,10 +18,11 @@ class CrawlerParams:
 
 
 class Crawler(BaseCrawler):
-    def run(self, params: CrawlerParams) -> None:
-        return self._punch(params)
+    def run(self, params: CrawlerParams) -> bool:
+        is_punched = self._punch(params)
+        return is_punched
 
-    def _punch(self, params: CrawlerParams) -> None:
+    def _punch(self, params: CrawlerParams) -> bool:
         try:
             # トップページ
             self.browser.get(TOP_URL)
@@ -44,14 +45,17 @@ class Crawler(BaseCrawler):
             # 実行する
             if val != "y":
                 logger.info(f"{myrecoder_option.name}ボタンはスキップしました")
+                return False
             else:
                 assert params.command in MyRecorderOptions.__annotations__.keys()
                 xpath = myrecoder_option.xpath
                 if not params.is_debug:
                     self.browser.click(xpath)
                     logger.info(f"{myrecoder_option.name}ボタンが押されました（多分）")
+                    return True
                 else:
                     logger.info(f"{myrecoder_option.name}ボタンは押されない")
+                    return False
         finally:
             # プロセス消す
             self.browser.quit()
