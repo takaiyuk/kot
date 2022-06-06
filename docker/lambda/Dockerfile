@@ -6,14 +6,12 @@ RUN yum update -y \
     && ln -s /usr/lib/python2.7/site-packages/amazon_linux_extras /var/lang/lib/python3.9/site-packages/ \
     && amazon-linux-extras install -y epel \
     && yum install -y chromium
-COPY config.yaml .
 
 # Copy function code
 COPY kot ${LAMBDA_TASK_ROOT}/kot
 
 # Install the function's dependencies using file requirements.txt
 # from your project folder.
-
 COPY requirements.txt  .
 RUN pip3 install -r requirements.txt --target "${LAMBDA_TASK_ROOT}"
 
