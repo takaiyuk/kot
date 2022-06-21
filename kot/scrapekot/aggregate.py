@@ -123,6 +123,7 @@ class Aggregator:
         (ex.)
         84 -> 1.24(=1h24m)
         -84 -> -1.24(=-1h24m)
+        479.875 -> 7.59875(=7h59.875m) -> 7.60 -> 8h00m
         """
         is_minus = False
         if minutes < 0:
@@ -131,7 +132,11 @@ class Aggregator:
         hm = minutes // 60 + round(minutes % 60 / 100, 2)
         if is_minus:
             hm *= -1
-        return round(hm, 2)
+        hm = round(hm, 2)
+        if round(hm % 1, 2) == 0.6:
+            return float(round(hm))
+        else:
+            return hm
 
     def _diff_hours(self, h1: float, h2: float) -> float:
         """
