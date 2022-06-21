@@ -92,7 +92,10 @@ def test_Aggregator_calc_work_hours_remain_by_day():
         remain_count: float
         expected: float
 
-    fixtures = [Fixture("54.10h / 8d = 6.46h/d", 54.10, 8, 6.46)]
+    fixtures = [
+        Fixture("54.10h / 8d = 6.46h/d", 54.10, 8, 6.46),
+        Fixture("63.59h / 8d = 7.598h/d", 63.59, 8, 8.00),
+    ]
     for fixture in fixtures:
         assert (
             a.calc_work_hours_remain_by_day(fixture.remain_hours, fixture.remain_count)
