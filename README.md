@@ -231,4 +231,7 @@ $ make test
 $ make pydeps
 ```
 
-![kot.svg](https://github.com/takaiyuk/kot/blob/main/statics/img/kot.svg)
+<details>
+<summary>Dependency Visualization</summary>
+<img src="./statics/img/kot.svg" title="kot.svg" />
+</details>
