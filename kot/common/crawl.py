@@ -29,6 +29,7 @@ class Driver:
     def build(
         cls, driver_options: DriverOptions
     ) -> Union[webdriver.Chrome, webdriver.Firefox]:
+        options: Union[webdriver.ChromeOptions, webdriver.FirefoxOptions]
         if driver_options.is_chrome:
             options = webdriver.ChromeOptions()
         elif driver_options.is_firefox:
@@ -39,7 +40,7 @@ class Driver:
             )
         options = cls._set_default_options(options, driver_options)
         driver: Union[webdriver.Chrome, webdriver.Firefox]
-        if driver_options.is_chrome:
+        if driver_options.is_chrome and isinstance(options, webdriver.ChromeOptions):
             if driver_options.is_chromium:
                 chrome_service = ChromeService(
                     ChromeDriverManager(
@@ -51,7 +52,9 @@ class Driver:
                     ChromeDriverManager(path=DRIVER_PATH).install()
                 )
             driver = webdriver.Chrome(service=chrome_service, options=options)
-        elif driver_options.is_firefox:
+        elif driver_options.is_firefox and isinstance(
+            options, webdriver.FirefoxOptions
+        ):
             gecko_service = GeckoService(GeckoDriverManager(path=DRIVER_PATH).install())
             driver = webdriver.Firefox(service=gecko_service, options=options)
         else:
@@ -65,7 +68,7 @@ class Driver:
         cls,
         options: Union[webdriver.ChromeOptions, webdriver.FirefoxOptions],
         driver_options: DriverOptions,
-    ) -> webdriver.ChromeOptions:
+    ) -> Union[webdriver.ChromeOptions, webdriver.FirefoxOptions]:
         if driver_options.is_headless:
             options.add_argument("--headless")
         options.add_argument("--no-sandbox")
