@@ -22,8 +22,8 @@ fi
 MESSAGE=$2
 if [ -z $MESSAGE ]; then
   docker run -it --rm -v ${CONFIG_PATH}:/kot/config.yaml takaiyuk/kot -m kot \
-    myrecorder ${CMD} --no-yes --chronium
+    myrecorder ${CMD} --no-yes --chromium
 else
   docker run -it --rm -v ${CONFIG_PATH}:/kot/config.yaml takaiyuk/kot -m kot \
-    myrecorder ${CMD} --no-yes --message ${MESSAGE} --chronium
+    myrecorder ${CMD} --no-yes --message ${MESSAGE} --chromium
 fi

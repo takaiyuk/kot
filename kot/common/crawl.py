@@ -19,7 +19,7 @@ B = TypeVar("B", bound="Browser")
 class DriverOptions:
     is_amazon_linux: bool
     is_chrome: bool
-    is_chronium: bool
+    is_chromium: bool
     is_firefox: bool
     is_headless: bool
 
@@ -40,7 +40,7 @@ class Driver:
         options = cls._set_default_options(options, driver_options)
         driver: Union[webdriver.Chrome, webdriver.Firefox]
         if driver_options.is_chrome:
-            if driver_options.is_chronium:
+            if driver_options.is_chromium:
                 chrome_service = ChromeService(
                     ChromeDriverManager(
                         path=DRIVER_PATH, chrome_type=ChromeType.CHROMIUM

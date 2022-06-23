@@ -46,7 +46,7 @@ def scrape_kot(params: ScrapeKOTParams) -> None:
         driver_options = DriverOptions(
             is_amazon_linux=params.is_amazon_linux,
             is_chrome=params.is_chrome,
-            is_chronium=params.is_chronium,
+            is_chromium=params.is_chromium,
             is_firefox=params.is_firefox,
             is_headless=params.is_headless,
         )
@@ -81,7 +81,7 @@ def punch_myrecorder(params: MyRecorderParams) -> None:
         driver_options = DriverOptions(
             is_amazon_linux=params.is_amazon_linux,
             is_chrome=params.is_chrome,
-            is_chronium=params.is_chronium,
+            is_chromium=params.is_chromium,
             is_firefox=params.is_firefox,
             is_headless=params.is_headless,
         )
@@ -117,7 +117,7 @@ def initialize_dirver(params: InitializeParams) -> None:
     driver_options = DriverOptions(
         is_amazon_linux=params.is_amazon_linux,
         is_chrome=params.is_chrome,
-        is_chronium=params.is_chronium,
+        is_chromium=params.is_chromium,
         is_firefox=params.is_firefox,
         is_headless=params.is_headless,
     )
@@ -129,7 +129,7 @@ def lambda_handler(event: Any, context: Any) -> None:
     params = ScrapeKOTParams(
         is_amazon_linux=True,
         is_chrome=True,
-        is_chronium=True,
+        is_chromium=True,
         is_firefox=False,
         is_headless=True,
         is_console=True,
