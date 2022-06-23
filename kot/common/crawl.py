@@ -19,7 +19,7 @@ B = TypeVar("B", bound="Browser")
 class DriverOptions:
     is_amazon_linux: bool
     is_chrome: bool
-    is_chronium: bool
+    is_chromium: bool
     is_firefox: bool
     is_headless: bool
 
@@ -29,11 +29,19 @@ class Driver:
     def build(
         cls, driver_options: DriverOptions
     ) -> Union[webdriver.Chrome, webdriver.Firefox]:
-        options = webdriver.ChromeOptions()
-        options = cls._set_default_chrome_options(options, driver_options)
-        driver: Union[webdriver.Chrome, webdriver.Firefox]
+        options: Union[webdriver.ChromeOptions, webdriver.FirefoxOptions]
         if driver_options.is_chrome:
-            if driver_options.is_chronium:
+            options = webdriver.ChromeOptions()
+        elif driver_options.is_firefox:
+            options = webdriver.FirefoxOptions()
+        else:
+            raise ValueError(
+                "driver_options.is_chrome or driver_options.is_firefox must be True"
+            )
+        options = cls._set_default_options(options, driver_options)
+        driver: Union[webdriver.Chrome, webdriver.Firefox]
+        if driver_options.is_chrome and isinstance(options, webdriver.ChromeOptions):
+            if driver_options.is_chromium:
                 chrome_service = ChromeService(
                     ChromeDriverManager(
                         path=DRIVER_PATH, chrome_type=ChromeType.CHROMIUM
@@ -44,7 +52,9 @@ class Driver:
                     ChromeDriverManager(path=DRIVER_PATH).install()
                 )
             driver = webdriver.Chrome(service=chrome_service, options=options)
-        elif driver_options.is_firefox:
+        elif driver_options.is_firefox and isinstance(
+            options, webdriver.FirefoxOptions
+        ):
             gecko_service = GeckoService(GeckoDriverManager(path=DRIVER_PATH).install())
             driver = webdriver.Firefox(service=gecko_service, options=options)
         else:
@@ -54,11 +64,11 @@ class Driver:
         return driver
 
     @classmethod
-    def _set_default_chrome_options(
+    def _set_default_options(
         cls,
-        options: webdriver.ChromeOptions,
+        options: Union[webdriver.ChromeOptions, webdriver.FirefoxOptions],
         driver_options: DriverOptions,
-    ) -> webdriver.ChromeOptions:
+    ) -> Union[webdriver.ChromeOptions, webdriver.FirefoxOptions]:
         if driver_options.is_headless:
             options.add_argument("--headless")
         options.add_argument("--no-sandbox")

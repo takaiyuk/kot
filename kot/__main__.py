@@ -1,7 +1,14 @@
 import typer
 
 from kot.common.logger import logger
-from kot.service import MyRecorderParams, ScrapeKOTParams, punch_myrecorder, scrape_kot
+from kot.service import (
+    MyRecorderParams,
+    ScrapeKOTParams,
+    InitializeParams,
+    punch_myrecorder,
+    scrape_kot,
+    initialize_dirver,
+)
 
 app = typer.Typer(add_completion=False)
 
@@ -10,7 +17,7 @@ app = typer.Typer(add_completion=False)
 def scrape(
     amazon_linux: bool = False,
     chrome: bool = True,
-    chronium: bool = False,
+    chromium: bool = False,
     firefox: bool = False,
     headless: bool = True,
     console: bool = True,
@@ -18,7 +25,7 @@ def scrape(
     params = ScrapeKOTParams(
         is_amazon_linux=amazon_linux,
         is_chrome=chrome,
-        is_chronium=chronium,
+        is_chromium=chromium,
         is_firefox=firefox,
         is_headless=headless,
         is_console=console,
@@ -35,14 +42,14 @@ def myrecorder(
     debug: bool = False,
     amazon_linux: bool = False,
     chrome: bool = True,
-    chronium: bool = False,
+    chromium: bool = False,
     firefox: bool = False,
     headless: bool = True,
 ) -> None:
     params = MyRecorderParams(
         is_amazon_linux=amazon_linux,
         is_chrome=chrome,
-        is_chronium=chronium,
+        is_chromium=chromium,
         is_firefox=firefox,
         is_headless=headless,
         command=command,
@@ -52,6 +59,22 @@ def myrecorder(
     )
     logger.info(params)
     punch_myrecorder(params)
+
+
+@app.command()
+def initialize() -> None:
+    """
+    Get cache of the latest chromedriver version for chromium in kot docker image
+    """
+    params = InitializeParams(
+        is_amazon_linux=False,
+        is_chrome=True,
+        is_chromium=True,
+        is_firefox=False,
+        is_headless=True,
+    )
+    logger.info(params)
+    initialize_dirver(params)
 
 
 if __name__ == "__main__":
