@@ -29,8 +29,15 @@ class Driver:
     def build(
         cls, driver_options: DriverOptions
     ) -> Union[webdriver.Chrome, webdriver.Firefox]:
-        options = webdriver.ChromeOptions()
-        options = cls._set_default_chrome_options(options, driver_options)
+        if driver_options.is_chrome:
+            options = webdriver.ChromeOptions()
+        elif driver_options.is_firefox:
+            options = webdriver.FirefoxOptions()
+        else:
+            raise ValueError(
+                "driver_options.is_chrome or driver_options.is_firefox must be True"
+            )
+        options = cls._set_default_options(options, driver_options)
         driver: Union[webdriver.Chrome, webdriver.Firefox]
         if driver_options.is_chrome:
             if driver_options.is_chronium:
@@ -54,9 +61,9 @@ class Driver:
         return driver
 
     @classmethod
-    def _set_default_chrome_options(
+    def _set_default_options(
         cls,
-        options: webdriver.ChromeOptions,
+        options: Union[webdriver.ChromeOptions, webdriver.FirefoxOptions],
         driver_options: DriverOptions,
     ) -> webdriver.ChromeOptions:
         if driver_options.is_headless:

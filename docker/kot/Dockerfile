@@ -13,9 +13,11 @@ COPY --from=builder /usr/share/zoneinfo/Asia/Tokyo /etc/localtime
 ENV PYTHONPATH=/usr/local:$PYTHONPATH
 ENV APP_HOME /kot
 WORKDIR $APP_HOME
-COPY . .
 RUN apt -y update \
   && apt -y install chromium \
   && rm -rf /var/lib/apt/lists/*
+COPY kot kot
+COPY scripts scripts
+RUN python -m kot initialize
 
 ENTRYPOINT ["python"]

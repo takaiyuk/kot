@@ -35,6 +35,11 @@ class MyRecorderParams(DriverOptions):
     is_debug: bool
 
 
+@dataclass
+class InitializeParams(DriverOptions):
+    pass
+
+
 def scrape_kot(params: ScrapeKOTParams) -> None:
     try:
         cfg = load_config(FILEPATH)
@@ -106,6 +111,18 @@ def punch_myrecorder(params: MyRecorderParams) -> None:
         t, v, tb = sys.exc_info()
         x = traceback.format_exception(t, v, tb)
         raise Exception(f"{''.join(x)}" + str(e))
+
+
+def initialize_dirver(params: InitializeParams) -> None:
+    driver_options = DriverOptions(
+        is_amazon_linux=params.is_amazon_linux,
+        is_chrome=params.is_chrome,
+        is_chronium=params.is_chronium,
+        is_firefox=params.is_firefox,
+        is_headless=params.is_headless,
+    )
+    browser = Browser.build(driver_options)
+    browser.quit()
 
 
 def lambda_handler(event: Any, context: Any) -> None:
