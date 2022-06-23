@@ -184,7 +184,7 @@ Options:
   --amazon-linux / --no-amazon-linux
                                   [default: no-amazon-linux]
   --chrome / --no-chrome          [default: chrome]
-  --chronium / --no-chronium      [default: no-chronium]
+  --chromium / --no-chromium      [default: no-chromium]
   --firefox / --no-firefox        [default: no-firefox]
   --headless / --no-headless      [default: headless]
   --console / --no-console        [default: console]
@@ -205,7 +205,7 @@ Options:
   --amazon-linux / --no-amazon-linux
                                   [default: no-amazon-linux]
   --chrome / --no-chrome          [default: chrome]
-  --chronium / --no-chronium      [default: no-chronium]
+  --chromium / --no-chromium      [default: no-chromium]
   --firefox / --no-firefox        [default: no-firefox]
   --headless / --no-headless      [default: headless]
   --help                          Show this message and exit.
@@ -231,4 +231,7 @@ $ make test
 $ make pydeps
 ```
 
-![kot.svg](https://github.com/takaiyuk/kot/blob/main/statics/img/kot.svg)
+<details>
+<summary>Dependency Visualization</summary>
+<img src="./statics/img/kot.svg" title="kot.svg" />
+</details>
