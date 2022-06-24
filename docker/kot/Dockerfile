@@ -18,6 +18,9 @@ RUN apt -y update \
   && rm -rf /var/lib/apt/lists/*
 COPY kot kot
 COPY scripts scripts
+# Turn off webdriver-manager logs use
+ENV WDM_LOG 0
+
 RUN python -m kot initialize
 
 ENTRYPOINT ["python"]
