@@ -5,10 +5,11 @@ from typing import Any, Type, TypeVar, Union
 
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service as ChromeService
+from selenium.webdriver.common.by import By
 from selenium.webdriver.firefox.service import Service as GeckoService
 from webdriver_manager.chrome import ChromeDriverManager
+from webdriver_manager.core.utils import ChromeType
 from webdriver_manager.firefox import GeckoDriverManager
-from webdriver_manager.utils import ChromeType
 
 TOP_URL = "https://s3.kingtime.jp/admin"
 DRIVER_PATH = "/tmp"
@@ -104,7 +105,7 @@ class Browser:
         self.sleep()
 
     def click(self, xpath: str) -> None:
-        self.driver.find_element_by_xpath(xpath).click()
+        self.driver.find_element(by=By.XPATH, value=xpath).click()
         self.sleep()
 
     def get(self, url: str) -> None:
@@ -123,7 +124,7 @@ class Browser:
         self.driver.execute_script("window.scrollTo(0, " + str(height) + ");")
 
     def send(self, xpath: str, string: str) -> None:
-        self.driver.find_element_by_xpath(xpath).send_keys(string)
+        self.driver.find_element(by=By.XPATH, value=xpath).send_keys(string)
 
     def sleep(self, a: int = 1, b: int = 2) -> None:
         ts = self._get_random(a, b)
