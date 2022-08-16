@@ -126,13 +126,30 @@ def initialize_dirver(params: InitializeParams) -> None:
 
 
 def lambda_handler(event: Any, context: Any) -> None:
-    params = ScrapeKOTParams(
-        is_amazon_linux=True,
-        is_chrome=True,
-        is_chromium=True,
-        is_firefox=False,
-        is_headless=True,
-        is_console=True,
-    )
-    logger.info(params)
-    scrape_kot(params)
+    if event["command"] == "myrecorder":
+        params = MyRecorderParams(
+            is_amazon_linux=True,
+            is_chrome=True,
+            is_chromium=True,
+            is_firefox=False,
+            is_headless=True,
+            command=event["myrecorder_command"],
+            message="",
+            yes=True,
+            is_debug=False,
+        )
+        logger.info(params)
+        punch_myrecorder(params)
+    elif event["command"] == "scrape":
+        params = ScrapeKOTParams(
+            is_amazon_linux=True,
+            is_chrome=True,
+            is_chromium=True,
+            is_firefox=False,
+            is_headless=True,
+            is_console=False,
+        )
+        logger.info(params)
+        scrape_kot(params)
+    else:
+        raise ValueError(f"{event['command']} is not supported")

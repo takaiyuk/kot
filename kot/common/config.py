@@ -103,18 +103,18 @@ def read_lambda_env() -> dict[str, Any]:
         },
         "myrecorder": {
             "slack": {
-                "webhook_url": os.environ["SLACK_WEBHOOK_URL"],
-                "channel": os.environ["SLACK_CHANNEL"],
-                "icon_emoji": os.environ["SLACK_ICON_EMOJI"],
-                "username": os.environ["SLACK_USERNAME"],
+                "webhook_url": os.environ["MYRECORDER_SLACK_WEBHOOK_URL"],
+                "channel": os.environ["MYRECORDER_SLACK_CHANNEL"],
+                "icon_emoji": os.environ["MYRECORDER_SLACK_ICON_EMOJI"],
+                "username": os.environ["MYRECORDER_SLACK_USERNAME"],
             }
         },
         "scrapekot": {
             "slack": {
-                "webhook_url": "",
-                "channel": "",
-                "icon_emoji": "",
-                "username": "",
+                "webhook_url": os.environ["SCRAPEKOT_SLACK_WEBHOOK_URL"],
+                "channel": os.environ["SCRAPEKOT_SLACK_CHANNEL"],
+                "icon_emoji": os.environ["SCRAPEKOT_SLACK_ICON_EMOJI"],
+                "username": os.environ["SCRAPEKOT_SLACK_USERNAME"],
             }
         },
     }
