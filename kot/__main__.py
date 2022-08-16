@@ -1,13 +1,14 @@
 import typer
 
+from kot.common.crawl import BrowserKind
 from kot.common.logger import logger
 from kot.service import (
+    InitializeParams,
     MyRecorderParams,
     ScrapeKOTParams,
-    InitializeParams,
+    initialize_dirver,
     punch_myrecorder,
     scrape_kot,
-    initialize_dirver,
 )
 
 app = typer.Typer(add_completion=False)
@@ -15,18 +16,14 @@ app = typer.Typer(add_completion=False)
 
 @app.command()
 def scrape(
-    amazon_linux: bool = False,
-    chrome: bool = True,
-    chromium: bool = False,
-    firefox: bool = False,
-    headless: bool = True,
     console: bool = True,
+    amazon_linux: bool = False,
+    browser_kind: BrowserKind = BrowserKind.chrome,
+    headless: bool = True,
 ) -> None:
     params = ScrapeKOTParams(
         is_amazon_linux=amazon_linux,
-        is_chrome=chrome,
-        is_chromium=chromium,
-        is_firefox=firefox,
+        browser_kind=browser_kind,
         is_headless=headless,
         is_console=console,
     )
@@ -41,16 +38,12 @@ def myrecorder(
     message: str = "",
     debug: bool = False,
     amazon_linux: bool = False,
-    chrome: bool = True,
-    chromium: bool = False,
-    firefox: bool = False,
+    browser_kind: BrowserKind = BrowserKind.chrome,
     headless: bool = True,
 ) -> None:
     params = MyRecorderParams(
         is_amazon_linux=amazon_linux,
-        is_chrome=chrome,
-        is_chromium=chromium,
-        is_firefox=firefox,
+        browser_kind=browser_kind,
         is_headless=headless,
         command=command,
         message=message,
@@ -68,9 +61,7 @@ def initialize() -> None:
     """
     params = InitializeParams(
         is_amazon_linux=False,
-        is_chrome=True,
-        is_chromium=True,
-        is_firefox=False,
+        browser_kind=BrowserKind.chromium,
         is_headless=True,
     )
     logger.info(params)
