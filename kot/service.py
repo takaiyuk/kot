@@ -5,18 +5,26 @@ from datetime import datetime
 from typing import Any, Union
 
 from kot.common.config import load_config
-from kot.common.crawl import Browser, DriverOptions
+from kot.common.crawl import Browser, BrowserKind, DriverOptions
 from kot.common.logger import logger
-from kot.myrecorder.crawl import Crawler as MyRecorderCrawler
-from kot.myrecorder.crawl import CrawlerParams as MyRecorderCrawlerParams
-from kot.myrecorder.notify import SlackClient as MyRecorderSlackClient
-from kot.myrecorder.notify import SlackClientParams as MyRecorderSlackClientParams
+from kot.myrecorder.crawl import (
+    Crawler as MyRecorderCrawler,
+    CrawlerParams as MyRecorderCrawlerParams,
+)
+from kot.myrecorder.notify import (
+    SlackClient as MyRecorderSlackClient,
+    SlackClientParams as MyRecorderSlackClientParams,
+)
 from kot.scrapekot.aggregate import Aggregator
-from kot.scrapekot.crawl import Crawler as ScrapeKOTCrawler
-from kot.scrapekot.crawl import CrawlerParams as ScrapeKOTCrawlerParams
-from kot.scrapekot.notify import Console
-from kot.scrapekot.notify import SlackClient as ScrapeKOTSlackClient
-from kot.scrapekot.notify import SlackClientParams as ScrapeKOTSlackClientParams
+from kot.scrapekot.crawl import (
+    Crawler as ScrapeKOTCrawler,
+    CrawlerParams as ScrapeKOTCrawlerParams,
+)
+from kot.scrapekot.notify import (
+    Console,
+    SlackClient as ScrapeKOTSlackClient,
+    SlackClientParams as ScrapeKOTSlackClientParams,
+)
 from kot.scrapekot.scrape import Scraper
 
 FILEPATH = "./config.yaml"
@@ -45,9 +53,7 @@ def scrape_kot(params: ScrapeKOTParams) -> None:
         cfg = load_config(FILEPATH)
         driver_options = DriverOptions(
             is_amazon_linux=params.is_amazon_linux,
-            is_chrome=params.is_chrome,
-            is_chromium=params.is_chromium,
-            is_firefox=params.is_firefox,
+            browser_kind=params.browser_kind,
             is_headless=params.is_headless,
         )
         crawler_params = ScrapeKOTCrawlerParams(
@@ -80,9 +86,7 @@ def punch_myrecorder(params: MyRecorderParams) -> None:
         cfg = load_config(FILEPATH)
         driver_options = DriverOptions(
             is_amazon_linux=params.is_amazon_linux,
-            is_chrome=params.is_chrome,
-            is_chromium=params.is_chromium,
-            is_firefox=params.is_firefox,
+            browser_kind=params.browser_kind,
             is_headless=params.is_headless,
         )
         crawler_params = MyRecorderCrawlerParams(
@@ -116,9 +120,7 @@ def punch_myrecorder(params: MyRecorderParams) -> None:
 def initialize_dirver(params: InitializeParams) -> None:
     driver_options = DriverOptions(
         is_amazon_linux=params.is_amazon_linux,
-        is_chrome=params.is_chrome,
-        is_chromium=params.is_chromium,
-        is_firefox=params.is_firefox,
+        browser_kind=params.browser_kind,
         is_headless=params.is_headless,
     )
     browser = Browser.build(driver_options)
@@ -130,9 +132,7 @@ def lambda_handler(event: Any, context: Any) -> None:
     if event["command"] == "myrecorder":
         params = MyRecorderParams(
             is_amazon_linux=True,
-            is_chrome=True,
-            is_chromium=True,
-            is_firefox=False,
+            browser_kind=BrowserKind.chromium,
             is_headless=True,
             command=event["myrecorder_command"],
             message="",
@@ -144,9 +144,7 @@ def lambda_handler(event: Any, context: Any) -> None:
     elif event["command"] == "scrape":
         params = ScrapeKOTParams(
             is_amazon_linux=True,
-            is_chrome=True,
-            is_chromium=True,
-            is_firefox=False,
+            browser_kind=BrowserKind.chromium,
             is_headless=True,
             is_console=False,
         )

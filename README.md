@@ -182,6 +182,7 @@ Options:
   --help  Show this message and exit.
 
 Commands:
+  initialize  Get cache of the latest chromedriver version for chromium...
   myrecorder
   scrape
 ```
@@ -191,13 +192,12 @@ $ poetry run python -m kot scrape --help
 Usage: python -m kot scrape [OPTIONS]
 
 Options:
+  --console / --no-console        [default: console]
   --amazon-linux / --no-amazon-linux
                                   [default: no-amazon-linux]
-  --chrome / --no-chrome          [default: chrome]
-  --chromium / --no-chromium      [default: no-chromium]
-  --firefox / --no-firefox        [default: no-firefox]
+  --browser-kind [chrome|chromium|firefox]
+                                  [default: BrowserKind.chrome]
   --headless / --no-headless      [default: headless]
-  --console / --no-console        [default: console]
   --help                          Show this message and exit.
 ```
 
@@ -214,22 +214,19 @@ Options:
   --debug / --no-debug            [default: no-debug]
   --amazon-linux / --no-amazon-linux
                                   [default: no-amazon-linux]
-  --chrome / --no-chrome          [default: chrome]
-  --chromium / --no-chromium      [default: no-chromium]
-  --firefox / --no-firefox        [default: no-firefox]
+  --browser-kind [chrome|chromium|firefox]
+                                  [default: BrowserKind.chrome]
   --headless / --no-headless      [default: headless]
   --help                          Show this message and exit.
 ```
 
 ### Lint
 
-#### type check
-
 ```shell
-$ make mypy
+$ make lint
 ```
 
-#### test
+### test
 
 ```shell
 $ make test

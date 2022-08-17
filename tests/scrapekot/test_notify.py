@@ -61,7 +61,9 @@ def test_SlackClient__build_noitfy_data(mocker):
     )
     fixtures = [Fixture("", params, data, expected)]
     for fixture in fixtures:
-        assert api._build_noitfy_data(fixture.params, fixture.data) == fixture.expected, fixture.desc
+        assert (
+            api._build_noitfy_data(fixture.params, fixture.data) == fixture.expected
+        ), fixture.desc
 
 
 def test_SlackClient__post_slack(mocker):
