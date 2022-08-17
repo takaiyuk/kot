@@ -2,7 +2,7 @@ import sys
 import traceback
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Any
+from typing import Any, Union
 
 from kot.common.config import load_config
 from kot.common.crawl import Browser, DriverOptions
@@ -126,6 +126,7 @@ def initialize_dirver(params: InitializeParams) -> None:
 
 
 def lambda_handler(event: Any, context: Any) -> None:
+    params: Union[MyRecorderParams, ScrapeKOTParams]
     if event["command"] == "myrecorder":
         params = MyRecorderParams(
             is_amazon_linux=True,
