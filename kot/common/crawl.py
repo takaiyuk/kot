@@ -27,41 +27,29 @@ class DriverOptions:
 
 class Driver:
     @classmethod
-    def build(
-        cls, driver_options: DriverOptions
-    ) -> Union[webdriver.Chrome, webdriver.Firefox]:
+    def build(cls, driver_options: DriverOptions) -> Union[webdriver.Chrome, webdriver.Firefox]:
         options: Union[webdriver.ChromeOptions, webdriver.FirefoxOptions]
         if driver_options.is_chrome:
             options = webdriver.ChromeOptions()
         elif driver_options.is_firefox:
             options = webdriver.FirefoxOptions()
         else:
-            raise ValueError(
-                "driver_options.is_chrome or driver_options.is_firefox must be True"
-            )
+            raise ValueError("driver_options.is_chrome or driver_options.is_firefox must be True")
         options = cls._set_default_options(options, driver_options)
         driver: Union[webdriver.Chrome, webdriver.Firefox]
         if driver_options.is_chrome and isinstance(options, webdriver.ChromeOptions):
             if driver_options.is_chromium:
                 chrome_service = ChromeService(
-                    ChromeDriverManager(
-                        path=DRIVER_PATH, chrome_type=ChromeType.CHROMIUM
-                    ).install()
+                    ChromeDriverManager(path=DRIVER_PATH, chrome_type=ChromeType.CHROMIUM).install()
                 )
             else:
-                chrome_service = ChromeService(
-                    ChromeDriverManager(path=DRIVER_PATH).install()
-                )
+                chrome_service = ChromeService(ChromeDriverManager(path=DRIVER_PATH).install())
             driver = webdriver.Chrome(service=chrome_service, options=options)
-        elif driver_options.is_firefox and isinstance(
-            options, webdriver.FirefoxOptions
-        ):
+        elif driver_options.is_firefox and isinstance(options, webdriver.FirefoxOptions):
             gecko_service = GeckoService(GeckoDriverManager(path=DRIVER_PATH).install())
             driver = webdriver.Firefox(service=gecko_service, options=options)
         else:
-            raise ValueError(
-                "driver_options.is_chrome or driver_options.is_firefox must be True"
-            )
+            raise ValueError("driver_options.is_chrome or driver_options.is_firefox must be True")
         return driver
 
     @classmethod

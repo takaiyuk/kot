@@ -173,10 +173,14 @@ def test_read_lambda_env():
     d = {
         "ACCOUNT_ID": "account_id",
         "ACCOUNT_PAWSSWORD": "account_password",
-        "SLACK_WEBHOOK_URL": "scrapekot_url",
-        "SLACK_CHANNEL": "scrapekot_channel",
-        "SLACK_ICON_EMOJI": "scrapekot_emoji",
-        "SLACK_USERNAME": "scrapekot_username",
+        "MYRECORDER_SLACK_WEBHOOK_URL": "myrecorder_url",
+        "MYRECORDER_SLACK_CHANNEL": "myrecorder_channel",
+        "MYRECORDER_SLACK_ICON_EMOJI": "myrecorder_emoji",
+        "MYRECORDER_SLACK_USERNAME": "myrecorder_username",
+        "SCRAPEKOT_SLACK_WEBHOOK_URL": "scrapekot_url",
+        "SCRAPEKOT_SLACK_CHANNEL": "scrapekot_channel",
+        "SCRAPEKOT_SLACK_ICON_EMOJI": "scrapekot_emoji",
+        "SCRAPEKOT_SLACK_USERNAME": "scrapekot_username",
     }
     expected = {
         "account": {
@@ -185,18 +189,18 @@ def test_read_lambda_env():
         },
         "myrecorder": {
             "slack": {
-                "webhook_url": "scrapekot_url",
-                "channel": "scrapekot_channel",
-                "icon_emoji": "scrapekot_emoji",
-                "username": "scrapekot_username",
+                "webhook_url": "myrecorder_url",
+                "channel": "myrecorder_channel",
+                "icon_emoji": "myrecorder_emoji",
+                "username": "myrecorder_username",
             }
         },
         "scrapekot": {
             "slack": {
-                "webhook_url": "",
-                "channel": "",
-                "icon_emoji": "",
-                "username": "",
+                "webhook_url": "scrapekot_url",
+                "channel": "scrapekot_channel",
+                "icon_emoji": "scrapekot_emoji",
+                "username": "scrapekot_username",
             }
         },
     }
