@@ -83,7 +83,11 @@ class Scraper:
         当月の必要総労働時間（営業日 * 8時間）を取得する
         """
         monthly_work_hours = (
-            self.soup.find("table", class_="specific-table_800").find("tbody").find("tr").find("td").text
+            self.soup.find("table", class_="specific-table_800")
+            .find("tbody")
+            .find("tr")
+            .find("td")
+            .text
         )
         return float(self._clean_text(monthly_work_hours))
 
@@ -112,13 +116,19 @@ class Scraper:
         """
         start_time_string, teiji_time_string = "", ""
         try:
-            st_string_dirty = self.soup.find_all("td", class_="start_end_timerecord specific-uncomplete")[
-                -2
-            ].text
+            st_string_dirty = self.soup.find_all(
+                "td", class_="start_end_timerecord specific-uncomplete"
+            )[-2].text
             # 上記の出力例: '\n\n\nIC\n\n09:02\n\n'
-            start_time_string = st_string_dirty.split(":")[0][-2:] + ":" + st_string_dirty.split(":")[1][:2]
+            start_time_string = (
+                st_string_dirty.split(":")[0][-2:]
+                + ":"
+                + st_string_dirty.split(":")[1][:2]
+            )
             hhmm = start_time_string.split(":")
-            teiji_time_string = ":".join([str(self._str_to_int(hhmm[0]) + (WORK_HOUR + 1)), hhmm[1]])
+            teiji_time_string = ":".join(
+                [str(self._str_to_int(hhmm[0]) + (WORK_HOUR + 1)), hhmm[1]]
+            )
         except Exception:
             logger.info("打刻しましたか？退勤後なら問題ないですが")
         finally:

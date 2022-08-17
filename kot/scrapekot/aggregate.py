@@ -22,7 +22,9 @@ class AggregatedData:
 class Aggregator:
     def aggregate(self, scraped_data: ScrapedData) -> AggregatedData:
         # 今月の必要勤務日を計算
-        monthly_work_counts = self.calc_monthly_work_counts(scraped_data.monthly_work_hours)
+        monthly_work_counts = self.calc_monthly_work_counts(
+            scraped_data.monthly_work_hours
+        )
 
         # 残り日数を計算
         work_hours_remain = self.calc_work_hours_remain(
@@ -30,13 +32,19 @@ class Aggregator:
         )
 
         # 残り必要時間を計算
-        work_counts_remain = self.calc_work_counts_remain(monthly_work_counts, scraped_data.work_counts)
+        work_counts_remain = self.calc_work_counts_remain(
+            monthly_work_counts, scraped_data.work_counts
+        )
 
         # 1日あたりの必要時間を計算
-        work_hours_remain_by_day = self.calc_work_hours_remain_by_day(work_hours_remain, work_counts_remain)
+        work_hours_remain_by_day = self.calc_work_hours_remain_by_day(
+            work_hours_remain, work_counts_remain
+        )
 
         # 貯金時間を計算
-        saving_time = self.calc_saving_time(scraped_data.work_hours, scraped_data.work_counts)
+        saving_time = self.calc_saving_time(
+            scraped_data.work_hours, scraped_data.work_counts
+        )
 
         aggregated_data = AggregatedData(
             work_counts_remain=work_counts_remain,
@@ -59,20 +67,26 @@ class Aggregator:
         monthly_work_count = monthly_work_hour / WORK_HOUR
         return round(monthly_work_count, 2)
 
-    def calc_work_hours_remain(self, total_hours: float, finished_hours: float) -> float:
+    def calc_work_hours_remain(
+        self, total_hours: float, finished_hours: float
+    ) -> float:
         """
         当月の残り必要勤務時間
         """
         remain_hour = self._diff_hours(total_hours, finished_hours)
         return remain_hour
 
-    def calc_work_counts_remain(self, monthly_work_count: float, work_count: float) -> float:
+    def calc_work_counts_remain(
+        self, monthly_work_count: float, work_count: float
+    ) -> float:
         """
         当月の残り営業日数
         """
         return round(monthly_work_count - work_count, 2)
 
-    def calc_work_hours_remain_by_day(self, remain_hours: float, remain_count: float) -> float:
+    def calc_work_hours_remain_by_day(
+        self, remain_hours: float, remain_count: float
+    ) -> float:
         """
         当月の1日あたりの残り必要勤務時間
         """
