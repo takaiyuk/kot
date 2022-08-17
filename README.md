@@ -114,27 +114,27 @@ $ ./scripts/docker/lambda/push.sh
 
 **NOTE: AWS Lambda で環境変数の設定が必要**
 
-CLI で以下のようにして例えば `my-function` という名前の関数に環境変数を設定できる
+CLI で以下のようにして例えば `kot` という名前の関数に環境変数を設定できる
 
 ```shell
-$ aws lambda update-function-configuration --function-name my-function \
+$ aws lambda update-function-configuration --function-name kot \
     --environment "Variables={ACCOUNT_ID=id,ACCOUNT_PAWSSWORD=password,MYRECORDER_SLACK_WEBHOOK_URL=webhook_url,MYRECORDER_SLACK_CHANNEL=channel,MYRECORDER_SLACK_ICON_EMOJI=icon_emoji,MYRECORDER_SLACK_USERNAME=usename,SCRAPEKOT_SLACK_WEBHOOK_URL=webhook_url,SCRAPEKOT_SLACK_CHANNEL=channel,SCRAPEKOT_SLACK_ICON_EMOJI=icon_emoji,SCRAPEKOT_SLACK_USERNAME=usename}"
 ```
 
 以下のコマンドで現在の設定を取得できる
 
 ```shell
-$ aws lambda get-function-configuration --function-name my-function
+$ aws lambda get-function-configuration --function-name kot
 ```
 
 以下のコマンドで実行できる
 
 ```shell
-$ aws lambda invoke --function-name my-function --cli-binary-format raw-in-base64-out --payload '{ "command": "scrape" }' /dev/stdout
+$ aws lambda invoke --function-name kot --cli-binary-format raw-in-base64-out --payload '{ "command": "scrape" }' /dev/stdout
 ```
 
 ```shell
-$ aws lambda invoke --function-name my-function --cli-binary-format raw-in-base64-out --payload '{ "command": "myrecorder", "myrecorder_command": "start" }' /dev/stdout
+$ aws lambda invoke --function-name kot --cli-binary-format raw-in-base64-out --payload '{ "command": "myrecorder", "myrecorder_command": "start" }' /dev/stdout
 ```
 
 ## My Recorder

@@ -18,7 +18,7 @@ COPY kot ${LAMBDA_TASK_ROOT}/kot
 # Turn off webdriver-manager logs use
 # ENV WDM_LOG 0
 # Set cache for the latest driver
-RUN python -m kot initialize
+# RUN python -m kot initialize
 
 # Set the CMD to your handler (could also be done as a parameter override outside of the Dockerfile)
 CMD [ "kot.service.lambda_handler" ]
