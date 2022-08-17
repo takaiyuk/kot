@@ -21,9 +21,7 @@ class SlackClientParams:
 
 
 class SlackClient(BaseSlackClient):
-    def _build_noitfy_data(
-        self, params: SlackClientParams, data: Any = None
-    ) -> Optional[NotifyData]:
+    def _build_noitfy_data(self, params: SlackClientParams, data: Any = None) -> Optional[NotifyData]:
         if params.message is None or params.message == "":
             kintai_messages = getattr(MyRecorderOptions, params.command).messages
             idx = random.randint(0, len(kintai_messages) - 1)
