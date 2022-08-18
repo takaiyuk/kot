@@ -3,7 +3,7 @@ import random
 import time
 from dataclasses import dataclass
 from enum import Enum
-from typing import Any, Type, TypeVar, Union
+from typing import Any, Type, TypeVar, Union, Tuple
 
 import boto3
 from selenium import webdriver
@@ -16,9 +16,7 @@ from webdriver_manager.firefox import GeckoDriverManager
 
 TOP_URL = "https://s3.kingtime.jp/admin"
 DRIVER_PATH = "/tmp"
-_S3_CACHE_DIR = os.path.join(
-    os.getenv("S3_CACHE_BUCKET", ""), "wdm/drivers/chromedriver/linux64"
-)
+_S3_CACHE_DIR = os.path.join(os.getenv("S3_CACHE_BUCKET", ""), "wdm/drivers/chromedriver/linux64")
 DRIVER_VERSION = os.getenv("DRIVER_VERSION", "")
 S3_CACHE_PATH = os.path.join(_S3_CACHE_DIR, DRIVER_VERSION, "chromedriver")
 B = TypeVar("B", bound="Browser")
@@ -39,9 +37,7 @@ class DriverOptions:
 
 class Driver:
     @classmethod
-    def build(
-        cls, driver_options: DriverOptions
-    ) -> Union[webdriver.Chrome, webdriver.Firefox]:
+    def build(cls, driver_options: DriverOptions) -> Union[webdriver.Chrome, webdriver.Firefox]:
         browser_options = cls._get_browser_options(driver_options)
         """
         NOTE:
@@ -65,14 +61,16 @@ class Driver:
             "chromedriver",
         )
         set_cache_flag = True
-        # cache が存在しているかつ、Lambda で実行時に cache を利用する。set_cache_flag は False にする。
-        if check_s3_path_exists(S3_CACHE_PATH) and os.getenv("LAMBDA_TASK_ROOT"):
-            cls.download_driver(S3_CACHE_PATH, driver_save_path)
-            set_cache_flag = False
+        # Lambda で実行時かつ、cache が存在している時に cache を利用する。set_cache_flag は False にする。
+        if is_lambda_runtime():
+            if check_s3_path_exists(S3_CACHE_PATH):
+                cls.download_driver(S3_CACHE_PATH, driver_save_path)
+                set_cache_flag = False
         driver = cls._get_driver(driver_options, browser_options)
-        # set_cache_flag が True かつ、Lambda で実行時に cache を保存する。
-        if set_cache_flag and os.getenv("LAMBDA_TASK_ROOT"):
-            cls.upload_driver(driver_save_path, S3_CACHE_PATH)
+        # Lambda で実行時かつ、set_cache_flag が True の時に cache を保存する。
+        if is_lambda_runtime():
+            if set_cache_flag:
+                cls.upload_driver(driver_save_path, S3_CACHE_PATH)
         return driver
 
     @classmethod
@@ -88,9 +86,7 @@ class Driver:
         elif driver_options.browser_kind == BrowserKind.firefox:
             options = webdriver.FirefoxOptions()
         else:
-            raise ValueError(
-                "driver_options.browser_kind must be one of chrome, chromium or firefox"
-            )
+            raise ValueError("driver_options.browser_kind must be one of chrome, chromium or firefox")
 
         if driver_options.is_headless:
             options.add_argument("--headless")
@@ -122,14 +118,10 @@ class Driver:
         ) and isinstance(options, webdriver.ChromeOptions):
             if driver_options.browser_kind == BrowserKind.chromium:
                 chrome_service = ChromeService(
-                    ChromeDriverManager(
-                        path=DRIVER_PATH, chrome_type=ChromeType.CHROMIUM
-                    ).install()
+                    ChromeDriverManager(path=DRIVER_PATH, chrome_type=ChromeType.CHROMIUM).install()
                 )
             else:
-                chrome_service = ChromeService(
-                    ChromeDriverManager(path=DRIVER_PATH).install()
-                )
+                chrome_service = ChromeService(ChromeDriverManager(path=DRIVER_PATH).install())
             driver = webdriver.Chrome(service=chrome_service, options=options)
         elif driver_options.browser_kind == BrowserKind.firefox and isinstance(
             options, webdriver.FirefoxOptions
@@ -145,17 +137,17 @@ class Driver:
 
     @classmethod
     def download_driver(cls, s3_path: str, local_path: str) -> None:
-        bucket = s3_path.split("/")[0]
-        key = s3_path.split("/")[1:]
+        bucket, key = parse_s3_bucket_and_key(s3_path)
         s3 = boto3.client("s3")
         s3.download_file(bucket, key, local_path)
+        print(f"Downloaded driver from {s3_path} to {local_path}")
 
     @classmethod
     def upload_driver(cls, local_path: str, s3_path: str) -> None:
-        bucket = s3_path.split("/")[0]
-        key = s3_path.split("/")[1:]
+        bucket, key = parse_s3_bucket_and_key(s3_path)
         s3_client = boto3.client("s3")
         s3_client.upload_file(local_path, bucket, key)
+        print(f"Uploaded driver from {local_path} to {s3_path}")
 
 
 class Browser:
@@ -218,12 +210,20 @@ class BaseCrawler:
 
 
 def check_s3_path_exists(path: str) -> bool:
-    bucket = path.split("/")[0]
-    key = path.split("/")[1:]
-
+    bucket, key = parse_s3_bucket_and_key(path)
     client = boto3.client("s3")
     result = client.list_objects(Bucket=bucket, Prefix=key)
     if "Contents" in result:
         return True
     else:
         return False
+
+
+def is_lambda_runtime() -> bool:
+    return "LAMBDA_TASK_ROOT" in os.environ
+
+
+def parse_s3_bucket_and_key(path: str) -> Tuple[str, str]:
+    bucket = path.split("/")[0]
+    key = "/".join(path.split("/")[1:])
+    return bucket, key
