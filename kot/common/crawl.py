@@ -16,7 +16,9 @@ from webdriver_manager.firefox import GeckoDriverManager
 
 TOP_URL = "https://s3.kingtime.jp/admin"
 DRIVER_PATH = "/tmp"
-_S3_CACHE_DIR = os.path.join(os.getenv("S3_CACHE_BUCKET", ""), "wdm/drivers/chromedriver/linux64")
+_S3_CACHE_DIR = os.path.join(
+    os.getenv("S3_CACHE_BUCKET", ""), "wdm/drivers/chromedriver/linux64"
+)
 DRIVER_VERSION = os.getenv("DRIVER_VERSION", "")
 S3_CACHE_PATH = os.path.join(_S3_CACHE_DIR, DRIVER_VERSION, "chromedriver")
 B = TypeVar("B", bound="Browser")
@@ -37,7 +39,9 @@ class DriverOptions:
 
 class Driver:
     @classmethod
-    def build(cls, driver_options: DriverOptions) -> Union[webdriver.Chrome, webdriver.Firefox]:
+    def build(
+        cls, driver_options: DriverOptions
+    ) -> Union[webdriver.Chrome, webdriver.Firefox]:
         browser_options = cls._get_browser_options(driver_options)
         """
         NOTE:
@@ -55,7 +59,10 @@ class Driver:
         local: $DRIVER_PATH/.wdm/drivers/chromedriver/linux64/$DRIVER_VERSION/chromedriver
         """
         driver_save_path = os.path.join(
-            DRIVER_PATH, ".wdm/drivers/chromedriver/linux64", DRIVER_VERSION, "chromedriver"
+            DRIVER_PATH,
+            ".wdm/drivers/chromedriver/linux64",
+            DRIVER_VERSION,
+            "chromedriver",
         )
         set_cache_flag = True
         # cache が存在しているかつ、Lambda で実行時に cache を利用する。set_cache_flag は False にする。
@@ -81,7 +88,9 @@ class Driver:
         elif driver_options.browser_kind == BrowserKind.firefox:
             options = webdriver.FirefoxOptions()
         else:
-            raise ValueError("driver_options.browser_kind must be one of chrome, chromium or firefox")
+            raise ValueError(
+                "driver_options.browser_kind must be one of chrome, chromium or firefox"
+            )
 
         if driver_options.is_headless:
             options.add_argument("--headless")
@@ -105,7 +114,7 @@ class Driver:
         cls,
         driver_options: DriverOptions,
         options: Union[webdriver.ChromeOptions, webdriver.FirefoxOptions],
-    ):
+    ) -> Union[webdriver.Chrome, webdriver.Firefox]:
         driver: Union[webdriver.Chrome, webdriver.Firefox]
         if (
             driver_options.browser_kind == BrowserKind.chrome
@@ -113,10 +122,14 @@ class Driver:
         ) and isinstance(options, webdriver.ChromeOptions):
             if driver_options.browser_kind == BrowserKind.chromium:
                 chrome_service = ChromeService(
-                    ChromeDriverManager(path=DRIVER_PATH, chrome_type=ChromeType.CHROMIUM).install()
+                    ChromeDriverManager(
+                        path=DRIVER_PATH, chrome_type=ChromeType.CHROMIUM
+                    ).install()
                 )
             else:
-                chrome_service = ChromeService(ChromeDriverManager(path=DRIVER_PATH).install())
+                chrome_service = ChromeService(
+                    ChromeDriverManager(path=DRIVER_PATH).install()
+                )
             driver = webdriver.Chrome(service=chrome_service, options=options)
         elif driver_options.browser_kind == BrowserKind.firefox and isinstance(
             options, webdriver.FirefoxOptions
