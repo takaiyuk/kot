@@ -64,6 +64,7 @@ class Driver:
         # Lambda で実行時かつ、cache が存在している時に cache を利用する。set_cache_flag は False にする。
         if is_lambda_runtime():
             if check_s3_path_exists(S3_CACHE_PATH):
+                os.makedirs(os.path.dirname(driver_save_path), exist_ok=True))
                 cls.download_driver(S3_CACHE_PATH, driver_save_path)
                 set_cache_flag = False
         driver = cls._get_driver(driver_options, browser_options)
