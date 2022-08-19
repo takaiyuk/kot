@@ -54,24 +54,26 @@ class Driver:
         s3: $S3_CACHE_PATH/chromedriver
         local: $DRIVER_PATH/.wdm/drivers/chromedriver/linux64/$DRIVER_VERSION/chromedriver
         """
-        driver_save_path = os.path.join(
-            DRIVER_PATH,
-            ".wdm/drivers/chromedriver/linux64",
-            DRIVER_VERSION,
-            "chromedriver",
-        )
+        # driver_save_path = os.path.join(
+        #     DRIVER_PATH,
+        #     ".wdm/drivers/chromedriver/linux64",
+        #     DRIVER_VERSION,
+        #     "chromedriver",
+        # )
         set_cache_flag = True
         # Lambda で実行時かつ、cache が存在している時に cache を利用する。set_cache_flag は False にする。
         if is_lambda_runtime():
             if check_s3_path_exists(S3_CACHE_PATH):
-                os.makedirs(os.path.dirname(driver_save_path), exist_ok=True))
-                cls.download_driver(S3_CACHE_PATH, driver_save_path)
-                set_cache_flag = False
+                pass
+                # os.makedirs(os.path.dirname(driver_save_path), exist_ok=True))
+                # cls.download_driver(S3_CACHE_PATH, driver_save_path)
+                # set_cache_flag = False
         driver = cls._get_driver(driver_options, browser_options)
         # Lambda で実行時かつ、set_cache_flag が True の時に cache を保存する。
         if is_lambda_runtime():
             if set_cache_flag:
-                cls.upload_driver(driver_save_path, S3_CACHE_PATH)
+                pass
+                # cls.upload_driver(driver_save_path, S3_CACHE_PATH)
         return driver
 
     @classmethod
