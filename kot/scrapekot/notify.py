@@ -81,7 +81,9 @@ class SlackClient(BaseSlackClient):
 
 class Console:
     @staticmethod
-    def display(aggregated_data: AggregatedData, dt_today: datetime) -> None:
+    def display(
+        aggregated_data: AggregatedData, dt_today: datetime, stdout: bool = True
+    ) -> str:
         kwargs = {
             "work_counts_remain": aggregated_data.work_counts_remain,
             "work_counts": aggregated_data.work_counts,
@@ -96,8 +98,7 @@ class Console:
             "start_time": aggregated_data.start_time,
             "teiji_time": aggregated_data.teiji_time,
         }
-        logger.info(
-            """
+        message = """
     残り{work_counts_remain}営業日: ({work_counts}/{monthly_work_counts} 日)
 
     あと{work_hours_remain}必要: ({work_hours}/{monthly_work_hours}時間)
@@ -110,9 +111,11 @@ class Console:
         出勤: {start_time}
         定時: {teiji_time}
 """.format(
-                today=dt_today, **kwargs
-            )
+            today=dt_today, **kwargs
         )
+        if stdout:
+            logger.info(message)
+        return message
 
 
 def format_hours(hours: float) -> str:

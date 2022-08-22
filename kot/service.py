@@ -2,7 +2,7 @@ import sys
 import traceback
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Any, Union
+from typing import Any, Dict, Union
 
 from kot.common.config import load_config
 from kot.common.crawl import Browser, BrowserKind, DriverOptions
@@ -48,7 +48,7 @@ class InitializeParams(DriverOptions):
     pass
 
 
-def scrape_kot(params: ScrapeKOTParams) -> None:
+def scrape_kot(params: ScrapeKOTParams) -> str:
     try:
         cfg = load_config(FILEPATH)
         driver_options = DriverOptions(
@@ -72,9 +72,12 @@ def scrape_kot(params: ScrapeKOTParams) -> None:
         scraped_data = Scraper(crawled_data).extract()
         aggregated_data = Aggregator().aggregate(scraped_data)
         if params.is_console:
-            Console.display(aggregated_data, datetime.today())
+            message = Console.display(aggregated_data, datetime.today())
+            return message
         else:
             ScrapeKOTSlackClient().notify(slack_client_params, aggregated_data)
+            message = Console.display(aggregated_data, datetime.today(), stdout=False)
+            return message
     except Exception as e:
         t, v, tb = sys.exc_info()
         x = traceback.format_exception(t, v, tb)
@@ -127,7 +130,7 @@ def initialize_dirver(params: InitializeParams) -> None:
     browser.quit()
 
 
-def lambda_handler(event: Any, context: Any) -> None:
+def lambda_handler(event: Any, context: Any) -> Dict[str, Any]:
     params: Union[MyRecorderParams, ScrapeKOTParams]
     if event["command"] == "myrecorder":
         params = MyRecorderParams(
@@ -141,6 +144,9 @@ def lambda_handler(event: Any, context: Any) -> None:
         )
         logger.info(params)
         punch_myrecorder(params)
+        return {
+            "myrecorder_command": event["myrecorder_command"],
+        }
     elif event["command"] == "scrape":
         params = ScrapeKOTParams(
             is_amazon_linux=True,
@@ -149,6 +155,9 @@ def lambda_handler(event: Any, context: Any) -> None:
             is_console=False,
         )
         logger.info(params)
-        scrape_kot(params)
+        message = scrape_kot(params)
+        return {
+            "message": message,
+        }
     else:
         raise ValueError(f"{event['command']} is not supported")

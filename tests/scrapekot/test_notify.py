@@ -240,7 +240,21 @@ def test_Console_display(mocker):
         today=dt_today
     )
     mocker.patch("kot.common.logger.logger.info", side_effect=mock_func_logger_info)
-    Console.display(aggregated_data, dt_today)
+    message = Console.display(aggregated_data, dt_today)
+    expected = """
+    残り8.0営業日: (12.0/20.0 日)
+
+    あと56時間00分必要: (104時間00分/160時間)
+
+    貯金: 8時間00分
+
+    貯金を元に残り営業日の必要勤務時間数を算出すると: 7時間00分
+
+    2022-03-17の出勤・定時
+        出勤: 09:00
+        定時: 18:00
+"""
+    assert message == expected
 
 
 def test_format_hours():
