@@ -62,32 +62,32 @@ class Scraper:
                 continue
             label = self._clean_text(label.text)
             value = self._clean_text(value.text)
-            match label:
-                case "有休":
-                    holiday_counts += float(value.split("(")[0])
-                case "代休":
-                    holiday_counts += float(value.split("(")[0])
-                # 欠勤はカウントしない
-                case "夏季休暇":
-                    holiday_counts += float(value.split("(")[0])
-                # 年末年始休暇は勤務日種別が法定休日なのでカウントしない
-                # 特別休暇（減算）はカウントしない
-                case "輪番休暇":
-                    holiday_counts += float(value.split("(")[0])
-                case "特別輪番休暇":
-                    holiday_counts += float(value.split("(")[0])
-                case "【メンテ用】特別輪番休暇":
-                    holiday_counts += float(value.split("(")[0])
-                case "産休・育休":
-                    holiday_counts += float(value)
-                case "振替休日":
-                    holiday_counts += float(value.split("(")[0])
-                case "コロナ全日休業":
-                    holiday_counts += float(value.split("/")[0])
-                case "全日休業":
-                    holiday_counts += float(value.split("(")[0])
-                case "特別休暇":
-                    holiday_counts += float(value.split("/")[0])
+
+            if label == "有休":
+                holiday_counts += float(value.split("(")[0])
+            elif label == "代休":
+                holiday_counts += float(value.split("(")[0])
+            # 欠勤はカウントしない
+            elif label == "夏季休暇":
+                holiday_counts += float(value.split("(")[0])
+            # 年末年始休暇は勤務日種別が法定休日なのでカウントしない
+            # 特別休暇（減算）はカウントしない
+            elif label == "輪番休暇":
+                holiday_counts += float(value.split("(")[0])
+            elif label == "特別輪番休暇":
+                holiday_counts += float(value.split("(")[0])
+            elif label == "【メンテ用】特別輪番休暇":
+                holiday_counts += float(value.split("(")[0])
+            elif label == "産休・育休":
+                holiday_counts += float(value)
+            elif label == "振替休日":
+                holiday_counts += float(value.split("(")[0])
+            elif label == "コロナ全日休業":
+                holiday_counts += float(value.split("/")[0])
+            elif label == "全日休業":
+                holiday_counts += float(value.split("(")[0])
+            elif label == "特別休暇":
+                holiday_counts += float(value.split("/")[0])
         return holiday_counts
 
     def get_monthly_work_hours(self) -> float:
