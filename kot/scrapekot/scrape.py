@@ -55,27 +55,31 @@ class Scraper:
         """
         result = self.soup.find_all("div", class_="holiday_count")
         holiday_counts = 0.0
-        # 有給
+        # 有休
         holiday_counts += float(self._clean_text(result[0].text).split("(")[0])
         # 代休
         holiday_counts += float(self._clean_text(result[1].text).split("(")[0])
+        # 欠勤はカウントしない
         # 夏季休暇
         holiday_counts += float(self._clean_text(result[3].text).split("(")[0])
-        # 特別休暇
-        holiday_counts += float(self._clean_text(result[4].text).split("/")[0])
-        # 年末年始休暇
         # 年末年始休暇は勤務日種別が法定休日なのでカウントしない
-        # holiday_counts += float(self._clean_text(result[5].text))
+        # 特別休暇（減算）はカウントしない
         # 輪番休暇
         holiday_counts += float(self._clean_text(result[6].text).split("(")[0])
-        # 産休・育休
-        holiday_counts += float(self._clean_text(result[7].text))
-        # 代休（土曜日・祝日）
-        holiday_counts += float(self._clean_text(result[8].text).split("(")[0])
-        # 代休（日曜日）
-        holiday_counts += float(self._clean_text(result[9].text).split("(")[0])
         # 特別輪番休暇
+        holiday_counts += float(self._clean_text(result[7].text).split("(")[0])
+        # 【メンテ用】特別輪番休暇
+        holiday_counts += float(self._clean_text(result[8].text).split("(")[0])
+        # 産休・育休
+        holiday_counts += float(self._clean_text(result[9].text))
+        # 振替休日
         holiday_counts += float(self._clean_text(result[10].text).split("(")[0])
+        # コロナ全日休業
+        holiday_counts += float(self._clean_text(result[11].text).split("/")[0])
+        # 全日休業
+        holiday_counts += float(self._clean_text(result[12].text).split("(")[0])
+        # 特別休暇
+        holiday_counts += float(self._clean_text(result[13].text).split("/")[0])
         return holiday_counts
 
     def get_monthly_work_hours(self) -> float:
@@ -83,11 +87,7 @@ class Scraper:
         当月の必要総労働時間（営業日 * 8時間）を取得する
         """
         monthly_work_hours = (
-            self.soup.find("table", class_="specific-table_800")
-            .find("tbody")
-            .find("tr")
-            .find("td")
-            .text
+            self.soup.find("table", class_="specific-table_800").find("tbody").find("tr").find("td").text
         )
         return float(self._clean_text(monthly_work_hours))
 
@@ -116,19 +116,13 @@ class Scraper:
         """
         start_time_string, teiji_time_string = "", ""
         try:
-            st_string_dirty = self.soup.find_all(
-                "td", class_="start_end_timerecord specific-uncomplete"
-            )[-2].text
+            st_string_dirty = self.soup.find_all("td", class_="start_end_timerecord specific-uncomplete")[
+                -2
+            ].text
             # 上記の出力例: '\n\n\nIC\n\n09:02\n\n'
-            start_time_string = (
-                st_string_dirty.split(":")[0][-2:]
-                + ":"
-                + st_string_dirty.split(":")[1][:2]
-            )
+            start_time_string = st_string_dirty.split(":")[0][-2:] + ":" + st_string_dirty.split(":")[1][:2]
             hhmm = start_time_string.split(":")
-            teiji_time_string = ":".join(
-                [str(self._str_to_int(hhmm[0]) + (WORK_HOUR + 1)), hhmm[1]]
-            )
+            teiji_time_string = ":".join([str(self._str_to_int(hhmm[0]) + (WORK_HOUR + 1)), hhmm[1]])
         except Exception:
             logger.info("打刻しましたか？退勤後なら問題ないですが")
         finally:

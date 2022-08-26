@@ -1,4 +1,4 @@
-.PHONY: scrapekot myrecorder mypy test pydeps
+.PHONY: scrapekot myrecorder lint test pydeps
 
 scrapekot:
 	poetry run python -m kot scrape
