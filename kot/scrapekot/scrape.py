@@ -54,6 +54,22 @@ class Scraper:
         有給や半休等の日数を数え上げる
         """
         holiday_counts = 0.0
+        valid_labels = [
+            "有休",
+            "代休",
+            # "欠勤",
+            "夏季休暇",
+            # "年末年始休暇", # 勤務日種別が法定休日なのでカウントしない
+            # "特別休暇（減算）",
+            "輪番休暇",
+            "特別輪番休暇",
+            "【メンテ用】特別輪番休暇",
+            "産休・育休",
+            "振替休日",
+            "コロナ全日休業",
+            "全日休業",
+            "特別休暇",
+        ]
         results = self.soup.find("ul", class_="specific-daysCount_1").find_all("li")
         for result in results:
             label = result.find("label", class_="holiday_count")
@@ -62,32 +78,10 @@ class Scraper:
                 continue
             label = self._clean_text(label.text)
             value = self._clean_text(value.text)
-
-            if label == "有休":
-                holiday_counts += float(value.split("(")[0])
-            elif label == "代休":
-                holiday_counts += float(value.split("(")[0])
-            # 欠勤はカウントしない
-            elif label == "夏季休暇":
-                holiday_counts += float(value.split("(")[0])
-            # 年末年始休暇は勤務日種別が法定休日なのでカウントしない
-            # 特別休暇（減算）はカウントしない
-            elif label == "輪番休暇":
-                holiday_counts += float(value.split("(")[0])
-            elif label == "特別輪番休暇":
-                holiday_counts += float(value.split("(")[0])
-            elif label == "【メンテ用】特別輪番休暇":
-                holiday_counts += float(value.split("(")[0])
-            elif label == "産休・育休":
-                holiday_counts += float(value)
-            elif label == "振替休日":
-                holiday_counts += float(value.split("(")[0])
-            elif label == "コロナ全日休業":
-                holiday_counts += float(value.split("/")[0])
-            elif label == "全日休業":
-                holiday_counts += float(value.split("(")[0])
-            elif label == "特別休暇":
-                holiday_counts += float(value.split("/")[0])
+            if label in valid_labels:
+                holiday_counts += float(value.split("(")[0].split("/")[0])
+            else:
+                logger.warning(f"有効なラベルではありません: {label}")
         return holiday_counts
 
     def get_monthly_work_hours(self) -> float:
