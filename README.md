@@ -133,10 +133,6 @@ $ aws lambda get-function-configuration --function-name kot
 $ aws lambda invoke --function-name kot --cli-binary-format raw-in-base64-out --payload '{ "command": "scrape" }' /dev/stdout
 ```
 
-```shell
-$ aws lambda invoke --function-name kot --cli-binary-format raw-in-base64-out --payload '{ "command": "myrecorder", "myrecorder_command": "start" }' /dev/stdout
-```
-
 ## My Recorder
 
 利用可能な `${CMD}` は以下の通り
@@ -168,6 +164,14 @@ Slack に特定のメッセージを通知する場合には以下のように�
 
 ```shell
 $ poetry run python -m kot myrecorder ${CMD} --message "Some messages"
+```
+
+### AWS Lambda で実行
+
+`myrecorder_command` で上記の `${CMD}` を指定する
+
+```shell
+$ aws lambda invoke --function-name kot --cli-binary-format raw-in-base64-out --payload '{ "command": "myrecorder", "myrecorder_command": "start" }' /dev/stdout
 ```
 
 ## Development
