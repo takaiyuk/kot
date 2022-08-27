@@ -47,9 +47,7 @@ def test_Aggregator_calc_monthly_work_counts():
 
     fixtures = [Fixture("160h -> 20d", 160.0, 20.0)]
     for fixture in fixtures:
-        assert (
-            a.calc_monthly_work_counts(fixture.input) == fixture.expected
-        ), fixture.desc
+        assert a.calc_monthly_work_counts(fixture.input) == fixture.expected, fixture.desc
 
 
 def test_Aggregator_calc_work_hours_remain():
@@ -63,8 +61,7 @@ def test_Aggregator_calc_work_hours_remain():
     fixtures = [Fixture("160h - 105h50m = 54h10m", 160.0, 105.50, 54.10)]
     for fixture in fixtures:
         assert (
-            a.calc_work_hours_remain(fixture.total_hours, fixture.finished_hours)
-            == fixture.expected
+            a.calc_work_hours_remain(fixture.total_hours, fixture.finished_hours) == fixture.expected
         ), fixture.desc
 
 
@@ -79,8 +76,7 @@ def test_Aggregator_calc_work_counts_remain():
     fixtures = [Fixture("20d - 8d = 12d", 20, 8, 12)]
     for fixture in fixtures:
         assert (
-            a.calc_work_counts_remain(fixture.monthly_work_count, fixture.work_count)
-            == fixture.expected
+            a.calc_work_counts_remain(fixture.monthly_work_count, fixture.work_count) == fixture.expected
         ), fixture.desc
 
 
@@ -98,8 +94,7 @@ def test_Aggregator_calc_work_hours_remain_by_day():
     ]
     for fixture in fixtures:
         assert (
-            a.calc_work_hours_remain_by_day(fixture.remain_hours, fixture.remain_count)
-            == fixture.expected
+            a.calc_work_hours_remain_by_day(fixture.remain_hours, fixture.remain_count) == fixture.expected
         ), fixture.desc
 
 
@@ -116,10 +111,7 @@ def test_Aggregator_calc_saving_time():
         Fixture("77.50 - 10 * 8 = -2.10", 77.50, 10, -2.10),
     ]
     for fixture in fixtures:
-        assert (
-            a.calc_saving_time(fixture.work_hour, fixture.work_count)
-            == fixture.expected
-        ), fixture.desc
+        assert a.calc_saving_time(fixture.work_hour, fixture.work_count) == fixture.expected, fixture.desc
 
 
 def test_Aggregator__hour_to_minute():

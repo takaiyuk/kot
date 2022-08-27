@@ -7,19 +7,13 @@ from typing import Any, Dict, Union
 from kot.common.config import load_config
 from kot.common.crawl import Browser, BrowserKind, DriverOptions
 from kot.common.logger import logger
-from kot.myrecorder.crawl import (
-    Crawler as MyRecorderCrawler,
-    CrawlerParams as MyRecorderCrawlerParams,
-)
+from kot.myrecorder.crawl import Crawler as MyRecorderCrawler, CrawlerParams as MyRecorderCrawlerParams
 from kot.myrecorder.notify import (
     SlackClient as MyRecorderSlackClient,
     SlackClientParams as MyRecorderSlackClientParams,
 )
 from kot.scrapekot.aggregate import Aggregator
-from kot.scrapekot.crawl import (
-    Crawler as ScrapeKOTCrawler,
-    CrawlerParams as ScrapeKOTCrawlerParams,
-)
+from kot.scrapekot.crawl import Crawler as ScrapeKOTCrawler, CrawlerParams as ScrapeKOTCrawlerParams
 from kot.scrapekot.notify import (
     Console,
     SlackClient as ScrapeKOTSlackClient,

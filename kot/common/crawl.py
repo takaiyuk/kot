@@ -32,9 +32,7 @@ class DriverOptions:
 
 class Driver:
     @classmethod
-    def build(
-        cls, driver_options: DriverOptions
-    ) -> Union[webdriver.Chrome, webdriver.Firefox]:
+    def build(cls, driver_options: DriverOptions) -> Union[webdriver.Chrome, webdriver.Firefox]:
         browser_options = cls._get_browser_options(driver_options)
         driver = cls._get_driver(driver_options, browser_options)
         return driver
@@ -52,9 +50,7 @@ class Driver:
         elif driver_options.browser_kind == BrowserKind.firefox:
             options = webdriver.FirefoxOptions()
         else:
-            raise ValueError(
-                "driver_options.browser_kind must be one of chrome, chromium or firefox"
-            )
+            raise ValueError("driver_options.browser_kind must be one of chrome, chromium or firefox")
 
         if driver_options.is_headless:
             options.add_argument("--headless")
@@ -86,14 +82,10 @@ class Driver:
         ) and isinstance(options, webdriver.ChromeOptions):
             if driver_options.browser_kind == BrowserKind.chromium:
                 chrome_service = ChromeService(
-                    ChromeDriverManager(
-                        path=DRIVER_PATH, chrome_type=ChromeType.CHROMIUM
-                    ).install()
+                    ChromeDriverManager(path=DRIVER_PATH, chrome_type=ChromeType.CHROMIUM).install()
                 )
             else:
-                chrome_service = ChromeService(
-                    ChromeDriverManager(path=DRIVER_PATH).install()
-                )
+                chrome_service = ChromeService(ChromeDriverManager(path=DRIVER_PATH).install())
             driver = webdriver.Chrome(service=chrome_service, options=options)
         elif driver_options.browser_kind == BrowserKind.firefox and isinstance(
             options, webdriver.FirefoxOptions
