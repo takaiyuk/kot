@@ -59,7 +59,7 @@ class Scraper:
             "代休",
             # "欠勤",
             "夏季休暇",
-            # "年末年始休暇", # 勤務日種別が法定休日なのでカウントしない
+            # "年末年始休暇",
             # "特別休暇（減算）",
             "輪番休暇",
             "特別輪番休暇",
@@ -69,6 +69,11 @@ class Scraper:
             "コロナ全日休業",
             "全日休業",
             "特別休暇",
+        ]
+        invalid_labels = [
+            "欠勤",
+            "年末年始休暇",  # 勤務日種別が法定休日なのでカウントしない
+            "特別休暇（減算）",
         ]
         results = self.soup.find("ul", class_="specific-daysCount_1").find_all("li")
         for result in results:
@@ -80,8 +85,10 @@ class Scraper:
             value = self._clean_text(value.text)
             if label in valid_labels:
                 holiday_counts += float(value.split("(")[0].split("/")[0])
+            elif label in invalid_labels:
+                continue
             else:
-                logger.warning(f"有効なラベルではありません: {label}")
+                logger.warning(f"Unknown label found: {label}")
         return holiday_counts
 
     def get_monthly_work_hours(self) -> float:
