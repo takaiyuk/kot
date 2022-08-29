@@ -17,6 +17,9 @@ class Logger:
     def info(self, message: Any) -> None:
         self.logger.info(message)
 
+    def warning(self, message: Any) -> None:
+        self.logger.warning(message)
+
     def error(self, message: Any) -> None:
         self.logger.error(message)
 

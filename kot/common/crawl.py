@@ -1,6 +1,7 @@
 import random
 import time
 from dataclasses import dataclass
+from enum import Enum
 from typing import Any, Type, TypeVar, Union
 
 from selenium import webdriver
@@ -16,60 +17,41 @@ DRIVER_PATH = "/tmp"
 B = TypeVar("B", bound="Browser")
 
 
+class BrowserKind(str, Enum):
+    chrome = "chrome"
+    chromium = "chromium"
+    firefox = "firefox"
+
+
 @dataclass
 class DriverOptions:
     is_amazon_linux: bool
-    is_chrome: bool
-    is_chromium: bool
-    is_firefox: bool
+    browser_kind: BrowserKind
     is_headless: bool
 
 
 class Driver:
     @classmethod
-    def build(
-        cls, driver_options: DriverOptions
-    ) -> Union[webdriver.Chrome, webdriver.Firefox]:
-        options: Union[webdriver.ChromeOptions, webdriver.FirefoxOptions]
-        if driver_options.is_chrome:
-            options = webdriver.ChromeOptions()
-        elif driver_options.is_firefox:
-            options = webdriver.FirefoxOptions()
-        else:
-            raise ValueError(
-                "driver_options.is_chrome or driver_options.is_firefox must be True"
-            )
-        options = cls._set_default_options(options, driver_options)
-        driver: Union[webdriver.Chrome, webdriver.Firefox]
-        if driver_options.is_chrome and isinstance(options, webdriver.ChromeOptions):
-            if driver_options.is_chromium:
-                chrome_service = ChromeService(
-                    ChromeDriverManager(
-                        path=DRIVER_PATH, chrome_type=ChromeType.CHROMIUM
-                    ).install()
-                )
-            else:
-                chrome_service = ChromeService(
-                    ChromeDriverManager(path=DRIVER_PATH).install()
-                )
-            driver = webdriver.Chrome(service=chrome_service, options=options)
-        elif driver_options.is_firefox and isinstance(
-            options, webdriver.FirefoxOptions
-        ):
-            gecko_service = GeckoService(GeckoDriverManager(path=DRIVER_PATH).install())
-            driver = webdriver.Firefox(service=gecko_service, options=options)
-        else:
-            raise ValueError(
-                "driver_options.is_chrome or driver_options.is_firefox must be True"
-            )
+    def build(cls, driver_options: DriverOptions) -> Union[webdriver.Chrome, webdriver.Firefox]:
+        browser_options = cls._get_browser_options(driver_options)
+        driver = cls._get_driver(driver_options, browser_options)
         return driver
 
     @classmethod
-    def _set_default_options(
-        cls,
-        options: Union[webdriver.ChromeOptions, webdriver.FirefoxOptions],
-        driver_options: DriverOptions,
+    def _get_browser_options(
+        cls, driver_options: DriverOptions
     ) -> Union[webdriver.ChromeOptions, webdriver.FirefoxOptions]:
+        options: Union[webdriver.ChromeOptions, webdriver.FirefoxOptions]
+        if (
+            driver_options.browser_kind == BrowserKind.chrome
+            or driver_options.browser_kind == BrowserKind.chromium
+        ):
+            options = webdriver.ChromeOptions()
+        elif driver_options.browser_kind == BrowserKind.firefox:
+            options = webdriver.FirefoxOptions()
+        else:
+            raise ValueError("driver_options.browser_kind must be one of chrome, chromium or firefox")
+
         if driver_options.is_headless:
             options.add_argument("--headless")
         options.add_argument("--no-sandbox")
@@ -86,6 +68,36 @@ class Driver:
             options.add_argument("--ignore-certificate-errors")
             options.add_argument("--homedir=/tmp")
         return options
+
+    @classmethod
+    def _get_driver(
+        cls,
+        driver_options: DriverOptions,
+        options: Union[webdriver.ChromeOptions, webdriver.FirefoxOptions],
+    ) -> Union[webdriver.Chrome, webdriver.Firefox]:
+        driver: Union[webdriver.Chrome, webdriver.Firefox]
+        if (
+            driver_options.browser_kind == BrowserKind.chrome
+            or driver_options.browser_kind == BrowserKind.chromium
+        ) and isinstance(options, webdriver.ChromeOptions):
+            if driver_options.browser_kind == BrowserKind.chromium:
+                chrome_service = ChromeService(
+                    ChromeDriverManager(path=DRIVER_PATH, chrome_type=ChromeType.CHROMIUM).install()
+                )
+            else:
+                chrome_service = ChromeService(ChromeDriverManager(path=DRIVER_PATH).install())
+            driver = webdriver.Chrome(service=chrome_service, options=options)
+        elif driver_options.browser_kind == BrowserKind.firefox and isinstance(
+            options, webdriver.FirefoxOptions
+        ):
+            gecko_service = GeckoService(GeckoDriverManager(path=DRIVER_PATH).install())
+            driver = webdriver.Firefox(service=gecko_service, options=options)
+        else:
+            raise ValueError(
+                f"driver_options.browser_kind must be one of chrome, chromium or firefox: {driver_options.browser_kind}\n"
+                f"or options must be consistent with browser_kind: {options}"
+            )
+        return driver
 
 
 class Browser:

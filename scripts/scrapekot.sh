@@ -16,4 +16,4 @@ else
   exit 1
 fi
 
-docker run --rm -v ${CONFIG_PATH}:/kot/config.yaml takaiyuk/kot -m kot scrape ${CONSOLE} --chromium
+docker run --rm -v ${CONFIG_PATH}:/kot/config.yaml takaiyuk/kot -m kot scrape ${CONSOLE} --browser-kind chromium

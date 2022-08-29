@@ -2,21 +2,23 @@ import sys
 import traceback
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Any
+from typing import Any, Dict, Union
 
 from kot.common.config import load_config
-from kot.common.crawl import Browser, DriverOptions
+from kot.common.crawl import Browser, BrowserKind, DriverOptions
 from kot.common.logger import logger
-from kot.myrecorder.crawl import Crawler as MyRecorderCrawler
-from kot.myrecorder.crawl import CrawlerParams as MyRecorderCrawlerParams
-from kot.myrecorder.notify import SlackClient as MyRecorderSlackClient
-from kot.myrecorder.notify import SlackClientParams as MyRecorderSlackClientParams
+from kot.myrecorder.crawl import Crawler as MyRecorderCrawler, CrawlerParams as MyRecorderCrawlerParams
+from kot.myrecorder.notify import (
+    SlackClient as MyRecorderSlackClient,
+    SlackClientParams as MyRecorderSlackClientParams,
+)
 from kot.scrapekot.aggregate import Aggregator
-from kot.scrapekot.crawl import Crawler as ScrapeKOTCrawler
-from kot.scrapekot.crawl import CrawlerParams as ScrapeKOTCrawlerParams
-from kot.scrapekot.notify import Console
-from kot.scrapekot.notify import SlackClient as ScrapeKOTSlackClient
-from kot.scrapekot.notify import SlackClientParams as ScrapeKOTSlackClientParams
+from kot.scrapekot.crawl import Crawler as ScrapeKOTCrawler, CrawlerParams as ScrapeKOTCrawlerParams
+from kot.scrapekot.notify import (
+    Console,
+    SlackClient as ScrapeKOTSlackClient,
+    SlackClientParams as ScrapeKOTSlackClientParams,
+)
 from kot.scrapekot.scrape import Scraper
 
 FILEPATH = "./config.yaml"
@@ -40,14 +42,12 @@ class InitializeParams(DriverOptions):
     pass
 
 
-def scrape_kot(params: ScrapeKOTParams) -> None:
+def scrape_kot(params: ScrapeKOTParams) -> str:
     try:
         cfg = load_config(FILEPATH)
         driver_options = DriverOptions(
             is_amazon_linux=params.is_amazon_linux,
-            is_chrome=params.is_chrome,
-            is_chromium=params.is_chromium,
-            is_firefox=params.is_firefox,
+            browser_kind=params.browser_kind,
             is_headless=params.is_headless,
         )
         crawler_params = ScrapeKOTCrawlerParams(
@@ -66,9 +66,12 @@ def scrape_kot(params: ScrapeKOTParams) -> None:
         scraped_data = Scraper(crawled_data).extract()
         aggregated_data = Aggregator().aggregate(scraped_data)
         if params.is_console:
-            Console.display(aggregated_data, datetime.today())
+            message = Console.display(aggregated_data, datetime.today())
+            return message
         else:
             ScrapeKOTSlackClient().notify(slack_client_params, aggregated_data)
+            message = Console.display(aggregated_data, datetime.today(), stdout=False)
+            return message
     except Exception as e:
         t, v, tb = sys.exc_info()
         x = traceback.format_exception(t, v, tb)
@@ -80,9 +83,7 @@ def punch_myrecorder(params: MyRecorderParams) -> None:
         cfg = load_config(FILEPATH)
         driver_options = DriverOptions(
             is_amazon_linux=params.is_amazon_linux,
-            is_chrome=params.is_chrome,
-            is_chromium=params.is_chromium,
-            is_firefox=params.is_firefox,
+            browser_kind=params.browser_kind,
             is_headless=params.is_headless,
         )
         crawler_params = MyRecorderCrawlerParams(
@@ -116,23 +117,41 @@ def punch_myrecorder(params: MyRecorderParams) -> None:
 def initialize_dirver(params: InitializeParams) -> None:
     driver_options = DriverOptions(
         is_amazon_linux=params.is_amazon_linux,
-        is_chrome=params.is_chrome,
-        is_chromium=params.is_chromium,
-        is_firefox=params.is_firefox,
+        browser_kind=params.browser_kind,
         is_headless=params.is_headless,
     )
     browser = Browser.build(driver_options)
     browser.quit()
 
 
-def lambda_handler(event: Any, context: Any) -> None:
-    params = ScrapeKOTParams(
-        is_amazon_linux=True,
-        is_chrome=True,
-        is_chromium=True,
-        is_firefox=False,
-        is_headless=True,
-        is_console=True,
-    )
-    logger.info(params)
-    scrape_kot(params)
+def lambda_handler(event: Any, context: Any) -> Dict[str, Any]:
+    params: Union[MyRecorderParams, ScrapeKOTParams]
+    if event["command"] == "myrecorder":
+        params = MyRecorderParams(
+            is_amazon_linux=True,
+            browser_kind=BrowserKind.chromium,
+            is_headless=True,
+            command=event["myrecorder_command"],
+            message="",
+            yes=True,
+            is_debug=False,
+        )
+        logger.info(params)
+        punch_myrecorder(params)
+        return {
+            "myrecorder_command": event["myrecorder_command"],
+        }
+    elif event["command"] == "scrape":
+        params = ScrapeKOTParams(
+            is_amazon_linux=True,
+            browser_kind=BrowserKind.chromium,
+            is_headless=True,
+            is_console=False,
+        )
+        logger.info(params)
+        message = scrape_kot(params)
+        return {
+            "message": message,
+        }
+    else:
+        raise ValueError(f"{event['command']} is not supported")

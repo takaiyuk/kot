@@ -1,4 +1,4 @@
-FROM python:3.10.4-buster as builder
+FROM python:3.9.13-buster as builder
 COPY poetry.lock pyproject.toml ./
 RUN apt -y update \
   && apt -y install tzdata \
@@ -7,8 +7,8 @@ RUN apt -y update \
   && poetry config virtualenvs.create false \
   && poetry install --no-ansi --no-interaction
 
-FROM python:3.10.4-slim-buster
-COPY --from=builder /usr/local/lib/python3.10/site-packages /usr/local/lib/python3.10/site-packages
+FROM python:3.9.13-slim-buster
+COPY --from=builder /usr/local/lib/python3.9/site-packages /usr/local/lib/python3.9/site-packages
 COPY --from=builder /usr/share/zoneinfo/Asia/Tokyo /etc/localtime
 ENV PYTHONPATH=/usr/local:$PYTHONPATH
 ENV APP_HOME /kot

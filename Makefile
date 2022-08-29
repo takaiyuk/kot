@@ -1,13 +1,24 @@
-.PHONY: scrapekot myrecorder mypy test pydeps
+.PHONY: scrapekot myrecorder lint test pydeps
 
 scrapekot:
-	python -m kot scrape
+	poetry run python -m kot scrape
 
 myrecorder:
-	python -m kot myrecorder
+	poetry run python -m kot myrecorder
+
+black:
+	poetry run black .
+
+flake8:
+	poetry run flake8 .
+
+isort:
+	poetry run isort --ca .
 
 mypy:
 	poetry run mypy kot --install-types --non-interactive
+
+lint: black flake8 isort mypy
 
 test:
 	poetry run pytest tests

@@ -24,9 +24,7 @@ class Color(Enum):
 
 
 class SlackClient(BaseSlackClient):
-    def _build_noitfy_data(
-        self, params: SlackClientParams, data: AggregatedData
-    ) -> Optional[NotifyData]:
+    def _build_noitfy_data(self, params: SlackClientParams, data: AggregatedData) -> Optional[NotifyData]:
         message = self._get_message(data)
         title = self._get_title(params.dt_now)
         color = self._get_color(data.saving_time)
@@ -81,7 +79,7 @@ class SlackClient(BaseSlackClient):
 
 class Console:
     @staticmethod
-    def display(aggregated_data: AggregatedData, dt_today: datetime) -> None:
+    def display(aggregated_data: AggregatedData, dt_today: datetime, stdout: bool = True) -> str:
         kwargs = {
             "work_counts_remain": aggregated_data.work_counts_remain,
             "work_counts": aggregated_data.work_counts,
@@ -90,14 +88,11 @@ class Console:
             "work_hours": format_hours(aggregated_data.work_hours),
             "monthly_work_hours": int(aggregated_data.monthly_work_hours),
             "saving_time": format_hours(aggregated_data.saving_time),
-            "work_hours_remain_by_day": format_hours(
-                aggregated_data.work_hours_remain_by_day
-            ),
+            "work_hours_remain_by_day": format_hours(aggregated_data.work_hours_remain_by_day),
             "start_time": aggregated_data.start_time,
             "teiji_time": aggregated_data.teiji_time,
         }
-        logger.info(
-            """
+        message = """
     残り{work_counts_remain}営業日: ({work_counts}/{monthly_work_counts} 日)
 
     あと{work_hours_remain}必要: ({work_hours}/{monthly_work_hours}時間)
@@ -110,9 +105,11 @@ class Console:
         出勤: {start_time}
         定時: {teiji_time}
 """.format(
-                today=dt_today, **kwargs
-            )
+            today=dt_today, **kwargs
         )
+        if stdout:
+            logger.info(message)
+        return message
 
 
 def format_hours(hours: float) -> str:

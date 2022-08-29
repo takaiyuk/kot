@@ -4,14 +4,7 @@ from datetime import datetime
 from typing import Any
 
 from kot.scrapekot.aggregate import AggregatedData
-from kot.scrapekot.notify import (
-    Color,
-    Console,
-    NotifyData,
-    SlackClient,
-    SlackClientParams,
-    format_hours,
-)
+from kot.scrapekot.notify import Color, Console, NotifyData, SlackClient, SlackClientParams, format_hours
 
 api = SlackClient()
 
@@ -61,9 +54,7 @@ def test_SlackClient__build_noitfy_data(mocker):
     )
     fixtures = [Fixture("", params, data, expected)]
     for fixture in fixtures:
-        assert (
-            api._build_noitfy_data(fixture.params, fixture.data) == fixture.expected
-        ), fixture.desc
+        assert api._build_noitfy_data(fixture.params, fixture.data) == fixture.expected, fixture.desc
 
 
 def test_SlackClient__post_slack(mocker):
@@ -240,7 +231,21 @@ def test_Console_display(mocker):
         today=dt_today
     )
     mocker.patch("kot.common.logger.logger.info", side_effect=mock_func_logger_info)
-    Console.display(aggregated_data, dt_today)
+    message = Console.display(aggregated_data, dt_today)
+    expected = """
+    残り8.0営業日: (12.0/20.0 日)
+
+    あと56時間00分必要: (104時間00分/160時間)
+
+    貯金: 8時間00分
+
+    貯金を元に残り営業日の必要勤務時間数を算出すると: 7時間00分
+
+    2022-03-17の出勤・定時
+        出勤: 09:00
+        定時: 18:00
+"""
+    assert message == expected
 
 
 def test_format_hours():
