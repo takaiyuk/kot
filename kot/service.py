@@ -18,6 +18,7 @@ from kot.scrapekot.notify import (
     Console,
     SlackClient as ScrapeKOTSlackClient,
     SlackClientParams as ScrapeKOTSlackClientParams,
+    message_to_dict,
 )
 from kot.scrapekot.scrape import Scraper
 
@@ -150,8 +151,7 @@ def lambda_handler(event: Any, context: Any) -> Dict[str, Any]:
         )
         logger.info(params)
         message = scrape_kot(params)
-        return {
-            "message": message,
-        }
+        message_dict = message_to_dict(message)
+        return message_dict
     else:
         raise ValueError(f"{event['command']} is not supported")
