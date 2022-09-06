@@ -1,9 +1,9 @@
 FROM python:3.9.13-buster as builder
 COPY poetry.lock pyproject.toml ./
+ENV PATH=/root/.local/bin:$PATH
 RUN apt -y update \
   && apt -y install tzdata \
-  && curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python - \
-  && . $HOME/.poetry/env \
+  && curl -sSL https://install.python-poetry.org | python3 - \
   && poetry config virtualenvs.create false \
   && poetry install --no-ansi --no-interaction
 
