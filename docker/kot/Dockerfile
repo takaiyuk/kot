@@ -13,14 +13,9 @@ COPY --from=builder /usr/share/zoneinfo/Asia/Tokyo /etc/localtime
 ENV PYTHONPATH=/usr/local:$PYTHONPATH
 ENV APP_HOME /kot
 WORKDIR $APP_HOME
-RUN apt -y update \
-  && apt -y install chromium \
-  && rm -rf /var/lib/apt/lists/*
 COPY kot kot
 COPY scripts scripts
 # Turn off webdriver-manager logs use
 ENV WDM_LOG 0
-
-RUN python -m kot initialize
 
 ENTRYPOINT ["python"]
