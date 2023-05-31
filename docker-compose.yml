@@ -4,6 +4,11 @@ services:
     image: seleniarm/standalone-chromium:4.1.4-20220429
     networks:
       - kot
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:4444/wd/hub/status"]
+      interval: 1s
+      timeout: 10s
+      retries: 3
   app:
     build:
       context: .
@@ -16,7 +21,8 @@ services:
     command: kot scrape --console --browser-kind remote
     tty: true
     depends_on:
-      - selenium
+      selenium:
+        condition: service_healthy
     networks:
       - kot
 
