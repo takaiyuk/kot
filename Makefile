@@ -10,7 +10,7 @@ black:
 	poetry run black .
 
 flake8:
-	poetry run flake8 .
+	poetry run pflake8 .
 
 isort:
 	poetry run isort --ca .
@@ -21,7 +21,7 @@ mypy:
 lint: black flake8 isort mypy
 
 test:
-	poetry run pytest tests
+	poetry run pytest
 
 pydeps:
 	# brew install graphviz && dot -c
