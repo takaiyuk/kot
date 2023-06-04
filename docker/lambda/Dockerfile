@@ -1,12 +1,12 @@
 # https://docs.aws.amazon.com/ja_jp/lambda/latest/dg/python-image.html
-FROM public.ecr.aws/lambda/python:3.9
+FROM public.ecr.aws/lambda/python:3.10
 
 ENV POETRY_HOME=/etc/poetry
 ENV PATH $POETRY_HOME/bin:$PATH
 
 RUN yum update -y \
     && yum install -y amazon-linux-extras \
-    && ln -s /usr/lib/python2.7/site-packages/amazon_linux_extras /var/lang/lib/python3.9/site-packages/ \
+    && ln -s /usr/lib/python2.7/site-packages/amazon_linux_extras /var/lang/lib/python3.10/site-packages/ \
     && amazon-linux-extras install -y epel \
     && yum install -y chromium
 

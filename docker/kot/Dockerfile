@@ -1,4 +1,4 @@
-FROM python:3.9.13-buster as builder
+FROM python:3.10.11-bullseye as builder
 COPY poetry.lock pyproject.toml ./
 ENV PATH=/root/.local/bin:$PATH
 RUN apt -y update \
@@ -7,8 +7,8 @@ RUN apt -y update \
   && poetry config virtualenvs.create false \
   && poetry install --no-ansi --no-interaction
 
-FROM python:3.9.13-slim-buster
-COPY --from=builder /usr/local/lib/python3.9/site-packages /usr/local/lib/python3.9/site-packages
+FROM python:3.10.11-slim-bullseye
+COPY --from=builder /usr/local/lib/python3.10/site-packages /usr/local/lib/python3.10/site-packages
 COPY --from=builder /usr/share/zoneinfo/Asia/Tokyo /etc/localtime
 ENV PYTHONPATH=/usr/local:$PYTHONPATH
 ENV APP_HOME /kot
