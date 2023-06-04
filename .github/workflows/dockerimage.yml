@@ -16,11 +16,13 @@ jobs:
       run: |
         if [ "${{ github.actor }}" == "dependabot[bot]" ]; then
           exit 0
-        else
-          echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u ${{ github.actor }} --password-stdin
         fi
+        echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u ${{ github.actor }} --password-stdin
     - name: Push image
       run: |
+        if [ "${{ github.actor }}" == "dependabot[bot]" ]; then
+          exit 0
+        fi
         IMAGE_ID=${{ github.actor }}/$IMAGE_NAME
 
         # Strip git ref prefix from version
