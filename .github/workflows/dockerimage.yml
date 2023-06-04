@@ -13,7 +13,12 @@ jobs:
     - name: Build image
       run: docker build -f ./docker/kot/Dockerfile -t image .
     - name: Log into registry
-      run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u ${{ github.actor }} --password-stdin
+      run: |
+        if [ "${{ github.actor }}" == "dependabot[bot]" ]; then
+          exit 0
+        else
+          echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u ${{ github.actor }} --password-stdin
+        fi
     - name: Push image
       run: |
         IMAGE_ID=${{ github.actor }}/$IMAGE_NAME
@@ -34,3 +39,5 @@ jobs:
 
         docker tag image $IMAGE_ID:$IMAGE_TAG
         docker push $IMAGE_ID:$IMAGE_TAG
+    - name: Logout
+      run: docker logout
