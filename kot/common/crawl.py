@@ -44,17 +44,17 @@ class Driver:
     @classmethod
     def _get_browser_options(cls, driver_options: DriverOptions) -> OPTIONS:
         options: OPTIONS
-        if (
-            driver_options.browser_kind == BrowserKind.chrome
-            or driver_options.browser_kind == BrowserKind.chromium
-        ):
-            options = webdriver.ChromeOptions()
-        elif driver_options.browser_kind == BrowserKind.firefox:
-            options = webdriver.FirefoxOptions()
-        elif driver_options.browser_kind == BrowserKind.remote:
-            options = webdriver.ChromeOptions()
-        else:
-            raise ValueError("driver_options.browser_kind must be one of chrome, chromium or firefox")
+        match driver_options.browser_kind:
+            case BrowserKind.chrome:
+                options = webdriver.ChromeOptions()
+            case BrowserKind.chromium:
+                options = webdriver.ChromeOptions()
+            case BrowserKind.firefox:
+                options = webdriver.FirefoxOptions()
+            case BrowserKind.remote:
+                options = webdriver.ChromeOptions()
+            case _:
+                raise ValueError("driver_options.browser_kind must be one of chrome, chromium or firefox")
 
         options.add_argument("--no-sandbox")
         options.add_argument("--disable-gpu")
@@ -80,32 +80,39 @@ class Driver:
         options: OPTIONS,
     ) -> BROWSERS:
         driver: BROWSERS
-        if (
-            driver_options.browser_kind == BrowserKind.chrome
-            or driver_options.browser_kind == BrowserKind.chromium
-        ) and isinstance(options, webdriver.ChromeOptions):
-            if driver_options.browser_kind == BrowserKind.chromium:
-                chrome_service = ChromeService(
-                    ChromeDriverManager(path=DRIVER_PATH, chrome_type=ChromeType.CHROMIUM).install()
+        match driver_options.browser_kind:
+            case BrowserKind.chromium:
+                if isinstance(options, webdriver.ChromeOptions):
+                    chrome_service = ChromeService(
+                        ChromeDriverManager(path=DRIVER_PATH, chrome_type=ChromeType.CHROMIUM).install()
+                    )
+                    driver = webdriver.Chrome(service=chrome_service, options=options)
+                else:
+                    raise ValueError(f"options must be consistent with browser_kind: {options}")
+            case BrowserKind.chrome:
+                if isinstance(options, webdriver.ChromeOptions):
+                    chrome_service = ChromeService(ChromeDriverManager(path=DRIVER_PATH).install())
+                    driver = webdriver.Chrome(service=chrome_service, options=options)
+                else:
+                    raise ValueError(f"options must be consistent with browser_kind: {options}")
+            case BrowserKind.firefox:
+                if isinstance(options, webdriver.FirefoxOptions):
+                    gecko_service = GeckoService(GeckoDriverManager(path=DRIVER_PATH).install())
+                    driver = webdriver.Firefox(service=gecko_service, options=options)
+                else:
+                    raise ValueError(f"options must be consistent with browser_kind: {options}")
+            case BrowserKind.remote:
+                if isinstance(options, webdriver.ChromeOptions):
+                    driver = webdriver.Remote(
+                        command_executor=os.getenv("SELENIUM_URL", "http://localhost:4444/wd/hub"),
+                        options=options,
+                    )
+                else:
+                    raise ValueError(f"options must be consistent with browser_kind: {options}")
+            case _:
+                raise ValueError(
+                    "driver_options.browser_kind must be one of chrome, chromium, firefox or remote"
                 )
-            else:
-                chrome_service = ChromeService(ChromeDriverManager(path=DRIVER_PATH).install())
-            driver = webdriver.Chrome(service=chrome_service, options=options)
-        elif driver_options.browser_kind == BrowserKind.firefox and isinstance(
-            options, webdriver.FirefoxOptions
-        ):
-            gecko_service = GeckoService(GeckoDriverManager(path=DRIVER_PATH).install())
-            driver = webdriver.Firefox(service=gecko_service, options=options)
-        elif driver_options.browser_kind == BrowserKind.remote:
-            driver = webdriver.Remote(
-                command_executor=os.getenv("SELENIUM_URL", "http://localhost:4444/wd/hub"),
-                options=options,
-            )
-        else:
-            raise ValueError(
-                f"driver_options.browser_kind must be one of chrome, chromium or firefox: {driver_options.browser_kind}\n"
-                f"or options must be consistent with browser_kind: {options}"
-            )
         return driver
 
 

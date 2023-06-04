@@ -127,31 +127,32 @@ def initialize_driver(params: InitializeParams) -> None:
 
 def lambda_handler(event: Any, context: Any) -> Dict[str, Any]:
     params: Union[MyRecorderParams, ScrapeKOTParams]
-    if event["command"] == "myrecorder":
-        params = MyRecorderParams(
-            is_amazon_linux=True,
-            browser_kind=BrowserKind.chromium,
-            is_headless=True,
-            command=event["myrecorder_command"],
-            message="",
-            yes=True,
-            is_debug=False,
-        )
-        logger.info(params)
-        punch_myrecorder(params)
-        return {
-            "myrecorder_command": event["myrecorder_command"],
-        }
-    elif event["command"] == "scrape":
-        params = ScrapeKOTParams(
-            is_amazon_linux=True,
-            browser_kind=BrowserKind.chromium,
-            is_headless=True,
-            is_console=False,
-        )
-        logger.info(params)
-        message = scrape_kot(params)
-        message_dict = message_to_dict(message)
-        return message_dict
-    else:
-        raise ValueError(f"{event['command']} is not supported")
+    match event["command"]:
+        case "myrecorder":
+            params = MyRecorderParams(
+                is_amazon_linux=True,
+                browser_kind=BrowserKind.chromium,
+                is_headless=True,
+                command=event["myrecorder_command"],
+                message="",
+                yes=True,
+                is_debug=False,
+            )
+            logger.info(params)
+            punch_myrecorder(params)
+            return {
+                "myrecorder_command": event["myrecorder_command"],
+            }
+        case "scrape":
+            params = ScrapeKOTParams(
+                is_amazon_linux=True,
+                browser_kind=BrowserKind.chromium,
+                is_headless=True,
+                is_console=False,
+            )
+            logger.info(params)
+            message = scrape_kot(params)
+            message_dict = message_to_dict(message)
+            return message_dict
+        case _:
+            raise ValueError(f"{event['command']} is not supported")

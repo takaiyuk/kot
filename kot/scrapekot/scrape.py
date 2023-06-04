@@ -83,12 +83,13 @@ class Scraper:
                 continue
             label = self._clean_text(label.text)
             value = self._clean_text(value.text)
-            if label in valid_labels:
-                holiday_counts += float(value.split("(")[0].split("/")[0])
-            elif label in invalid_labels:
-                continue
-            else:
-                logger.warning(f"Unknown label found: {label}")
+            match label:
+                case x if x in valid_labels:
+                    holiday_counts += float(value.split("(")[0].split("/")[0])
+                case x if x in invalid_labels:
+                    continue
+                case _:
+                    logger.warning(f"Unknown label found: {label}")
         return holiday_counts
 
     def get_monthly_work_hours(self) -> float:

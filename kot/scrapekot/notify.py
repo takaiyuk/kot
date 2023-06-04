@@ -53,12 +53,15 @@ class SlackClient(BaseSlackClient):
         return title
 
     def _get_color(self, saving_time: float) -> str:
-        if saving_time >= 1:
-            return Color.GREEN.value
-        elif saving_time >= 0:
-            return Color.YELLOW.value
-        else:
-            return Color.RED.value
+        match saving_time:
+            case t if t >= 1:
+                return Color.GREEN.value
+            case t if t >= 0:
+                return Color.YELLOW.value
+            case _:
+                # Avoid mypy error when using match guard: https://github.com/python/mypy/issues/14704
+                pass
+        return Color.RED.value
 
     def _slack_url(self, notify_data: NotifyData) -> str:
         return notify_data.slack_webhook_url
