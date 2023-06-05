@@ -1,3 +1,4 @@
+import os
 import random
 import time
 from dataclasses import dataclass
@@ -21,6 +22,7 @@ class BrowserKind(str, Enum):
     chrome = "chrome"
     chromium = "chromium"
     firefox = "firefox"
+    remote = "remote"
 
 
 @dataclass
@@ -49,6 +51,8 @@ class Driver:
             options = webdriver.ChromeOptions()
         elif driver_options.browser_kind == BrowserKind.firefox:
             options = webdriver.FirefoxOptions()
+        elif driver_options.browser_kind == BrowserKind.remote:
+            options = webdriver.ChromeOptions()
         else:
             raise ValueError("driver_options.browser_kind must be one of chrome, chromium or firefox")
 
@@ -92,6 +96,11 @@ class Driver:
         ):
             gecko_service = GeckoService(GeckoDriverManager(path=DRIVER_PATH).install())
             driver = webdriver.Firefox(service=gecko_service, options=options)
+        elif driver_options.browser_kind == BrowserKind.remote:
+            driver = webdriver.Remote(
+                command_executor=os.getenv('SELENIUM_URL', 'http://localhost:4444/wd/hub'),
+                options=options,
+            )
         else:
             raise ValueError(
                 f"driver_options.browser_kind must be one of chrome, chromium or firefox: {driver_options.browser_kind}\n"

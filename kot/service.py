@@ -115,7 +115,7 @@ def punch_myrecorder(params: MyRecorderParams) -> None:
         raise Exception(f"{''.join(x)}" + str(e))
 
 
-def initialize_dirver(params: InitializeParams) -> None:
+def initialize_driver(params: InitializeParams) -> None:
     driver_options = DriverOptions(
         is_amazon_linux=params.is_amazon_linux,
         browser_kind=params.browser_kind,
