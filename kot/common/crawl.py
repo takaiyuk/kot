@@ -34,7 +34,9 @@ class DriverOptions:
 
 class Driver:
     @classmethod
-    def build(cls, driver_options: DriverOptions) -> Union[webdriver.Chrome, webdriver.Firefox]:
+    def build(
+        cls, driver_options: DriverOptions
+    ) -> Union[webdriver.Chrome, webdriver.Firefox, webdriver.Remote]:
         browser_options = cls._get_browser_options(driver_options)
         driver = cls._get_driver(driver_options, browser_options)
         return driver
@@ -78,8 +80,8 @@ class Driver:
         cls,
         driver_options: DriverOptions,
         options: Union[webdriver.ChromeOptions, webdriver.FirefoxOptions],
-    ) -> Union[webdriver.Chrome, webdriver.Firefox]:
-        driver: Union[webdriver.Chrome, webdriver.Firefox]
+    ) -> Union[webdriver.Chrome, webdriver.Firefox, webdriver.Remote]:
+        driver: Union[webdriver.Chrome, webdriver.Firefox, webdriver.Remote]
         if (
             driver_options.browser_kind == BrowserKind.chrome
             or driver_options.browser_kind == BrowserKind.chromium
@@ -98,7 +100,7 @@ class Driver:
             driver = webdriver.Firefox(service=gecko_service, options=options)
         elif driver_options.browser_kind == BrowserKind.remote:
             driver = webdriver.Remote(
-                command_executor=os.getenv('SELENIUM_URL', 'http://localhost:4444/wd/hub'),
+                command_executor=os.getenv("SELENIUM_URL", "http://localhost:4444/wd/hub"),
                 options=options,
             )
         else:
@@ -110,7 +112,7 @@ class Driver:
 
 
 class Browser:
-    def __init__(self, driver: Union[webdriver.Chrome, webdriver.Firefox]) -> None:
+    def __init__(self, driver: Union[webdriver.Chrome, webdriver.Firefox, webdriver.Remote]) -> None:
         self.driver = driver
 
     @classmethod
