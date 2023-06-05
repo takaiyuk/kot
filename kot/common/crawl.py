@@ -16,6 +16,8 @@ from webdriver_manager.firefox import GeckoDriverManager
 TOP_URL = "https://s3.kingtime.jp/admin"
 DRIVER_PATH = "/tmp"
 B = TypeVar("B", bound="Browser")
+BROWSERS = Union[webdriver.Chrome, webdriver.Firefox, webdriver.Remote]
+OPTIONS = Union[webdriver.ChromeOptions, webdriver.FirefoxOptions]
 
 
 class BrowserKind(str, Enum):
@@ -34,18 +36,14 @@ class DriverOptions:
 
 class Driver:
     @classmethod
-    def build(
-        cls, driver_options: DriverOptions
-    ) -> Union[webdriver.Chrome, webdriver.Firefox, webdriver.Remote]:
+    def build(cls, driver_options: DriverOptions) -> BROWSERS:
         browser_options = cls._get_browser_options(driver_options)
         driver = cls._get_driver(driver_options, browser_options)
         return driver
 
     @classmethod
-    def _get_browser_options(
-        cls, driver_options: DriverOptions
-    ) -> Union[webdriver.ChromeOptions, webdriver.FirefoxOptions]:
-        options: Union[webdriver.ChromeOptions, webdriver.FirefoxOptions]
+    def _get_browser_options(cls, driver_options: DriverOptions) -> OPTIONS:
+        options: OPTIONS
         if (
             driver_options.browser_kind == BrowserKind.chrome
             or driver_options.browser_kind == BrowserKind.chromium
@@ -79,9 +77,9 @@ class Driver:
     def _get_driver(
         cls,
         driver_options: DriverOptions,
-        options: Union[webdriver.ChromeOptions, webdriver.FirefoxOptions],
-    ) -> Union[webdriver.Chrome, webdriver.Firefox, webdriver.Remote]:
-        driver: Union[webdriver.Chrome, webdriver.Firefox, webdriver.Remote]
+        options: OPTIONS,
+    ) -> BROWSERS:
+        driver: BROWSERS
         if (
             driver_options.browser_kind == BrowserKind.chrome
             or driver_options.browser_kind == BrowserKind.chromium
@@ -112,7 +110,7 @@ class Driver:
 
 
 class Browser:
-    def __init__(self, driver: Union[webdriver.Chrome, webdriver.Firefox, webdriver.Remote]) -> None:
+    def __init__(self, driver: BROWSERS) -> None:
         self.driver = driver
 
     @classmethod
