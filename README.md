@@ -10,11 +10,13 @@
   - [Console に通知](#console-に通知)
   - [AWS Lambda で実行](#aws-lambda-で実行)
 - [My Recorder](#my-recorder)
+  - [実行例](#console-に通知)
+  - [AWS Lambda で実行](#aws-lambda-で実行)
 - [Development](#development)
-  - [Typer Help](#typer-help)
+  - [Setup](#setup)
   - [Lint](#lint)
-    - [type check](#type-check)
-    - [test](#test)
+  - [Test](#test)
+  - [Typer Help](#typer-help)
   - [Pydeps](#pydeps)
 
 ## 概要
@@ -26,64 +28,40 @@
 
 ## 実行環境の準備
 
-### Docker で実行
-
 ```shell
 $ git clone https://github.com/takaiyuk/kot.git
 $ cd kot
 $ mkdir ~/.kot
 # config.yaml を適宜書き換える
 $ cp ./config.yaml.example ~/.kot/config.yaml
-$ ./scripts/docker/kot/pull.sh
+$ make build
 ```
 
-### ローカルで実行
+**NOTE**
 
-```shell
-$ git clone https://github.com/takaiyuk/kot.git
-$ cd kot
-# config.yaml を適宜書き換える
-$ cp ./config.yaml.example ./config.yaml
-$ poetry install
-```
+- ローカルでの実行は Arm64 の MacOS のみサポートしている
 
 ## Scrape KOT
 
 ### Slack に通知
 
-#### Docker で実行
-
 ```shell
-$ ./scripts/scrapekot.sh slack
+$ make scrapekot-slack
 ```
 
-#### ローカルで実行
-
-```shell
-$ poetry run python -m kot scrape --no-console
-```
-
-#### 出力イメージ
+- 出力イメージ
 
 ![Slack Notify Image](https://github.com/takaiyuk/kot/blob/main/statics/img/notify-green.png)
 
 ### Console に通知
 
-Slack チャンネルに通知させたくない場合は `console` をつけて実行することで自身のコンソール上のみに出力させることも可能
-
-#### Docker で実行
+Slack チャンネルに通知させたくない場合は実行のコンソール上のみに出力させることも可能
 
 ```shell
-$ ./scripts/scrapekot.sh console
+$ make scrapekot
 ```
 
-#### ローカルで実行
-
-```shell
-$ poetry run python -m kot scrape --console
-```
-
-#### 出力イメージ
+- 出力イメージ
 
 ```
     残り12営業日: (8.0/20.0 日)
@@ -135,46 +113,66 @@ $ aws lambda invoke --function-name kot --cli-binary-format raw-in-base64-out --
 
 ## My Recorder
 
-利用可能な `${CMD}` は以下の通り
+利用可能なオプションは以下の通り
 
 - `start`: 出勤
 - `end`: 退勤
 - `rest_start`: 休憩開始
 - `rest_end`: 休憩終了
 
-### Docker で実行
+### 実行例
+
+- 出勤
 
 ```shell
-$ ./scripts/myrecorder.sh ${CMD}
+$ make myrecorder-start
 ```
 
-Slack に特定のメッセージを通知する場合には以下のようにする
+- 退勤
 
 ```shell
-$ ./scripts/myrecorder.sh ${CMD} "Some messages"
+$ make myrecorder-end
 ```
 
-### ローカルで実行
+- 休憩開始
 
 ```shell
-$ poetry run python -m kot myrecorder ${CMD}
+$ make myrecorder-rest-start
 ```
 
-Slack に特定のメッセージを通知する場合には以下のようにする
+- 休憩終了
 
 ```shell
-$ poetry run python -m kot myrecorder ${CMD} --message "Some messages"
+$ make myrecorder-rest-end
 ```
 
 ### AWS Lambda で実行
 
-`myrecorder_command` で上記の `${CMD}` を指定する
+`myrecorder_command` で上記のオプションを指定する
 
 ```shell
 $ aws lambda invoke --function-name kot --cli-binary-format raw-in-base64-out --payload '{ "command": "myrecorder", "myrecorder_command": "start" }' /dev/stdout
 ```
 
 ## Development
+
+### Setup
+
+```shell
+$ poetry install
+```
+
+### Lint
+
+```shell
+$ make lint
+```
+
+### Test
+
+```shell
+$ make test
+```
 
 ### Typer Help
 
@@ -199,7 +197,7 @@ Options:
   --console / --no-console        [default: console]
   --amazon-linux / --no-amazon-linux
                                   [default: no-amazon-linux]
-  --browser-kind [chrome|chromium|firefox]
+  --browser-kind [chrome|chromium|firefox|remote]
                                   [default: BrowserKind.chrome]
   --headless / --no-headless      [default: headless]
   --help                          Show this message and exit.
@@ -218,22 +216,10 @@ Options:
   --debug / --no-debug            [default: no-debug]
   --amazon-linux / --no-amazon-linux
                                   [default: no-amazon-linux]
-  --browser-kind [chrome|chromium|firefox]
+  --browser-kind [chrome|chromium|firefox|remote]
                                   [default: BrowserKind.chrome]
   --headless / --no-headless      [default: headless]
   --help                          Show this message and exit.
-```
-
-### Lint
-
-```shell
-$ make lint
-```
-
-### test
-
-```shell
-$ make test
 ```
 
 ### Pydeps

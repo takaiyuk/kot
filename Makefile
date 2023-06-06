@@ -1,10 +1,25 @@
-.PHONY: scrapekot myrecorder lint test pydeps
+.PHONY: build scrapekot scrapekot-slack myrecorder-start myrecorder-end lint test pydeps
+
+build:
+	docker compose build
 
 scrapekot:
-	poetry run python -m kot scrape
+	docker compose run --rm app kot scrape --console --browser-kind remote
 
-myrecorder:
-	poetry run python -m kot myrecorder
+scrapekot-slack:
+	docker compose run --rm app kot scrape --no-console --browser-kind remote
+
+myrecorder-start:
+	docker compose run --rm app kot myrecorder start --yes --browser-kind remote
+
+myrecorder-end:
+	docker compose run --rm app kot myrecorder end --yes --browser-kind remote
+
+myrecorder-rest-start:
+	docker compose run --rm app kot myrecorder rest_start --yes --browser-kind remote
+
+myrecorder-rest-end:
+	docker compose run --rm app kot myrecorder rest_end --yes --browser-kind remote
 
 black:
 	poetry run black .
@@ -18,7 +33,7 @@ isort:
 mypy:
 	poetry run mypy kot --install-types --non-interactive
 
-lint: black flake8 isort mypy
+lint: black isort flake8 mypy
 
 test:
 	poetry run pytest
