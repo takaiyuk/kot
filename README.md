@@ -8,14 +8,15 @@
 - [Scrape KOT](#scrape-kot)
   - [Slack に通知](#slack-に通知)
   - [Console に通知](#console-に通知)
-  - [AWS Lambda で実行](#aws-lambda-で実行)
+  - [AWS Lambda で実行 (scrapekot)](#aws-lambda-で実行-scrapekot)
 - [My Recorder](#my-recorder)
-  - [実行例](#console-に通知)
-  - [AWS Lambda で実行](#aws-lambda-で実行)
+  - [実行例](#実行例)
+  - [AWS Lambda で実行 (myrecorder)](#aws-lambda-で実行-myrecorder)
 - [Development](#development)
   - [Setup](#setup)
   - [Lint](#lint)
   - [Test](#test)
+  - [Invoke tasks](#invoke-tasks)
   - [Typer Help](#typer-help)
   - [Pydeps](#pydeps)
 
@@ -34,7 +35,7 @@ $ cd kot
 $ mkdir ~/.kot
 # config.yaml を適宜書き換える
 $ cp ./config.yaml.example ~/.kot/config.yaml
-$ make build
+$ poetry run invoke build
 ```
 
 **NOTE**
@@ -46,7 +47,7 @@ $ make build
 ### Slack に通知
 
 ```shell
-$ make scrapekot-slack
+$ poetry run invoke scrapekot-slack
 ```
 
 - 出力イメージ
@@ -58,7 +59,7 @@ $ make scrapekot-slack
 Slack チャンネルに通知させたくない場合は実行のコンソール上のみに出力させることも可能
 
 ```shell
-$ make scrapekot
+$ poetry run invoke scrapekot
 ```
 
 - 出力イメージ
@@ -77,7 +78,7 @@ $ make scrapekot
         定時: 19:15
 ```
 
-### AWS Lambda で実行
+### AWS Lambda で実行 (scrapekot)
 
 AWS Lambda で動かすためにコンテナイメージを利用して Lambda 関数コードをデプロイすることができる（ref. [コンテナイメージで Python Lambda 関数をデプロイする](https://docs.aws.amazon.com/ja_jp/lambda/latest/dg/python-image.html)）
 
@@ -125,28 +126,28 @@ $ aws lambda invoke --function-name kot --cli-binary-format raw-in-base64-out --
 - 出勤
 
 ```shell
-$ make myrecorder-start
+$ poetry run invoke myrecorder-start
 ```
 
 - 退勤
 
 ```shell
-$ make myrecorder-end
+$ poetry run invoke myrecorder-end
 ```
 
 - 休憩開始
 
 ```shell
-$ make myrecorder-rest-start
+$ poetry run invoke myrecorder-start-rest
 ```
 
 - 休憩終了
 
 ```shell
-$ make myrecorder-rest-end
+$ poetry run invoke myrecorder-end-rest
 ```
 
-### AWS Lambda で実行
+### AWS Lambda で実行 (myrecorder)
 
 `myrecorder_command` で上記のオプションを指定する
 
@@ -165,18 +166,36 @@ $ poetry install
 ### Lint
 
 ```shell
-$ make lint
+$ poetry run invoke lint
 ```
 
 ### Test
 
 ```shell
-$ make test
+$ poetry run invoke test
+```
+
+### Invoke tasks
+
+```shell
+$ inv --list
+Available tasks:
+
+  build                   Build docker compose
+  lint                    Lint
+  myrecorder-end          Run MyRecorder to end working
+  myrecorder-end-rest     Run MyRecorder to end rest
+  myrecorder-start        Run MyRecorder to start working
+  myrecorder-start-rest   Run MyRecorder to start rest
+  pydeps                  Create pydeps graph
+  scrapekot               Run scrapekot to notify on console
+  scrapekot-slack         Run scrapekot to notify on slack
+  test                    Test
 ```
 
 ### Typer Help
 
-```
+```shell
 $ poetry run python -m kot --help
 Usage: python -m kot [OPTIONS] COMMAND [ARGS]...
 
@@ -189,7 +208,7 @@ Commands:
   scrape
 ```
 
-```
+```shell
 $ poetry run python -m kot scrape --help
 Usage: python -m kot scrape [OPTIONS]
 
@@ -203,7 +222,7 @@ Options:
   --help                          Show this message and exit.
 ```
 
-```
+```shell
 $ poetry run python -m kot myrecorder --help
 Usage: python -m kot myrecorder [OPTIONS] COMMAND
 
@@ -225,7 +244,7 @@ Options:
 ### Pydeps
 
 ```shell
-$ make pydeps
+$ poetry run invoke pydeps
 ```
 
 <details>

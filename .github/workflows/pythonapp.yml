@@ -20,7 +20,7 @@ jobs:
         poetry install --no-ansi --no-interaction
     - name: Run lint
       run: |
-        make lint
+        poetry run invoke lint
     - name: Run test
       run: |
-        make test
+        poetry run invoke test
