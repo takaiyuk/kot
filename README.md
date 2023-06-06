@@ -8,13 +8,16 @@
 - [Scrape KOT](#scrape-kot)
   - [Slack に通知](#slack-に通知)
   - [Console に通知](#console-に通知)
-  - [AWS Lambda で実行](#aws-lambda-で実行)
+  - [AWS Lambda で実行 (scrapekot)](#aws-lambda-で実行-scrapekot)
 - [My Recorder](#my-recorder)
+  - [実行例](#実行例)
+  - [AWS Lambda で実行 (myrecorder)](#aws-lambda-で実行-myrecorder)
 - [Development](#development)
-  - [Typer Help](#typer-help)
+  - [Setup](#setup)
   - [Lint](#lint)
-    - [type check](#type-check)
-    - [test](#test)
+  - [Test](#test)
+  - [Invoke tasks](#invoke-tasks)
+  - [Typer Help](#typer-help)
   - [Pydeps](#pydeps)
 
 ## 概要
@@ -26,64 +29,40 @@
 
 ## 実行環境の準備
 
-### Docker で実行
-
 ```shell
 $ git clone https://github.com/takaiyuk/kot.git
 $ cd kot
 $ mkdir ~/.kot
 # config.yaml を適宜書き換える
 $ cp ./config.yaml.example ~/.kot/config.yaml
-$ ./scripts/docker/kot/pull.sh
+$ poetry run invoke build
 ```
 
-### ローカルで実行
+**NOTE**
 
-```shell
-$ git clone https://github.com/takaiyuk/kot.git
-$ cd kot
-# config.yaml を適宜書き換える
-$ cp ./config.yaml.example ./config.yaml
-$ poetry install
-```
+- ローカルでの実行は Arm64 の MacOS のみサポートしている
 
 ## Scrape KOT
 
 ### Slack に通知
 
-#### Docker で実行
-
 ```shell
-$ ./scripts/scrapekot.sh slack
+$ poetry run invoke scrapekot-slack
 ```
 
-#### ローカルで実行
-
-```shell
-$ poetry run python -m kot scrape --no-console
-```
-
-#### 出力イメージ
+- 出力イメージ
 
 ![Slack Notify Image](https://github.com/takaiyuk/kot/blob/main/statics/img/notify-green.png)
 
 ### Console に通知
 
-Slack チャンネルに通知させたくない場合は `console` をつけて実行することで自身のコンソール上のみに出力させることも可能
-
-#### Docker で実行
+Slack チャンネルに通知させたくない場合は実行のコンソール上のみに出力させることも可能
 
 ```shell
-$ ./scripts/scrapekot.sh console
+$ poetry run invoke scrapekot
 ```
 
-#### ローカルで実行
-
-```shell
-$ poetry run python -m kot scrape --console
-```
-
-#### 出力イメージ
+- 出力イメージ
 
 ```
     残り12営業日: (8.0/20.0 日)
@@ -99,7 +78,7 @@ $ poetry run python -m kot scrape --console
         定時: 19:15
 ```
 
-### AWS Lambda で実行
+### AWS Lambda で実行 (scrapekot)
 
 AWS Lambda で動かすためにコンテナイメージを利用して Lambda 関数コードをデプロイすることができる（ref. [コンテナイメージで Python Lambda 関数をデプロイする](https://docs.aws.amazon.com/ja_jp/lambda/latest/dg/python-image.html)）
 
@@ -135,40 +114,42 @@ $ aws lambda invoke --function-name kot --cli-binary-format raw-in-base64-out --
 
 ## My Recorder
 
-利用可能な `${CMD}` は以下の通り
+利用可能なオプションは以下の通り
 
 - `start`: 出勤
 - `end`: 退勤
 - `rest_start`: 休憩開始
 - `rest_end`: 休憩終了
 
-### Docker で実行
+### 実行例
+
+- 出勤
 
 ```shell
-$ ./scripts/myrecorder.sh ${CMD}
+$ poetry run invoke myrecorder-start
 ```
 
-Slack に特定のメッセージを通知する場合には以下のようにする
+- 退勤
 
 ```shell
-$ ./scripts/myrecorder.sh ${CMD} "Some messages"
+$ poetry run invoke myrecorder-end
 ```
 
-### ローカルで実行
+- 休憩開始
 
 ```shell
-$ poetry run python -m kot myrecorder ${CMD}
+$ poetry run invoke myrecorder-start-rest
 ```
 
-Slack に特定のメッセージを通知する場合には以下のようにする
+- 休憩終了
 
 ```shell
-$ poetry run python -m kot myrecorder ${CMD} --message "Some messages"
+$ poetry run invoke myrecorder-end-rest
 ```
 
-### AWS Lambda で実行
+### AWS Lambda で実行 (myrecorder)
 
-`myrecorder_command` で上記の `${CMD}` を指定する
+`myrecorder_command` で上記のオプションを指定する
 
 ```shell
 $ aws lambda invoke --function-name kot --cli-binary-format raw-in-base64-out --payload '{ "command": "myrecorder", "myrecorder_command": "start" }' /dev/stdout
@@ -176,9 +157,45 @@ $ aws lambda invoke --function-name kot --cli-binary-format raw-in-base64-out --
 
 ## Development
 
+### Setup
+
+```shell
+$ poetry install
+```
+
+### Lint
+
+```shell
+$ poetry run invoke lint
+```
+
+### Test
+
+```shell
+$ poetry run invoke test
+```
+
+### Invoke tasks
+
+```shell
+$ inv --list
+Available tasks:
+
+  build                   Build docker compose
+  lint                    Lint
+  myrecorder-end          Run MyRecorder to end working
+  myrecorder-end-rest     Run MyRecorder to end rest
+  myrecorder-start        Run MyRecorder to start working
+  myrecorder-start-rest   Run MyRecorder to start rest
+  pydeps                  Create pydeps graph
+  scrapekot               Run scrapekot to notify on console
+  scrapekot-slack         Run scrapekot to notify on slack
+  test                    Test
+```
+
 ### Typer Help
 
-```
+```shell
 $ poetry run python -m kot --help
 Usage: python -m kot [OPTIONS] COMMAND [ARGS]...
 
@@ -191,7 +208,7 @@ Commands:
   scrape
 ```
 
-```
+```shell
 $ poetry run python -m kot scrape --help
 Usage: python -m kot scrape [OPTIONS]
 
@@ -199,13 +216,13 @@ Options:
   --console / --no-console        [default: console]
   --amazon-linux / --no-amazon-linux
                                   [default: no-amazon-linux]
-  --browser-kind [chrome|chromium|firefox]
+  --browser-kind [chrome|chromium|firefox|remote]
                                   [default: BrowserKind.chrome]
   --headless / --no-headless      [default: headless]
   --help                          Show this message and exit.
 ```
 
-```
+```shell
 $ poetry run python -m kot myrecorder --help
 Usage: python -m kot myrecorder [OPTIONS] COMMAND
 
@@ -218,28 +235,16 @@ Options:
   --debug / --no-debug            [default: no-debug]
   --amazon-linux / --no-amazon-linux
                                   [default: no-amazon-linux]
-  --browser-kind [chrome|chromium|firefox]
+  --browser-kind [chrome|chromium|firefox|remote]
                                   [default: BrowserKind.chrome]
   --headless / --no-headless      [default: headless]
   --help                          Show this message and exit.
 ```
 
-### Lint
-
-```shell
-$ make lint
-```
-
-### test
-
-```shell
-$ make test
-```
-
 ### Pydeps
 
 ```shell
-$ make pydeps
+$ poetry run invoke pydeps
 ```
 
 <details>

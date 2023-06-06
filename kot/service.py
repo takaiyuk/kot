@@ -18,6 +18,7 @@ from kot.scrapekot.notify import (
     Console,
     SlackClient as ScrapeKOTSlackClient,
     SlackClientParams as ScrapeKOTSlackClientParams,
+    message_to_dict,
 )
 from kot.scrapekot.scrape import Scraper
 
@@ -114,7 +115,7 @@ def punch_myrecorder(params: MyRecorderParams) -> None:
         raise Exception(f"{''.join(x)}" + str(e))
 
 
-def initialize_dirver(params: InitializeParams) -> None:
+def initialize_driver(params: InitializeParams) -> None:
     driver_options = DriverOptions(
         is_amazon_linux=params.is_amazon_linux,
         browser_kind=params.browser_kind,
@@ -150,8 +151,7 @@ def lambda_handler(event: Any, context: Any) -> Dict[str, Any]:
         )
         logger.info(params)
         message = scrape_kot(params)
-        return {
-            "message": message,
-        }
+        message_dict = message_to_dict(message)
+        return message_dict
     else:
         raise ValueError(f"{event['command']} is not supported")

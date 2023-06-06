@@ -1,0 +1,30 @@
+version: "3"
+services:
+  selenium:
+    image: seleniarm/standalone-chromium:4.1.4-20220429
+    networks:
+      - kot
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:4444/wd/hub/status"]
+      interval: 1s
+      timeout: 10s
+      retries: 3
+  app:
+    build:
+      context: .
+      dockerfile: docker/kot/Dockerfile
+    volumes:
+      - .:/app
+      - $HOME/.kot/config.yaml:/kot/config.yaml
+    environment:
+      SELENIUM_URL: 'http://selenium:4444/wd/hub'
+    command: kot scrape --console --browser-kind remote
+    tty: true
+    depends_on:
+      selenium:
+        condition: service_healthy
+    networks:
+      - kot
+
+networks:
+  kot: null

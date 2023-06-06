@@ -6,7 +6,7 @@ from kot.service import (
     InitializeParams,
     MyRecorderParams,
     ScrapeKOTParams,
-    initialize_dirver,
+    initialize_driver,
     punch_myrecorder,
     scrape_kot,
 )
@@ -55,17 +55,19 @@ def myrecorder(
 
 
 @app.command()
-def initialize() -> None:
+def initialize(
+    browser_kind: BrowserKind = BrowserKind.chrome,
+) -> None:
     """
     Get cache of the latest chromedriver version for chromium in kot docker image
     """
     params = InitializeParams(
         is_amazon_linux=False,
-        browser_kind=BrowserKind.chromium,
+        browser_kind=browser_kind,
         is_headless=True,
     )
     logger.info(params)
-    initialize_dirver(params)
+    initialize_driver(params)
 
 
 if __name__ == "__main__":

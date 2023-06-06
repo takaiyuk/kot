@@ -13,9 +13,16 @@ jobs:
     - name: Build image
       run: docker build -f ./docker/kot/Dockerfile -t image .
     - name: Log into registry
-      run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u ${{ github.actor }} --password-stdin
+      run: |
+        if [ "${{ github.actor }}" == "dependabot[bot]" ]; then
+          exit 0
+        fi
+        echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u ${{ github.actor }} --password-stdin
     - name: Push image
       run: |
+        if [ "${{ github.actor }}" == "dependabot[bot]" ]; then
+          exit 0
+        fi
         IMAGE_ID=${{ github.actor }}/$IMAGE_NAME
 
         # Strip git ref prefix from version
@@ -34,3 +41,5 @@ jobs:
 
         docker tag image $IMAGE_ID:$IMAGE_TAG
         docker push $IMAGE_ID:$IMAGE_TAG
+    - name: Logout
+      run: docker logout

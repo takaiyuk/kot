@@ -1,3 +1,4 @@
+import os
 import random
 import time
 from dataclasses import dataclass
@@ -15,12 +16,15 @@ from webdriver_manager.firefox import GeckoDriverManager
 TOP_URL = "https://s3.kingtime.jp/admin"
 DRIVER_PATH = "/tmp"
 B = TypeVar("B", bound="Browser")
+BROWSERS = Union[webdriver.Chrome, webdriver.Firefox, webdriver.Remote]
+OPTIONS = Union[webdriver.ChromeOptions, webdriver.FirefoxOptions]
 
 
 class BrowserKind(str, Enum):
     chrome = "chrome"
     chromium = "chromium"
     firefox = "firefox"
+    remote = "remote"
 
 
 @dataclass
@@ -32,16 +36,14 @@ class DriverOptions:
 
 class Driver:
     @classmethod
-    def build(cls, driver_options: DriverOptions) -> Union[webdriver.Chrome, webdriver.Firefox]:
+    def build(cls, driver_options: DriverOptions) -> BROWSERS:
         browser_options = cls._get_browser_options(driver_options)
         driver = cls._get_driver(driver_options, browser_options)
         return driver
 
     @classmethod
-    def _get_browser_options(
-        cls, driver_options: DriverOptions
-    ) -> Union[webdriver.ChromeOptions, webdriver.FirefoxOptions]:
-        options: Union[webdriver.ChromeOptions, webdriver.FirefoxOptions]
+    def _get_browser_options(cls, driver_options: DriverOptions) -> OPTIONS:
+        options: OPTIONS
         if (
             driver_options.browser_kind == BrowserKind.chrome
             or driver_options.browser_kind == BrowserKind.chromium
@@ -49,6 +51,8 @@ class Driver:
             options = webdriver.ChromeOptions()
         elif driver_options.browser_kind == BrowserKind.firefox:
             options = webdriver.FirefoxOptions()
+        elif driver_options.browser_kind == BrowserKind.remote:
+            options = webdriver.ChromeOptions()
         else:
             raise ValueError("driver_options.browser_kind must be one of chrome, chromium or firefox")
 
@@ -73,9 +77,9 @@ class Driver:
     def _get_driver(
         cls,
         driver_options: DriverOptions,
-        options: Union[webdriver.ChromeOptions, webdriver.FirefoxOptions],
-    ) -> Union[webdriver.Chrome, webdriver.Firefox]:
-        driver: Union[webdriver.Chrome, webdriver.Firefox]
+        options: OPTIONS,
+    ) -> BROWSERS:
+        driver: BROWSERS
         if (
             driver_options.browser_kind == BrowserKind.chrome
             or driver_options.browser_kind == BrowserKind.chromium
@@ -92,6 +96,11 @@ class Driver:
         ):
             gecko_service = GeckoService(GeckoDriverManager(path=DRIVER_PATH).install())
             driver = webdriver.Firefox(service=gecko_service, options=options)
+        elif driver_options.browser_kind == BrowserKind.remote:
+            driver = webdriver.Remote(
+                command_executor=os.getenv("SELENIUM_URL", "http://localhost:4444/wd/hub"),
+                options=options,
+            )
         else:
             raise ValueError(
                 f"driver_options.browser_kind must be one of chrome, chromium or firefox: {driver_options.browser_kind}\n"
@@ -101,7 +110,7 @@ class Driver:
 
 
 class Browser:
-    def __init__(self, driver: Union[webdriver.Chrome, webdriver.Firefox]) -> None:
+    def __init__(self, driver: BROWSERS) -> None:
         self.driver = driver
 
     @classmethod

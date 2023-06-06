@@ -1,3 +1,4 @@
+from collections import OrderedDict
 from dataclasses import dataclass
 from datetime import datetime
 from enum import Enum
@@ -127,3 +128,17 @@ def format_hours(hours: float) -> str:
     if len(minute_str) == 1:
         minute_str += "0"
     return f"{hour_str}時間{minute_str}分"
+
+
+def message_to_dict(message: str) -> OrderedDict[str, str]:
+    od = OrderedDict()
+    for m in message.replace(" ", "").split("\n"):
+        if len(m) == 0:
+            continue
+        m_split = m.split(":")
+        if len(m_split) == 1:
+            continue
+        key = m_split[0]
+        value = ":".join(m_split[1:])
+        od.update({key: value})
+    return od
