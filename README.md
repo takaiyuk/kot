@@ -35,6 +35,7 @@ $ cd kot
 $ mkdir ~/.kot
 # config.yaml を適宜書き換える
 $ cp ./config.yaml.example ~/.kot/config.yaml
+$ poetry install
 $ poetry run invoke build
 ```
 
@@ -178,7 +179,7 @@ $ poetry run invoke test
 ### Invoke tasks
 
 ```shell
-$ inv --list
+$ poetry run inv --list
 Available tasks:
 
   build                   Build docker compose
