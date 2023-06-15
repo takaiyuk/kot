@@ -97,6 +97,7 @@ class Driver:
             gecko_service = GeckoService(GeckoDriverManager(path=DRIVER_PATH).install())
             driver = webdriver.Firefox(service=gecko_service, options=options)
         elif driver_options.browser_kind == BrowserKind.remote:
+            options.add_argument("--disable-dev-shm-usage") # docker
             driver = webdriver.Remote(
                 command_executor=os.getenv("SELENIUM_URL", "http://localhost:4444/wd/hub"),
                 options=options,
