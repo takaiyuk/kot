@@ -1,5 +1,7 @@
 #!/bin/bash
 
+cd "$(dirname $(realpath "$0"))"
+
 CONFIG_PATH=${HOME}/.kot/config.yaml
 if [ ! -f "$CONFIG_PATH" ]; then
   CONFIG_PATH=${PWD}/config.yaml
