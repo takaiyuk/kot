@@ -12,13 +12,19 @@ class MyRecorderOptions:
     start: Cmd = Cmd(
         xpath='//*[@id="record_qmXXCxw9WEWN3X/YrkMWuQ=="]/div/div[2]',
         name="出勤",
-        messages=[":shukkin:", "業務開始します", "業務開始します！"],
+        messages=[
+            ":shukkin:",
+            ":shukkin2:",
+            "業務開始します",
+            "業務開始します！",
+        ],
     )
     end: Cmd = Cmd(
         xpath='//*[@id="record_j8ekmJaw6W3M4w3i6hlSIQ=="]/div/div[2]',
         name="退勤",
         messages=[
             ":taikin:",
+            ":taikin2:",
             ":taikin::shimasu:",
             ":taikin::simasu:",
             ":taikin::shimashita:",
@@ -29,10 +35,10 @@ class MyRecorderOptions:
     rest_start: Cmd = Cmd(
         xpath='//*[@id="record_tgI75YcXVUW7d/VjiooYtA=="]/div/div',
         name="休憩開始",
-        messages=[":kyuu::hajime:"],
+        messages=[":kyuu::hajime:", ":kyukei1::hajime:"],
     )
     rest_end: Cmd = Cmd(
         xpath='//*[@id="record_1HnBUiZe8JiePXoZZkorfw=="]/div/div',
         name="休憩終了",
-        messages=[":kyuu::owari:"],
+        messages=[":kyuu::owari:", ":kyukei1::owari:"],
     )
