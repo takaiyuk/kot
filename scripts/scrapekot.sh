@@ -19,3 +19,4 @@ else
 fi
 
 docker compose run --rm app kot scrape ${CONSOLE} --browser-kind remote
+docker compose down

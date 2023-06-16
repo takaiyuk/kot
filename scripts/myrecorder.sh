@@ -27,3 +27,5 @@ if [ -z "${MESSAGE}" ]; then
 else
   docker compose run --rm app kot myrecorder ${CMD} --no-yes  --message "${MESSAGE}" --browser-kind remote
 fi
+
+docker compose down
