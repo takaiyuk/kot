@@ -1,5 +1,7 @@
 #!/bin/bash
 
+cd "$(dirname $(realpath "$0"))"
+
 CONFIG_PATH=${HOME}/.kot/config.yaml
 if [ ! -f "$CONFIG_PATH" ]; then
   CONFIG_PATH=${PWD}/config.yaml
@@ -25,3 +27,5 @@ if [ -z "${MESSAGE}" ]; then
 else
   docker compose run --rm app kot myrecorder ${CMD} --no-yes  --message "${MESSAGE}" --browser-kind remote
 fi
+
+docker compose down
