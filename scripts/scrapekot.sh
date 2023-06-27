@@ -1,5 +1,7 @@
 #!/bin/bash
 
+cd "$(dirname $(realpath "$0"))"
+
 CONFIG_PATH=${HOME}/.kot/config.yaml
 if [ ! -f "$CONFIG_PATH" ]; then
   CONFIG_PATH=${PWD}/config.yaml
@@ -16,4 +18,5 @@ else
   exit 1
 fi
 
-docker run --rm -v ${CONFIG_PATH}:/kot/config.yaml takaiyuk/kot -m kot scrape ${CONSOLE} --browser-kind chromium
+docker compose run --rm app kot scrape ${CONSOLE} --browser-kind remote
+docker compose down

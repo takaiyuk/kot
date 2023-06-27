@@ -1,5 +1,7 @@
 #!/bin/bash
 
+cd "$(dirname $(realpath "$0"))"
+
 CONFIG_PATH=${HOME}/.kot/config.yaml
 if [ ! -f "$CONFIG_PATH" ]; then
   CONFIG_PATH=${PWD}/config.yaml
@@ -20,10 +22,10 @@ if [ $CMD != "start" ] && [ $CMD != "end" ] && [ $CMD != "rest_start" ] && [ $CM
 fi
 
 MESSAGE=$2
-if [ -z $MESSAGE ]; then
-  docker run -it --rm -v ${CONFIG_PATH}:/kot/config.yaml takaiyuk/kot -m kot \
-    myrecorder ${CMD} --no-yes --browser-kind chromium
+if [ -z "${MESSAGE}" ]; then
+  docker compose run --rm app kot myrecorder ${CMD} --no-yes --browser-kind remote
 else
-  docker run -it --rm -v ${CONFIG_PATH}:/kot/config.yaml takaiyuk/kot -m kot \
-    myrecorder ${CMD} --no-yes --message ${MESSAGE} --browser-kind chromium
+  docker compose run --rm app kot myrecorder ${CMD} --no-yes  --message "${MESSAGE}" --browser-kind remote
 fi
+
+docker compose down

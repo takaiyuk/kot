@@ -6,6 +6,7 @@ services:
       - kot
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:4444/wd/hub/status"]
+      start_period: 2s
       interval: 1s
       timeout: 10s
       retries: 3

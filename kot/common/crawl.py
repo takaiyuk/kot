@@ -56,11 +56,11 @@ class Driver:
         else:
             raise ValueError("driver_options.browser_kind must be one of chrome, chromium or firefox")
 
-        if driver_options.is_headless:
-            options.add_argument("--headless")
         options.add_argument("--no-sandbox")
         options.add_argument("--disable-gpu")
         options.add_argument("--window-size=1280x1696")
+        if driver_options.is_headless:
+            options.add_argument("--headless")
         if driver_options.is_amazon_linux:
             options.add_argument("--disable-application-cache")
             options.add_argument("--disable-dev-shm-usage")
@@ -71,6 +71,8 @@ class Driver:
             options.add_argument("--single-process")
             options.add_argument("--ignore-certificate-errors")
             options.add_argument("--homedir=/tmp")
+        if driver_options.browser_kind == BrowserKind.remote:
+            options.add_argument("--disable-dev-shm-usage")  # docker
         return options
 
     @classmethod
