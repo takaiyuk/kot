@@ -61,9 +61,9 @@ class Driver:
         options.add_argument("--window-size=1280x1696")
         if driver_options.is_headless:
             options.add_argument("--headless")
-        if driver_options.is_amazon_linux:
+        if driver_options.is_amazon_linux or driver_options.browser_kind == BrowserKind.remote:
             options.add_argument("--disable-application-cache")
-            options.add_argument("--disable-dev-shm-usage")
+            options.add_argument("--disable-dev-shm-usage")  # docker
             options.add_argument("--disable-infobars")
             options.add_argument("--hide-scrollbars")
             options.add_argument("--enable-logging")
@@ -71,8 +71,6 @@ class Driver:
             options.add_argument("--single-process")
             options.add_argument("--ignore-certificate-errors")
             options.add_argument("--homedir=/tmp")
-        if driver_options.browser_kind == BrowserKind.remote:
-            options.add_argument("--disable-dev-shm-usage")  # docker
         return options
 
     @classmethod
