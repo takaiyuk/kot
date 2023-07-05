@@ -2,6 +2,7 @@ version: "3"
 services:
   selenium:
     image: seleniarm/standalone-chromium:4.1.4-20220429
+    shm_size: 2gb
     networks:
       - kot
     healthcheck:
