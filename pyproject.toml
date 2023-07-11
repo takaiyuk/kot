@@ -13,7 +13,6 @@ requests = "2.31.0"
 typer = "0.4.1"
 webdriver-manager = "3.7.0"
 PyYAML = "6.0"
-tenacity = "^8.2.2"
 
 [tool.poetry.group.dev.dependencies]
 black = "^23.3.0"
