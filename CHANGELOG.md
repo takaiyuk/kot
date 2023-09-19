@@ -1,0 +1,162 @@
+# Changelog
+
+## [v3.0.0](https://github.com/takaiyuk/kot/compare/v2.0.0...v3.0.0) - 2023-09-19
+- Release 2020-02-19 14:48:40 +0000 by @github-actions in https://github.com/takaiyuk/kot/pull/90
+- Release 2020-02-20 12:50:54 +0000 by @github-actions in https://github.com/takaiyuk/kot/pull/92
+- Release 2020-02-21 03:23:45 +0000 by @github-actions in https://github.com/takaiyuk/kot/pull/99
+- Release 2020-02-21 09:17:40 +0000 by @github-actions in https://github.com/takaiyuk/kot/pull/102
+- Release 2020-04-01 01:16:59 +0000 by @github-actions in https://github.com/takaiyuk/kot/pull/105
+- Release 2020-04-01 02:14:07 +0000 by @github-actions in https://github.com/takaiyuk/kot/pull/107
+- Release 2020-04-22 13:47:06 +0000 by @github-actions in https://github.com/takaiyuk/kot/pull/111
+- Release 2020-04-23 14:40:01 +0000 by @github-actions in https://github.com/takaiyuk/kot/pull/116
+- Release 2020-05-07 00:25:34 +0000 by @github-actions in https://github.com/takaiyuk/kot/pull/119
+- Release 2020-05-14 00:30:55 +0000 by @github-actions in https://github.com/takaiyuk/kot/pull/121
+- Release 2020-10-08 13:35:39 +0000 by @github-actions in https://github.com/takaiyuk/kot/pull/125
+- Release 2022-06-02 23:53:40 +0000 by @github-actions in https://github.com/takaiyuk/kot/pull/139
+- Release 2022-06-03 00:23:10 +0000 by @github-actions in https://github.com/takaiyuk/kot/pull/141
+- Release 2022-06-03 00:48:42 +0000 by @github-actions in https://github.com/takaiyuk/kot/pull/143
+- Release 2022-06-03 12:04:34 +0000 by @github-actions in https://github.com/takaiyuk/kot/pull/145
+- Release 2022-06-05 14:50:10 +0000 by @github-actions in https://github.com/takaiyuk/kot/pull/148
+- Release 2022-06-06 11:03:31 +0000 by @github-actions in https://github.com/takaiyuk/kot/pull/151
+- Release 2022-06-06 15:20:33 +0000 by @github-actions in https://github.com/takaiyuk/kot/pull/153
+- Release 2022-06-21 11:31:03 +0000 by @github-actions in https://github.com/takaiyuk/kot/pull/155
+- Release 2022-06-23 15:26:26 +0000 by @github-actions in https://github.com/takaiyuk/kot/pull/157
+- Release 2022-06-24 14:55:11 +0000 by @github-actions in https://github.com/takaiyuk/kot/pull/159
+- Release 2022-08-29 00:15:41 +0000 by @github-actions in https://github.com/takaiyuk/kot/pull/165
+- Release 2023-06-06 12:23:07 +0000 by @github-actions in https://github.com/takaiyuk/kot/pull/174
+- Release 2023-06-23 00:12:43 +0000 by @github-actions in https://github.com/takaiyuk/kot/pull/188
+- Bump certifi from 2023.5.7 to 2023.7.22 by @dependabot in https://github.com/takaiyuk/kot/pull/201
+- Bump cryptography from 41.0.1 to 41.0.3 by @dependabot in https://github.com/takaiyuk/kot/pull/202
+- Release 2023-08-02 03:34:57 +0000 by @github-actions in https://github.com/takaiyuk/kot/pull/195
+- Add tagpr workflow by @takaiyuk in https://github.com/takaiyuk/kot/pull/205
+- Release 2023-09-19 10:40:27 +0000 by @github-actions in https://github.com/takaiyuk/kot/pull/206
+- Upgrade by @takaiyuk in https://github.com/takaiyuk/kot/pull/208
+
+## [v2.0.0](https://github.com/takaiyuk/kot/compare/v1.0.0...v2.0.0) - 2023-07-11
+- Feature/kot by @takaiyuk in https://github.com/takaiyuk/kot/pull/138
+- Fix click==8.0.4 by @takaiyuk in https://github.com/takaiyuk/kot/pull/140
+- Rename master to main by @takaiyuk in https://github.com/takaiyuk/kot/pull/142
+- Feature/poetry by @takaiyuk in https://github.com/takaiyuk/kot/pull/144
+- Skip notification when params.yes is False by @takaiyuk in https://github.com/takaiyuk/kot/pull/146
+- feature/dockerignore by @takaiyuk in https://github.com/takaiyuk/kot/pull/147
+- Fix by @takaiyuk in https://github.com/takaiyuk/kot/pull/149
+- Add is_punched field to SlackClientParams by @takaiyuk in https://github.com/takaiyuk/kot/pull/150
+- Lambda env values by @takaiyuk in https://github.com/takaiyuk/kot/pull/152
+- Hotfix/scrapekot/aggregate  minute to hour by @takaiyuk in https://github.com/takaiyuk/kot/pull/154
+- Feature/chromedriver cache by @takaiyuk in https://github.com/takaiyuk/kot/pull/156
+- Feature/turn off wdm log use by @takaiyuk in https://github.com/takaiyuk/kot/pull/158
+- Feature/lambda myrecorder by @takaiyuk in https://github.com/takaiyuk/kot/pull/161
+- Feature/argument by @takaiyuk in https://github.com/takaiyuk/kot/pull/162
+- Feature/mini refactor by @takaiyuk in https://github.com/takaiyuk/kot/pull/164
+- Feature/pythonapp by @takaiyuk in https://github.com/takaiyuk/kot/pull/167
+- Lambda return value by @takaiyuk in https://github.com/takaiyuk/kot/pull/168
+- Fix holiday count by @takaiyuk in https://github.com/takaiyuk/kot/pull/169
+- Feature/scrapekot/scrape/refactor by @takaiyuk in https://github.com/takaiyuk/kot/pull/170
+- Use browser-kind option by @takaiyuk in https://github.com/takaiyuk/kot/pull/171
+- Suppress known labels by @takaiyuk in https://github.com/takaiyuk/kot/pull/172
+- Feature/lambda/format console message by @takaiyuk in https://github.com/takaiyuk/kot/pull/173
+- Run poetry lock by @takaiyuk in https://github.com/takaiyuk/kot/pull/176
+- Modify pyproject.toml by @takaiyuk in https://github.com/takaiyuk/kot/pull/179
+- Bump cryptography from 40.0.2 to 41.0.0 by @dependabot in https://github.com/takaiyuk/kot/pull/180
+- Skip push image for dependabot by @takaiyuk in https://github.com/takaiyuk/kot/pull/182
+- Skip push image for dependabot by @takaiyuk in https://github.com/takaiyuk/kot/pull/183
+- Bump requests from 2.28.0 to 2.31.0 by @dependabot in https://github.com/takaiyuk/kot/pull/181
+- with remote browser by @mocyuto in https://github.com/takaiyuk/kot/pull/178
+- Hotfix/lint mypy by @takaiyuk in https://github.com/takaiyuk/kot/pull/185
+- Invoke task by @takaiyuk in https://github.com/takaiyuk/kot/pull/186
+- Add missing `poetry install` command to README by @m-hamashita in https://github.com/takaiyuk/kot/pull/187
+- avoid remote browser crash by @mocyuto in https://github.com/takaiyuk/kot/pull/189
+- Feature/small fix by @takaiyuk in https://github.com/takaiyuk/kot/pull/190
+- Add myrecorder messages by @takaiyuk in https://github.com/takaiyuk/kot/pull/191
+- cd for symbolic link by @mocyuto in https://github.com/takaiyuk/kot/pull/192
+- set start period by @mocyuto in https://github.com/takaiyuk/kot/pull/193
+- Add options for remote by @takaiyuk in https://github.com/takaiyuk/kot/pull/194
+- increase devshm by @mocyuto in https://github.com/takaiyuk/kot/pull/197
+- Add retry by @takaiyuk in https://github.com/takaiyuk/kot/pull/198
+- Revert "Add retry" by @takaiyuk in https://github.com/takaiyuk/kot/pull/199
+
+## [v1.0.0](https://github.com/takaiyuk/kot/commits/v1.0.0) - 2020-10-08
+- fix request using webhookURL by @mocyuto in https://github.com/takaiyuk/kot/pull/2
+- forgot to remove by @mocyuto in https://github.com/takaiyuk/kot/pull/4
+- fix formatting by @takaiyuk in https://github.com/takaiyuk/kot/pull/5
+- slackに通知せずコンソールに出力するだけのサブコマンドを追加 by @oyakata in https://github.com/takaiyuk/kot/pull/8
+- Fix trivial by @takaiyuk in https://github.com/takaiyuk/kot/pull/11
+- Add output example to README by @takaiyuk in https://github.com/takaiyuk/kot/pull/12
+- Set headless option default as True by @takaiyuk in https://github.com/takaiyuk/kot/pull/13
+- Change image by @takaiyuk in https://github.com/takaiyuk/kot/pull/14
+- notify in one message by @mocyuto in https://github.com/takaiyuk/kot/pull/15
+- add support for linux by @jkatagi in https://github.com/takaiyuk/kot/pull/16
+- Lambda deploy package by @takaiyuk in https://github.com/takaiyuk/kot/pull/19
+- Add Dockerfile for local execution by @civitaspo in https://github.com/takaiyuk/kot/pull/20
+- [WIP] Docker by @tmotegi in https://github.com/takaiyuk/kot/pull/21
+- Add drivers/ to .dockerignore by @takaiyuk in https://github.com/takaiyuk/kot/pull/23
+- using attachment by @mocyuto in https://github.com/takaiyuk/kot/pull/22
+- Raised exception when login failed by @takaiyuk in https://github.com/takaiyuk/kot/pull/27
+- Make error message richer by @takaiyuk in https://github.com/takaiyuk/kot/pull/26
+- Fix get_today_work_start bug by @takaiyuk in https://github.com/takaiyuk/kot/pull/25
+- Add configpy to dockerignore by @takaiyuk in https://github.com/takaiyuk/kot/pull/30
+- Refactor scraper by @takaiyuk in https://github.com/takaiyuk/kot/pull/31
+- Get holiday count by @takaiyuk in https://github.com/takaiyuk/kot/pull/35
+- Pull dockerhub image by @takaiyuk in https://github.com/takaiyuk/kot/pull/38
+- Fix readme for everyone by @takaiyuk in https://github.com/takaiyuk/kot/pull/39
+- Fix by @takaiyuk in https://github.com/takaiyuk/kot/pull/40
+- Fix tz by @takaiyuk in https://github.com/takaiyuk/kot/pull/41
+- Fix hankyu case by @takaiyuk in https://github.com/takaiyuk/kot/pull/37
+- Notify coloring by @takaiyuk in https://github.com/takaiyuk/kot/pull/42
+- Create LICENSE by @takaiyuk in https://github.com/takaiyuk/kot/pull/43
+- Update README by @takaiyuk in https://github.com/takaiyuk/kot/pull/44
+- Handle month start date error by @takaiyuk in https://github.com/takaiyuk/kot/pull/49
+- Create shellscript by @takaiyuk in https://github.com/takaiyuk/kot/pull/50
+- Change notation by @takaiyuk in https://github.com/takaiyuk/kot/pull/53
+- Fix scraper by @takaiyuk in https://github.com/takaiyuk/kot/pull/58
+- Fix bug by @takaiyuk in https://github.com/takaiyuk/kot/pull/60
+- Refactor by @takaiyuk in https://github.com/takaiyuk/kot/pull/59
+- Fix dockerfile by @takaiyuk in https://github.com/takaiyuk/kot/pull/61
+- Add test by @takaiyuk in https://github.com/takaiyuk/kot/pull/62
+- Multi stage build by @takaiyuk in https://github.com/takaiyuk/kot/pull/63
+- Fix get your work hour by @takaiyuk in https://github.com/takaiyuk/kot/pull/65
+- Fix sh by @takaiyuk in https://github.com/takaiyuk/kot/pull/66
+- Add GitHub action by @takaiyuk in https://github.com/takaiyuk/kot/pull/67
+- Update dockerimage.yml by @takaiyuk in https://github.com/takaiyuk/kot/pull/68
+- Update dockerimage.yml by @takaiyuk in https://github.com/takaiyuk/kot/pull/69
+- Create pythonapp.yml by @takaiyuk in https://github.com/takaiyuk/kot/pull/70
+- change-lambda-deploy by @takaiyuk in https://github.com/takaiyuk/kot/pull/71
+- fix-holiday-calc by @takaiyuk in https://github.com/takaiyuk/kot/pull/72
+- Add pull sh by @takaiyuk in https://github.com/takaiyuk/kot/pull/73
+- default setting using homedir by @mocyuto in https://github.com/takaiyuk/kot/pull/76
+- Hadolint by @takaiyuk in https://github.com/takaiyuk/kot/pull/75
+- Fix dockerfile by @takaiyuk in https://github.com/takaiyuk/kot/pull/77
+- Fix by @takaiyuk in https://github.com/takaiyuk/kot/pull/78
+- add-argument-to-sh by @takaiyuk in https://github.com/takaiyuk/kot/pull/80
+- Error handling lambda function by @takaiyuk in https://github.com/takaiyuk/kot/pull/82
+- My Recorder by @takaiyuk in https://github.com/takaiyuk/kot/pull/83
+- Fix myrecoder by @takaiyuk in https://github.com/takaiyuk/kot/pull/84
+- Add more sec after browser.get by @takaiyuk in https://github.com/takaiyuk/kot/pull/86
+- Git flow setting by @takaiyuk in https://github.com/takaiyuk/kot/pull/89
+- Delete unnecessary by @takaiyuk in https://github.com/takaiyuk/kot/pull/91
+- Yes argument option by @takaiyuk in https://github.com/takaiyuk/kot/pull/88
+- Fix by @takaiyuk in https://github.com/takaiyuk/kot/pull/93
+- Fix workflow by @takaiyuk in https://github.com/takaiyuk/kot/pull/94
+- Add sleep when yes by @takaiyuk in https://github.com/takaiyuk/kot/pull/95
+- Cleaning by @takaiyuk in https://github.com/takaiyuk/kot/pull/96
+- Revise readme by @takaiyuk in https://github.com/takaiyuk/kot/pull/97
+- Fix by @takaiyuk in https://github.com/takaiyuk/kot/pull/98
+- Fix parse start time by @takaiyuk in https://github.com/takaiyuk/kot/pull/101
+- Handle error occurred when monthly_work_hour is zero by @takaiyuk in https://github.com/takaiyuk/kot/pull/104
+- Delete unnecessary last line by @takaiyuk in https://github.com/takaiyuk/kot/pull/106
+- Fix requirements.txt by @takaiyuk in https://github.com/takaiyuk/kot/pull/108
+- Notify when myrecorder punch by @takaiyuk in https://github.com/takaiyuk/kot/pull/110
+- Fix notify message by @takaiyuk in https://github.com/takaiyuk/kot/pull/112
+- Change README by @takaiyuk in https://github.com/takaiyuk/kot/pull/113
+- Revert "Change README" by @takaiyuk in https://github.com/takaiyuk/kot/pull/114
+- Revert "Revert "Change README"" by @takaiyuk in https://github.com/takaiyuk/kot/pull/115
+- Random kintai message by @takaiyuk in https://github.com/takaiyuk/kot/pull/118
+- be able to set user by @mocyuto in https://github.com/takaiyuk/kot/pull/120
+- Fix username by @takaiyuk in https://github.com/takaiyuk/kot/pull/122
+- Use slim as base image by @takaiyuk in https://github.com/takaiyuk/kot/pull/124
+- Add libgconf2-4 by @takaiyuk in https://github.com/takaiyuk/kot/pull/126
+- Revert "Add libgconf2-4" by @takaiyuk in https://github.com/takaiyuk/kot/pull/127
+- Revert "Use slim as base image" by @takaiyuk in https://github.com/takaiyuk/kot/pull/128
+- Copy only site-packages by @takaiyuk in https://github.com/takaiyuk/kot/pull/129
+- change attachment to text by @mocyuto in https://github.com/takaiyuk/kot/pull/131
+- Update dockerfile by @takaiyuk in https://github.com/takaiyuk/kot/pull/132
