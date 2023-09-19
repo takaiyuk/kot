@@ -12,7 +12,7 @@ from kot.scrapekot.aggregate import AggregatedData
 @dataclass
 class SlackClientParams:
     slack_webhook_url: str
-    slack_channel: str
+    slack_channels: list[str]
     slack_icon_emoji: str
     slack_username: str
     dt_now: datetime
@@ -31,7 +31,7 @@ class SlackClient(BaseSlackClient):
         color = self._get_color(data.saving_time)
         return NotifyData(
             slack_webhook_url=params.slack_webhook_url,
-            slack_channel=params.slack_channel,
+            slack_channels=params.slack_channels,
             slack_icon_emoji=params.slack_icon_emoji,
             slack_username=params.slack_username,
             message=message,
@@ -63,19 +63,24 @@ class SlackClient(BaseSlackClient):
     def _slack_url(self, notify_data: NotifyData) -> str:
         return notify_data.slack_webhook_url
 
-    def _slack_data(self, notify_data: NotifyData) -> dict[str, Any]:
-        return {
-            "username": notify_data.slack_username,
-            "icon_emoji": notify_data.slack_icon_emoji,
-            "channel": notify_data.slack_channel,
-            "attachments": [
+    def _slack_data(self, notify_data: NotifyData) -> list[dict[str, Any]]:
+        data = []
+        for slack_channel in notify_data.slack_channels:
+            data.append(
                 {
-                    "pretext": notify_data.title,
-                    "color": notify_data.color,
-                    "text": notify_data.message,
+                    "username": notify_data.slack_username,
+                    "icon_emoji": notify_data.slack_icon_emoji,
+                    "channel": slack_channel,
+                    "attachments": [
+                        {
+                            "pretext": notify_data.title,
+                            "color": notify_data.color,
+                            "text": notify_data.message,
+                        }
+                    ],
                 }
-            ],
-        }
+            )
+        return data
 
 
 class Console:

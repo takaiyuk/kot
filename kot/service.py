@@ -57,7 +57,7 @@ def scrape_kot(params: ScrapeKOTParams) -> str:
         )
         slack_client_params = ScrapeKOTSlackClientParams(
             slack_webhook_url=cfg.scrapekot.slack.webhook_url,
-            slack_channel=cfg.scrapekot.slack.channel,
+            slack_channels=cfg.scrapekot.slack.channels,
             slack_icon_emoji=cfg.scrapekot.slack.icon_emoji,
             slack_username=cfg.scrapekot.slack.username,
             dt_now=datetime.now(),
@@ -99,7 +99,7 @@ def punch_myrecorder(params: MyRecorderParams) -> None:
         is_punched = MyRecorderCrawler(browser).run(crawler_params)
         slack_client_params = MyRecorderSlackClientParams(
             slack_webhook_url=cfg.myrecorder.slack.webhook_url,
-            slack_channel=cfg.myrecorder.slack.channel,
+            slack_channels=cfg.myrecorder.slack.channels,
             slack_icon_emoji=cfg.myrecorder.slack.icon_emoji,
             slack_username=cfg.myrecorder.slack.username,
             command=params.command,
