@@ -4,12 +4,14 @@ account:
 scrapekot:
   slack: 
     webhook_url: 
-    channel: 
+    channels:
+      -
     icon_emoji: 
     username: 
 myrecorder: 
   slack:  
     webhook_url: 
-    channel: 
+    channels:
+      -
     icon_emoji: 
     username: 
