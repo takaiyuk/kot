@@ -8,7 +8,8 @@ def build(c):
     """
     c.run(
         """
-        docker compose build
+        echo 'docker compose build'
+        docker compose build -q
     """
     )
 
