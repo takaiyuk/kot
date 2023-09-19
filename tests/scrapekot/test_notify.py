@@ -32,7 +32,7 @@ def test_SlackClient__build_noitfy_data(mocker):
 
     params = SlackClientParams(
         slack_webhook_url="scrapekot_url",
-        slack_channel="scrapekot_channel",
+        slack_channels=["scrapekot_channel"],
         slack_icon_emoji="scrapekot_emoji",
         slack_username="scrapekot_username",
         dt_now=datetime(2022, 3, 17, 0, 7, 37, 819883),
@@ -54,7 +54,7 @@ def test_SlackClient__build_noitfy_data(mocker):
     color = api._get_color(data.saving_time)
     expected = NotifyData(
         slack_webhook_url="scrapekot_url",
-        slack_channel="scrapekot_channel",
+        slack_channels=["scrapekot_channel"],
         slack_icon_emoji="scrapekot_emoji",
         slack_username="scrapekot_username",
         message=message,
@@ -92,7 +92,7 @@ def test_SlackClient__post_slack(mocker):
     mocker.patch("requests.post", side_effect=mock_func_requests_post)
     notify_data = NotifyData(
         slack_webhook_url="scrapekot_url",
-        slack_channel="scrapekot_channel",
+        slack_channels=["scrapekot_channel"],
         slack_icon_emoji="scrapekot_emoji",
         slack_username="scrapekot_username",
         message="test_message",
@@ -162,7 +162,7 @@ def test_SlackClient__slack_url():
 
     notify_data = NotifyData(
         slack_webhook_url="scrapekot_url",
-        slack_channel="scrapekot_channel",
+        slack_channels=["scrapekot_channel"],
         slack_icon_emoji="scrapekot_emoji",
         slack_username="scrapekot_username",
         message="test_message",
@@ -183,25 +183,27 @@ def test_SlackClient__slack_data():
 
     notify_data = NotifyData(
         slack_webhook_url="scrapekot_url",
-        slack_channel="scrapekot_channel",
+        slack_channels=["scrapekot_channel"],
         slack_icon_emoji="scrapekot_emoji",
         slack_username="scrapekot_username",
         message="test_message",
         title="test_title",
         color="green",
     )
-    expected = {
-        "username": "scrapekot_username",
-        "icon_emoji": "scrapekot_emoji",
-        "channel": "scrapekot_channel",
-        "attachments": [
-            {
-                "pretext": "test_title",
-                "color": "green",
-                "text": "test_message",
-            }
-        ],
-    }
+    expected = [
+        {
+            "username": "scrapekot_username",
+            "icon_emoji": "scrapekot_emoji",
+            "channel": "scrapekot_channel",
+            "attachments": [
+                {
+                    "pretext": "test_title",
+                    "color": "green",
+                    "text": "test_message",
+                }
+            ],
+        }
+    ]
     fixtures = [Fixture("", notify_data, expected)]
     for fixture in fixtures:
         assert api._slack_data(fixture.notify_data) == fixture.expected, fixture.desc
