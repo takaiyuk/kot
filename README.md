@@ -1,5 +1,9 @@
 # kot
 
+> [!IMPORTANT]  
+> v3.0.0 以前を利用していて v3.1.0 以降を利用する予定のユーザーは移行ガイドを必ず参照してください。
+> [v3.1.0 以降への移行ガイド](https://github.com/takaiyuk/kot/blob/38937fbff3a631652d1d072ffe6c7d18c984342b/docs/migration-guide-for-v3.1.0.md)
+
 ## TOC
 
 - [TOC](#TOC)
