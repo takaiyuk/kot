@@ -2,44 +2,10 @@ name: Docker Image CI
 
 on: [push]
 
-env:
-  IMAGE_NAME: kot
-
 jobs:
-  build-and-push:
+  build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
     - name: Build image
       run: docker build -f ./docker/kot/Dockerfile -t image .
-    - name: Log into registry
-      run: |
-        if [ "${{ github.actor }}" == "dependabot[bot]" ]; then
-          exit 0
-        fi
-        echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u ${{ github.actor }} --password-stdin
-    - name: Push image
-      run: |
-        if [ "${{ github.actor }}" == "dependabot[bot]" ]; then
-          exit 0
-        fi
-        IMAGE_ID=${{ github.actor }}/$IMAGE_NAME
-
-        # Strip git ref prefix from version
-        BRANCH_NAME=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
-
-        # Strip "-"/"_" from tag name
-        # BRANCH_NAME=$(echo $BRANCH_NAME | sed -e 's/-//g -e 's/_//g')
-
-        # Use Docker `latest` tag convention
-        [ "$BRANCH_NAME" == "main" ] && IMAGE_TAG=latest
-        [ "$BRANCH_NAME" == "develop" ] && IMAGE_TAG=stg
-        [ "$BRANCH_NAME" != "main" ] && [ "$BRANCH_NAME" != "develop" ] && IMAGE_TAG=dev
-        
-        echo IMAGE_ID=$IMAGE_ID
-        echo IMAGE_TAG=$IMAGE_TAG
-
-        docker tag image $IMAGE_ID:$IMAGE_TAG
-        docker push $IMAGE_ID:$IMAGE_TAG
-    - name: Logout
-      run: docker logout
