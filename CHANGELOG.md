@@ -1,5 +1,10 @@
 # Changelog
 
+## [v3.1.0](https://github.com/takaiyuk/kot/compare/v3.0.0...v3.1.0) - 2023-09-20
+- Notify multiple channels by @takaiyuk in https://github.com/takaiyuk/kot/pull/209
+- Modify action workflows by @takaiyuk in https://github.com/takaiyuk/kot/pull/210
+- Add migration guide for v3.1.0 by @takaiyuk in https://github.com/takaiyuk/kot/pull/212
+
 ## [v3.0.0](https://github.com/takaiyuk/kot/compare/v2.0.0...v3.0.0) - 2023-09-19
 - Release 2020-02-19 14:48:40 +0000 by @github-actions in https://github.com/takaiyuk/kot/pull/90
 - Release 2020-02-20 12:50:54 +0000 by @github-actions in https://github.com/takaiyuk/kot/pull/92
