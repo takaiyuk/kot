@@ -25,13 +25,16 @@ account:
 scrapekot:
   slack:
     webhook_url: scrapekot_url
-    channel: scrapekot_channel
+    channels:
+      - scrapekot_channel
     icon_emoji: scrapekot_emoji
     username: scrapekot_username
 myrecorder:
   slack:
     webhook_url: myrecorder_url
-    channel: myrecorder_channel
+    channels:
+      - myrecorder_channel_1
+      - myrecorder_channel_2
     icon_emoji: myrecorder_emoji
     username: myrecorder_username
 """
@@ -57,7 +60,7 @@ def test_read_env():
             "scrapekot": {
                 "slack": {
                     "webhook_url": "scrapekot_url",
-                    "channel": "scrapekot_channel",
+                    "channels": ["scrapekot_channel"],
                     "icon_emoji": "scrapekot_emoji",
                     "username": "scrapekot_username",
                 },
@@ -65,7 +68,7 @@ def test_read_env():
             "myrecorder": {
                 "slack": {
                     "webhook_url": "myrecorder_url",
-                    "channel": "myrecorder_channel",
+                    "channels": ["myrecorder_channel_1", "myrecorder_channel_2"],
                     "icon_emoji": "myrecorder_emoji",
                     "username": "myrecorder_username",
                 },
@@ -92,7 +95,7 @@ def test_load_config():
             scrapekot=ScrapeKOT(
                 slack=Slack(
                     webhook_url="scrapekot_url",
-                    channel="scrapekot_channel",
+                    channels=["scrapekot_channel"],
                     icon_emoji="scrapekot_emoji",
                     username="scrapekot_username",
                 ),
@@ -100,7 +103,7 @@ def test_load_config():
             myrecorder=MyRecorder(
                 slack=Slack(
                     webhook_url="myrecorder_url",
-                    channel="myrecorder_channel",
+                    channels=["myrecorder_channel_1", "myrecorder_channel_2"],
                     icon_emoji="myrecorder_emoji",
                     username="myrecorder_username",
                 ),
@@ -125,7 +128,7 @@ def test_generate_config():
         "scrapekot": {
             "slack": {
                 "webhook_url": "scrapekot_url",
-                "channel": "scrapekot_channel",
+                "channels": ["scrapekot_channel"],
                 "icon_emoji": "scrapekot_emoji",
                 "username": "scrapekot_username",
             }
@@ -133,7 +136,7 @@ def test_generate_config():
         "myrecorder": {
             "slack": {
                 "webhook_url": "myrecorder_url",
-                "channel": "myrecorder_channel",
+                "channels": ["myrecorder_channel_1", "myrecorder_channel_2"],
                 "icon_emoji": "myrecorder_emoji",
                 "username": "myrecorder_username",
             }
@@ -144,7 +147,7 @@ def test_generate_config():
         scrapekot=ScrapeKOT(
             slack=Slack(
                 webhook_url="scrapekot_url",
-                channel="scrapekot_channel",
+                channels=["scrapekot_channel"],
                 icon_emoji="scrapekot_emoji",
                 username="scrapekot_username",
             ),
@@ -152,7 +155,7 @@ def test_generate_config():
         myrecorder=MyRecorder(
             slack=Slack(
                 webhook_url="myrecorder_url",
-                channel="myrecorder_channel",
+                channels=["myrecorder_channel_1", "myrecorder_channel_2"],
                 icon_emoji="myrecorder_emoji",
                 username="myrecorder_username",
             ),
@@ -190,7 +193,7 @@ def test_read_lambda_env():
         "myrecorder": {
             "slack": {
                 "webhook_url": "myrecorder_url",
-                "channel": "myrecorder_channel",
+                "channels": ["myrecorder_channel"],
                 "icon_emoji": "myrecorder_emoji",
                 "username": "myrecorder_username",
             }
@@ -198,7 +201,7 @@ def test_read_lambda_env():
         "scrapekot": {
             "slack": {
                 "webhook_url": "scrapekot_url",
-                "channel": "scrapekot_channel",
+                "channels": ["scrapekot_channel"],
                 "icon_emoji": "scrapekot_emoji",
                 "username": "scrapekot_username",
             }

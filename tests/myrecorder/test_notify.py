@@ -34,7 +34,7 @@ def test_SlackClient__build_noitfy_data(mocker):
     params = [
         SlackClientParams(
             slack_webhook_url="myrecorder_url",
-            slack_channel="myrecorder_channel",
+            slack_channels=["myrecorder_channel"],
             slack_icon_emoji="myrecorder_emoji",
             slack_username="myrecorder_username",
             command="start",
@@ -48,7 +48,7 @@ def test_SlackClient__build_noitfy_data(mocker):
     expected = [
         NotifyData(
             slack_webhook_url="myrecorder_url",
-            slack_channel="myrecorder_channel",
+            slack_channels=["myrecorder_channel"],
             slack_icon_emoji="myrecorder_emoji",
             slack_username="myrecorder_username",
             message=":shukkin:",
@@ -58,7 +58,7 @@ def test_SlackClient__build_noitfy_data(mocker):
         None,
         NotifyData(
             slack_webhook_url="myrecorder_url",
-            slack_channel="myrecorder_channel",
+            slack_channels=["myrecorder_channel"],
             slack_icon_emoji="myrecorder_emoji",
             slack_username="myrecorder_username",
             message=":shukkin:",
@@ -92,7 +92,7 @@ def test_SlackClient__post_slack(mocker):
     mocker.patch("requests.post", side_effect=mock_func_requests_post)
     notify_data = NotifyData(
         slack_webhook_url="myrecorder_url",
-        slack_channel="myrecorder_channel",
+        slack_channels=["myrecorder_channel"],
         slack_icon_emoji="myrecorder_emoji",
         slack_username="myrecorder_username",
         message="test_message",
@@ -111,7 +111,7 @@ def test_SlackClient__slack_url():
 
     notify_data = NotifyData(
         slack_webhook_url="myrecorder_url",
-        slack_channel="myrecorder_channel",
+        slack_channels=["myrecorder_channel"],
         slack_icon_emoji="myrecorder_emoji",
         slack_username="myrecorder_username",
         message="test_message",
@@ -132,17 +132,19 @@ def test_SlackClient__slack_data():
 
     notify_data = NotifyData(
         slack_webhook_url="myrecorder_url",
-        slack_channel="myrecorder_channel",
+        slack_channels=["myrecorder_channel"],
         slack_icon_emoji="myrecorder_emoji",
         slack_username="myrecorder_username",
         message="test_message",
     )
-    expected = {
-        "username": "myrecorder_username",
-        "icon_emoji": "myrecorder_emoji",
-        "channel": "myrecorder_channel",
-        "text": "test_message",
-    }
+    expected = [
+        {
+            "username": "myrecorder_username",
+            "icon_emoji": "myrecorder_emoji",
+            "channel": "myrecorder_channel",
+            "text": "test_message",
+        }
+    ]
     fixtures = [Fixture("", notify_data, expected)]
     for fixture in fixtures:
         assert api._slack_data(fixture.notify_data) == fixture.expected, fixture.desc

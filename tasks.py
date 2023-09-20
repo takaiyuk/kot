@@ -8,12 +8,13 @@ def build(c):
     """
     c.run(
         """
-        docker compose build
+        echo 'docker compose build'
+        docker compose build -q
     """
     )
 
 
-@task
+@task(build)
 def scrapekot(c):
     """
     Run scrapekot to notify on console
@@ -25,7 +26,7 @@ def scrapekot(c):
     )
 
 
-@task
+@task(build)
 def scrapekot_slack(c):
     """
     Run scrapekot to notify on slack
@@ -37,7 +38,7 @@ def scrapekot_slack(c):
     )
 
 
-@task
+@task(build)
 def myrecorder_start(c):
     """
     Run MyRecorder to start working
@@ -49,7 +50,7 @@ def myrecorder_start(c):
     )
 
 
-@task
+@task(build)
 def myrecorder_end(c):
     """
     Run MyRecorder to end working
@@ -61,7 +62,7 @@ def myrecorder_end(c):
     )
 
 
-@task
+@task(build)
 def myrecorder_start_rest(c):
     """
     Run MyRecorder to start rest
@@ -73,7 +74,7 @@ def myrecorder_start_rest(c):
     )
 
 
-@task
+@task(build)
 def myrecorder_end_rest(c):
     """
     Run MyRecorder to end rest

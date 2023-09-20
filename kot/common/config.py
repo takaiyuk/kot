@@ -16,7 +16,7 @@ class Account:
 @dataclass
 class Slack:
     webhook_url: str
-    channel: str
+    channels: list[str]
     icon_emoji: str
     username: str
 
@@ -40,13 +40,16 @@ class Config:
     scrapekot:
         slack:
             webhook_url: url
-            channel: channel
+            channels:
+              - channel_a
             icon_emoji: icon
             username: username
     myrecorder:
         slack:
             webhook_url: url
-            channel: channel
+            channels:
+              - channel_a
+              - channel_b
             icon_emoji: icon
             username: username
     """
@@ -79,7 +82,7 @@ def generate_config(d: dict[str, Any]) -> Config:
         scrapekot=ScrapeKOT(
             slack=Slack(
                 webhook_url=d["scrapekot"]["slack"].get("webhook_url", ""),
-                channel=d["scrapekot"]["slack"].get("channel", ""),
+                channels=d["scrapekot"]["slack"].get("channels", [""]),
                 icon_emoji=d["scrapekot"]["slack"].get("icon_emoji", ""),
                 username=d["scrapekot"]["slack"].get("username", ""),
             ),
@@ -87,7 +90,7 @@ def generate_config(d: dict[str, Any]) -> Config:
         myrecorder=MyRecorder(
             slack=Slack(
                 webhook_url=d["myrecorder"]["slack"].get("webhook_url", ""),
-                channel=d["myrecorder"]["slack"].get("channel", ""),
+                channels=d["myrecorder"]["slack"].get("channels", [""]),
                 icon_emoji=d["myrecorder"]["slack"].get("icon_emoji", ""),
                 username=d["myrecorder"]["slack"].get("username", ""),
             ),
@@ -104,7 +107,7 @@ def read_lambda_env() -> dict[str, Any]:
         "myrecorder": {
             "slack": {
                 "webhook_url": os.environ["MYRECORDER_SLACK_WEBHOOK_URL"],
-                "channel": os.environ["MYRECORDER_SLACK_CHANNEL"],
+                "channels": [os.environ["MYRECORDER_SLACK_CHANNEL"]],
                 "icon_emoji": os.environ["MYRECORDER_SLACK_ICON_EMOJI"],
                 "username": os.environ["MYRECORDER_SLACK_USERNAME"],
             }
@@ -112,7 +115,7 @@ def read_lambda_env() -> dict[str, Any]:
         "scrapekot": {
             "slack": {
                 "webhook_url": os.environ["SCRAPEKOT_SLACK_WEBHOOK_URL"],
-                "channel": os.environ["SCRAPEKOT_SLACK_CHANNEL"],
+                "channels": [os.environ["SCRAPEKOT_SLACK_CHANNEL"]],
                 "icon_emoji": os.environ["SCRAPEKOT_SLACK_ICON_EMOJI"],
                 "username": os.environ["SCRAPEKOT_SLACK_USERNAME"],
             }

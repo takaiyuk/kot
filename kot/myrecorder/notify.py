@@ -10,7 +10,7 @@ from kot.myrecorder import MyRecorderOptions
 @dataclass
 class SlackClientParams:
     slack_webhook_url: str
-    slack_channel: str
+    slack_channels: list[str]
     slack_icon_emoji: str
     slack_username: str
     command: str
@@ -35,7 +35,7 @@ class SlackClient(BaseSlackClient):
             return None
         return NotifyData(
             slack_webhook_url=params.slack_webhook_url,
-            slack_channel=params.slack_channel,
+            slack_channels=params.slack_channels,
             slack_icon_emoji=params.slack_icon_emoji,
             slack_username=params.slack_username,
             message=kintai_message,
@@ -44,10 +44,15 @@ class SlackClient(BaseSlackClient):
     def _slack_url(self, notify_data: NotifyData) -> str:
         return notify_data.slack_webhook_url
 
-    def _slack_data(self, notify_data: NotifyData) -> dict:
-        return {
-            "username": notify_data.slack_username,
-            "icon_emoji": notify_data.slack_icon_emoji,
-            "channel": notify_data.slack_channel,
-            "text": notify_data.message,
-        }
+    def _slack_data(self, notify_data: NotifyData) -> list[dict[str, Any]]:
+        data = []
+        for slack_channel in notify_data.slack_channels:
+            data.append(
+                {
+                    "username": notify_data.slack_username,
+                    "icon_emoji": notify_data.slack_icon_emoji,
+                    "channel": slack_channel,
+                    "text": notify_data.message,
+                }
+            )
+        return data
