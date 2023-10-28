@@ -14,8 +14,8 @@ RUN yum update -y \
 # from pyproject.toml with poetry export.
 COPY pyproject.toml poetry.lock ./
 RUN yum update -y \
-    && yum install -y --no-install-recommends curl \
-    && curl -sSL https://install.python-poetry.org | python - \
+    && yum install -y curl \
+    && curl -sSL https://install.python-poetry.org | python3 - \
     && poetry export -f requirements.txt --output requirements.txt \
     && curl -sSL https://install.python-poetry.org | python3 - --uninstall \
     && yum clean all \
