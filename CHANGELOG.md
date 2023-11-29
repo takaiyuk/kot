@@ -1,5 +1,11 @@
 # Changelog
 
+## [v3.1.1](https://github.com/takaiyuk/kot/compare/v3.1.0...v3.1.1) - 2023-11-29
+- Bump cryptography from 41.0.3 to 41.0.4 by @dependabot in https://github.com/takaiyuk/kot/pull/213
+- Bump urllib3 from 1.26.16 to 1.26.17 by @dependabot in https://github.com/takaiyuk/kot/pull/215
+- Bump urllib3 from 1.26.17 to 1.26.18 by @dependabot in https://github.com/takaiyuk/kot/pull/216
+- Bump cryptography from 41.0.4 to 41.0.6 by @dependabot in https://github.com/takaiyuk/kot/pull/217
+
 ## [v3.1.0](https://github.com/takaiyuk/kot/compare/v3.0.0...v3.1.0) - 2023-09-20
 - Notify multiple channels by @takaiyuk in https://github.com/takaiyuk/kot/pull/209
 - Modify action workflows by @takaiyuk in https://github.com/takaiyuk/kot/pull/210
