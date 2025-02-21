@@ -1,5 +1,8 @@
 # Changelog
 
+## [v3.1.2](https://github.com/takaiyuk/kot/compare/v3.1.1...v3.1.2) - 2025-02-21
+- set package mode for poetry 2.0 by @mocyuto in https://github.com/takaiyuk/kot/pull/223
+
 ## [v3.1.1](https://github.com/takaiyuk/kot/compare/v3.1.0...v3.1.1) - 2023-11-29
 - Bump cryptography from 41.0.3 to 41.0.4 by @dependabot in https://github.com/takaiyuk/kot/pull/213
 - Bump urllib3 from 1.26.16 to 1.26.17 by @dependabot in https://github.com/takaiyuk/kot/pull/215
