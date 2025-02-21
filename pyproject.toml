@@ -3,6 +3,7 @@ name = "kot"
 version = "3.1.1"
 description = ""
 authors = ["takaiyuk"]
+package-mode = false
 
 [tool.poetry.dependencies]
 python = "~3.9"
