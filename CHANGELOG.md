@@ -1,5 +1,13 @@
 # Changelog
 
+## [v3.1.3](https://github.com/takaiyuk/kot/compare/v3.1.2...v3.1.3) - 2025-02-22
+- Bump idna from 3.4 to 3.7 by @dependabot in https://github.com/takaiyuk/kot/pull/222
+- Bump black from 23.3.0 to 24.3.0 by @dependabot in https://github.com/takaiyuk/kot/pull/221
+- Bump cryptography from 41.0.6 to 42.0.4 by @dependabot in https://github.com/takaiyuk/kot/pull/220
+- Bump requests from 2.31.0 to 2.32.2 by @dependabot in https://github.com/takaiyuk/kot/pull/226
+- Bump certifi from 2023.7.22 to 2024.7.4 by @dependabot in https://github.com/takaiyuk/kot/pull/227
+- Bump urllib3 from 1.26.18 to 1.26.19 by @dependabot in https://github.com/takaiyuk/kot/pull/228
+
 ## [v3.1.2](https://github.com/takaiyuk/kot/compare/v3.1.1...v3.1.2) - 2025-02-21
 - set package mode for poetry 2.0 by @mocyuto in https://github.com/takaiyuk/kot/pull/223
 
